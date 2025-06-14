@@ -59,7 +59,7 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
   }, {} as { [key: string]: number });
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div className="grid grid-cols-2 gap-4">
       {/* Overview Cards */}
       <Card 
         className="bg-blue-50 dark:bg-blue-500/10 border-0 shadow-lg hover:shadow-xl hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-all duration-300 h-full cursor-pointer"
