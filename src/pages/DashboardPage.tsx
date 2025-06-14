@@ -1,4 +1,5 @@
 
+import { useState } from 'react';
 import { Task } from './Index';
 import { TaskDashboard } from '../components/TaskDashboard';
 import { TaskList } from '../components/TaskList';
@@ -15,9 +16,21 @@ interface DashboardPageProps {
 
 export const DashboardPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask }: DashboardPageProps) => {
   const navigate = useNavigate();
+  const [filter, setFilter] = useState('all');
+
   const handleAddTaskClick = () => {
     navigate('/add-task');
   };
+
+  const filteredTasks = tasks.filter(task => {
+    if (filter === 'pending') {
+      return !task.completed;
+    }
+    if (filter === 'completed') {
+      return task.completed;
+    }
+    return true; // 'all'
+  });
 
   return (
     <>
@@ -36,8 +49,20 @@ export const DashboardPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask }:
         </Button>
       </div>
 
+      <div className="flex items-center justify-center gap-2 mb-6">
+        <Button variant={filter === 'all' ? 'default' : 'outline'} onClick={() => setFilter('all')}>
+          All Tasks
+        </Button>
+        <Button variant={filter === 'pending' ? 'default' : 'outline'} onClick={() => setFilter('pending')}>
+          Pending
+        </Button>
+        <Button variant={filter === 'completed' ? 'default' : 'outline'} onClick={() => setFilter('completed')}>
+          Completed
+        </Button>
+      </div>
+
       <TaskList 
-        tasks={tasks}
+        tasks={filteredTasks}
         onToggleTask={onToggleTask}
         onDeleteTask={onDeleteTask}
         onEditTask={onEditTask}
