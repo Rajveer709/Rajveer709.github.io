@@ -61,7 +61,7 @@ export const CalendarPage = ({ tasks, onBack, currentTheme }: CalendarPageProps)
           </h1>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid lg:grid-cols-2 gap-6 items-start">
           <div className="bg-background/60 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-primary/20">
             <h2 className="text-lg font-semibold mb-4 text-primary text-center">Select Date</h2>
             <div className="flex justify-center">
