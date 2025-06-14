@@ -1,3 +1,4 @@
+
 import { CheckSquare, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SettingsDialog } from './SettingsDialog';
@@ -10,8 +11,8 @@ interface HeaderProps {
 
 export const Header = ({ onThemeChange, currentTheme, onCalendarClick }: HeaderProps) => {
   return (
-    <div className="text-center mb-8 md:mb-12">
-      <div className="flex items-center justify-between mb-6">
+    <div className="text-center mb-6">
+      <div className="flex items-center justify-between">
         <div className="flex-1"></div>
         <div className="flex items-center justify-center">
           <div className="bg-primary/10 p-2 md:p-3 rounded-xl md:rounded-2xl shadow-lg mr-3 md:mr-4">
@@ -35,9 +36,6 @@ export const Header = ({ onThemeChange, currentTheme, onCalendarClick }: HeaderP
           </div>
         </div>
       </div>
-      <p className="text-lg md:text-xl font-medium text-foreground/90">
-        Stay organized, achieve more.
-      </p>
     </div>
   );
 };
