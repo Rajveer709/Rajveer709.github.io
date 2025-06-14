@@ -78,22 +78,6 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
 
       <Card 
         className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full cursor-pointer"
-        onClick={() => navigate('/tasks/overdue')}
-      >
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-600">OverDue Tasks</CardTitle>
-          <AlertTriangle className="h-5 w-5 text-destructive" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl md:text-3xl font-bold text-destructive">{overdueTasks}</div>
-          <p className="text-sm text-gray-500">
-            Need attention
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card 
-        className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full cursor-pointer"
         onClick={() => navigate('/tasks/due-soon')}
       >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -104,6 +88,22 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
           <div className="text-2xl md:text-3xl font-bold text-orange-600">{upcomingTasks}</div>
           <p className="text-sm text-gray-500">
             Coming up soon
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card 
+        className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full cursor-pointer"
+        onClick={() => navigate('/tasks/overdue')}
+      >
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium text-gray-600">OverDue Tasks</CardTitle>
+          <AlertTriangle className="h-5 w-5 text-destructive" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl md:text-3xl font-bold text-destructive">{overdueTasks}</div>
+          <p className="text-sm text-gray-500">
+            Need attention
           </p>
         </CardContent>
       </Card>
