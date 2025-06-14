@@ -100,10 +100,10 @@ const vehicleFluidOptions = [
 ];
 
 const priorities = [
-  { value: 'low', label: 'Low Priority' },
-  { value: 'medium', label: 'Medium Priority' },
-  { value: 'high', label: 'High Priority' },
-  { value: 'urgent', label: 'Urgent Priority' }
+  { value: 'low', label: 'Low Priority', color: 'bg-green-500' },
+  { value: 'medium', label: 'Medium Priority', color: 'bg-yellow-500' },
+  { value: 'high', label: 'High Priority', color: 'bg-orange-500' },
+  { value: 'urgent', label: 'Urgent Priority', color: 'bg-red-500', emoji: '🚨' }
 ];
 
 const getThemeBackgroundStyle = (currentTheme: string) => {
@@ -134,6 +134,8 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
   const [streamingApp, setStreamingApp] = useState('');
   const [medicineName, setMedicineName] = useState('');
   const [selectedFluid, setSelectedFluid] = useState('');
+
+  const selectedPriorityDetails = priorities.find(p => p.value === priority);
 
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
@@ -292,12 +294,22 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
               <div>
                 <Select value={priority} onValueChange={(value: 'low' | 'medium' | 'high' | 'urgent') => setPriority(value)}>
                   <SelectTrigger>
-                    <SelectValue />
+                    {selectedPriorityDetails && (
+                      <div className="flex items-center gap-2">
+                        <span className={cn("h-2.5 w-2.5 rounded-full", selectedPriorityDetails.color)} />
+                        <span>{selectedPriorityDetails.label}</span>
+                        {selectedPriorityDetails.emoji && <span>{selectedPriorityDetails.emoji}</span>}
+                      </div>
+                    )}
                   </SelectTrigger>
                   <SelectContent>
                     {priorities.map((p) => (
                       <SelectItem key={p.value} value={p.value}>
-                        {p.label}
+                        <div className="flex items-center gap-2">
+                          <span className={cn("h-2.5 w-2.5 rounded-full", p.color)} />
+                          <span>{p.label}</span>
+                          {p.emoji && <span className="ml-auto">{p.emoji}</span>}
+                        </div>
                       </SelectItem>
                     ))}
                   </SelectContent>
