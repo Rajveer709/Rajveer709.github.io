@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { CheckSquare, Calendar, Bell, Target, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -97,15 +96,25 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
           </p>
 
           <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
-            <Button 
-              onClick={onGetStarted}
-              size="lg"
-              className="px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white animate-pulse-glow"
-              style={{ backgroundColor: theme?.colors.primary }}
-            >
-              Get Started for Free
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button 
+                onClick={onGetStarted}
+                size="lg"
+                className="px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white w-full sm:w-auto"
+                style={{ backgroundColor: theme?.colors.primary }}
+              >
+                Get Started for Free
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              <Button 
+                onClick={onGetStarted}
+                size="lg"
+                variant="outline"
+                className="px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200 w-full sm:w-auto"
+              >
+                Add Task
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -169,7 +178,7 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
           <Button 
             onClick={onGetStarted}
             size="lg"
-            className="px-8 md:px-12 py-3 md:py-4 text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white animate-pulse-glow"
+            className="px-8 md:px-12 py-3 md:py-4 text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white"
              style={{ backgroundColor: theme?.colors.primary }}
           >
             Start Organizing Today
