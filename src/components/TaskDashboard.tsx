@@ -1,3 +1,4 @@
+
 import { useNavigate } from 'react-router-dom';
 import { Task } from '../pages/Index';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -27,11 +28,11 @@ const categoryIcons: { [key: string]: any } = {
 };
 
 const categoryColors: { [key: string]: string } = {
-  'Financial': 'bg-green-100 text-green-800 border-green-200',
-  'Health & Wellness': 'bg-red-100 text-red-800 border-red-200',
-  'Household': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  'Personal': 'bg-purple-100 text-purple-800 border-purple-200',
-  'Legal & Admin': 'bg-blue-100 text-blue-800 border-blue-200'
+  'Financial': 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/50 dark:text-green-300 dark:border-green-800',
+  'Health & Wellness': 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/50 dark:text-red-300 dark:border-red-800',
+  'Household': 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/50 dark:text-yellow-300 dark:border-yellow-800',
+  'Personal': 'bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/50 dark:text-purple-300 dark:border-purple-800',
+  'Legal & Admin': 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/50 dark:text-blue-300 dark:border-blue-800'
 };
 
 export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
@@ -61,75 +62,75 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       {/* Overview Cards */}
       <Card 
-        className="bg-blue-50 border-0 shadow-lg hover:shadow-xl hover:bg-blue-100 transition-all duration-300 h-full cursor-pointer"
+        className="bg-blue-50 dark:bg-blue-500/10 border-0 shadow-lg hover:shadow-xl hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-all duration-300 h-full cursor-pointer"
         onClick={() => navigate('/tasks/all')}
       >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-600">Total Tasks</CardTitle>
+          <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Tasks</CardTitle>
           <CheckCircle className="h-5 w-5 text-blue-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl md:text-3xl font-bold text-blue-600">{totalTasks}</div>
-          <p className="text-sm text-gray-500">
+          <div className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">{totalTasks}</div>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             {completedTasks} completed
           </p>
         </CardContent>
       </Card>
 
       <Card 
-        className="bg-orange-50 border-0 shadow-lg hover:shadow-xl hover:bg-orange-100 transition-all duration-300 h-full cursor-pointer"
+        className="bg-orange-50 dark:bg-orange-500/10 border-0 shadow-lg hover:shadow-xl hover:bg-orange-100 dark:hover:bg-orange-500/20 transition-all duration-300 h-full cursor-pointer"
         onClick={() => navigate('/tasks/due-soon')}
       >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-600">Due Tasks</CardTitle>
+          <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Due Tasks</CardTitle>
           <Clock className="h-5 w-5 text-orange-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl md:text-3xl font-bold text-orange-600">{upcomingTasks}</div>
-          <p className="text-sm text-gray-500">
+          <div className="text-2xl md:text-3xl font-bold text-orange-600 dark:text-orange-400">{upcomingTasks}</div>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             Coming up soon
           </p>
         </CardContent>
       </Card>
 
       <Card 
-        className="bg-red-50 border-0 shadow-lg hover:shadow-xl hover:bg-red-100 transition-all duration-300 h-full cursor-pointer"
+        className="bg-red-50 dark:bg-destructive/10 border-0 shadow-lg hover:shadow-xl hover:bg-red-100 dark:hover:bg-destructive/20 transition-all duration-300 h-full cursor-pointer"
         onClick={() => navigate('/tasks/overdue')}
       >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-600">OverDue Tasks</CardTitle>
+          <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">OverDue Tasks</CardTitle>
           <AlertTriangle className="h-5 w-5 text-destructive" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl md:text-3xl font-bold text-destructive">{overdueTasks}</div>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             Need attention
           </p>
         </CardContent>
       </Card>
 
       <Card 
-        className="bg-green-50 border-0 shadow-lg hover:shadow-xl hover:bg-green-100 transition-all duration-300 h-full cursor-pointer"
+        className="bg-green-50 dark:bg-green-500/10 border-0 shadow-lg hover:shadow-xl hover:bg-green-100 dark:hover:bg-green-500/20 transition-all duration-300 h-full cursor-pointer"
         onClick={() => navigate('/tasks/completed')}
       >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-600">Completed Tasks</CardTitle>
+          <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Completed Tasks</CardTitle>
           <CheckCircle className="h-5 w-5 text-green-500" />
         </CardHeader>
         <CardContent>
-            <div className="text-2xl md:text-3xl font-bold text-green-600">
+            <div className="text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400">
               {completedTasks}
             </div>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
               out of {totalTasks} tasks
             </p>
         </CardContent>
       </Card>
 
       {/* Category Breakdown */}
-      <Card className="col-span-full bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+      <Card className="col-span-full bg-white/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-gray-800">Active Tasks by Category</CardTitle>
+          <CardTitle className="text-lg font-semibold text-gray-800 dark:text-gray-200">Active Tasks by Category</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-3">
@@ -147,7 +148,7 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
               );
             })}
             {Object.keys(categoryCounts).length === 0 && (
-              <p className="text-gray-500 text-sm">No active tasks</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">No active tasks</p>
             )}
           </div>
         </CardContent>
