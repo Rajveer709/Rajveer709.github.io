@@ -1,12 +1,13 @@
 
 import { NavLink } from 'react-router-dom';
-import { Home, PlusSquare, Calendar, Settings } from 'lucide-react';
+import { Home, PlusSquare, Calendar, Settings, Trophy } from 'lucide-react';
 
 export const BottomNavBar = () => {
   const navItems = [
     { to: '/', icon: Home, label: 'Home' },
-    { to: '/add-task', icon: PlusSquare, label: 'Add Task' },
     { to: '/calendar', icon: Calendar, label: 'Calendar' },
+    { to: '/add-task', icon: PlusSquare, label: 'Add Task' },
+    { to: '/challenges', icon: Trophy, label: 'Challenges' },
   ];
 
   const linkClasses = "flex flex-col items-center justify-center gap-1 transition-all duration-200 ease-in-out text-foreground/60 hover:text-primary";
