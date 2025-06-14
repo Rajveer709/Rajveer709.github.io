@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { DashboardPage } from './DashboardPage';
@@ -116,7 +115,7 @@ const Index = () => {
     const b = parseInt(primaryColor.slice(5, 7), 16);
     
     return {
-        background: `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 0.05), hsl(var(--background)))`
+        background: `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 0.1), hsl(var(--background)))`
     };
   };
 

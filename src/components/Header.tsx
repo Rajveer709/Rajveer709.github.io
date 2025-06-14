@@ -11,14 +11,14 @@ interface HeaderProps {
 
 export const Header = ({ onThemeChange, currentTheme, onCalendarClick }: HeaderProps) => {
   return (
-    <div className="text-center mb-6 md:mb-10">
-      <div className="flex items-center justify-between mb-4">
+    <div className="text-center mb-8 md:mb-12">
+      <div className="flex items-center justify-between mb-6">
         <div className="flex-1"></div>
         <div className="flex items-center justify-center">
-          <div className="bg-primary/10 p-2 rounded-xl shadow-lg mr-3">
-            <CheckSquare className="w-6 h-6 text-primary" />
+          <div className="bg-primary/10 p-2 md:p-3 rounded-xl md:rounded-2xl shadow-lg mr-3 md:mr-4">
+            <CheckSquare className="w-6 h-6 md:w-8 md:h-8 text-primary" />
           </div>
-          <h1 className="text-xl md:text-2xl font-bold text-primary">
+          <h1 className="text-2xl md:text-4xl font-bold text-primary">
             Life Admin
           </h1>
         </div>
@@ -36,8 +36,8 @@ export const Header = ({ onThemeChange, currentTheme, onCalendarClick }: HeaderP
           </div>
         </div>
       </div>
-      <p className="text-sm md:text-base text-foreground/80 max-w-2xl mx-auto">
-        Stay on top of all your important life tasks - from bills and appointments to maintenance and deadlines.
+      <p className="text-lg md:text-xl font-medium text-foreground/90">
+        Simplify Life. One Task at a Time.
       </p>
     </div>
   );
