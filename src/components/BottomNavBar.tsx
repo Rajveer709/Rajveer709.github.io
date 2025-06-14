@@ -14,7 +14,7 @@ export const BottomNavBar = () => {
   const activeLinkClasses = "!text-primary transform scale-110";
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t h-16 z-50 md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t h-16 z-50 md:hidden">
       <div className="flex justify-around items-center h-full max-w-lg mx-auto">
         {navItems.map((item) => (
           <NavLink
@@ -38,3 +38,4 @@ export const BottomNavBar = () => {
     </nav>
   );
 };
+
