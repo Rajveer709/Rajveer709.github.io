@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { DashboardPage } from './DashboardPage';
 import { AddTaskPage } from './AddTaskPage';
@@ -30,7 +30,7 @@ const Index = () => {
   const location = useLocation();
   const isLandingPage = location.pathname === '/landing';
 
-  const applyTheme = (themeValue: string) => {
+  const applyTheme = useCallback((themeValue: string) => {
     const theme = themes.find(t => t.value === themeValue) || themes.find(t => t.value === defaultTheme);
     if (!theme) return;
 
@@ -41,7 +41,7 @@ const Index = () => {
         root.style.setProperty('--primary', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
         root.style.setProperty('--ring', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
     }
-  };
+  }, []);
 
   useEffect(() => {
     const savedTasks = localStorage.getItem('lifeAdminTasks');
@@ -71,7 +71,7 @@ const Index = () => {
 
     const savedDarkMode = localStorage.getItem('lifeAdminDarkMode') === 'true';
     setIsDarkMode(savedDarkMode);
-  }, []);
+  }, [applyTheme]);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -135,11 +135,11 @@ const Index = () => {
     };
   };
 
-  const handleThemeChange = (theme: string) => {
+  const handleThemeChange = useCallback((theme: string) => {
     setCurrentTheme(theme);
     localStorage.setItem('lifeAdminTheme', theme);
     applyTheme(theme);
-  };
+  }, [applyTheme]);
 
   const handleToggleDarkMode = () => {
     setIsDarkMode(prev => !prev);
@@ -171,6 +171,8 @@ const Index = () => {
                       onDeleteTask={deleteTask}
                       onEditTask={editTask}
                       onBack={() => navigate(-1)}
+                      applyTheme={applyTheme}
+                      currentTheme={currentTheme}
                     />
                   } />
                   <Route path="/settings" element={

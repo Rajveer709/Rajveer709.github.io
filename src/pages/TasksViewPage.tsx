@@ -1,5 +1,5 @@
-
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Task } from './Index';
 import { TaskList } from '../components/TaskList';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,8 @@ interface TasksViewPageProps {
   onDeleteTask: (taskId: string) => void;
   onEditTask: (taskId: string, updatedTask: Partial<Task>) => void;
   onBack: () => void;
+  applyTheme: (theme: string) => void;
+  currentTheme: string;
 }
 
 const filterConfig: { [key: string]: { title: string; filterFn: (task: Task) => boolean } } = {
@@ -37,11 +39,23 @@ const filterConfig: { [key: string]: { title: string; filterFn: (task: Task) => 
   },
 };
 
-export const TasksViewPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, onBack }: TasksViewPageProps) => {
+export const TasksViewPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, onBack, applyTheme, currentTheme }: TasksViewPageProps) => {
   const { filter } = useParams<{ filter: string }>();
   const currentConfig = filterConfig[filter || 'all'] || filterConfig.all;
   
   const filteredTasks = tasks.filter(currentConfig.filterFn);
+
+  useEffect(() => {
+    if (filter === 'due-soon') {
+      applyTheme('orange');
+    } else {
+      applyTheme(currentTheme);
+    }
+
+    return () => {
+      applyTheme(currentTheme);
+    };
+  }, [filter, applyTheme, currentTheme]);
 
   return (
     <div className="animate-fade-in">
