@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Task } from './Index';
 import { TaskDashboard } from '../components/TaskDashboard';
@@ -35,7 +34,7 @@ export const DashboardPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask }:
   return (
     <>
       <div className="mb-6 md:mb-8">
-        <TaskDashboard tasks={tasks} />
+        <TaskDashboard tasks={tasks} filter={filter} onFilterChange={setFilter} />
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -52,12 +51,6 @@ export const DashboardPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask }:
       <div className="flex items-center justify-center gap-2 mb-6">
         <Button variant={filter === 'all' ? 'default' : 'outline'} onClick={() => setFilter('all')}>
           All Tasks
-        </Button>
-        <Button variant={filter === 'pending' ? 'default' : 'outline'} onClick={() => setFilter('pending')}>
-          Pending
-        </Button>
-        <Button variant={filter === 'completed' ? 'default' : 'outline'} onClick={() => setFilter('completed')}>
-          Completed
         </Button>
       </div>
 

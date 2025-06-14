@@ -2,6 +2,8 @@ import { Task } from '../pages/Index';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { 
   Calendar, 
   DollarSign, 
@@ -16,6 +18,8 @@ import {
 
 interface TaskDashboardProps {
   tasks: Task[];
+  filter: string;
+  onFilterChange: (filter: string) => void;
 }
 
 const categoryIcons: { [key: string]: any } = {
@@ -34,7 +38,7 @@ const categoryColors: { [key: string]: string } = {
   'Legal & Admin': 'bg-blue-100 text-blue-800 border-blue-200'
 };
 
-export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
+export const TaskDashboard = ({ tasks, filter, onFilterChange }: TaskDashboardProps) => {
   const completedTasks = tasks.filter(task => task.completed).length;
   const totalTasks = tasks.length;
   const overdueTasks = tasks.filter(task => 
@@ -92,9 +96,21 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
         </CardHeader>
         <CardContent>
           <div className="text-xl md:text-2xl font-bold text-orange-600">{upcomingTasks}</div>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 mb-2">
             Coming up soon
           </p>
+          <Button
+            onClick={() => onFilterChange('pending')}
+            variant={filter === 'pending' ? 'default' : 'outline'}
+            className={cn(
+              "w-full mt-1 text-xs h-8",
+              filter === 'pending'
+                ? 'bg-orange-500 hover:bg-orange-600 text-white'
+                : 'text-orange-600 border-orange-500 hover:bg-orange-100 hover:text-orange-700'
+            )}
+          >
+            View Pending
+          </Button>
         </CardContent>
       </Card>
 
@@ -108,9 +124,21 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
             {completionPercentage}%
           </div>
           <Progress value={completionPercentage} className="h-2 mt-2" />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-500 mt-1 mb-2">
             {completedTasks} of {totalTasks} tasks
           </p>
+          <Button
+            onClick={() => onFilterChange('completed')}
+            variant={filter === 'completed' ? 'default' : 'outline'}
+            className={cn(
+              "w-full mt-1 text-xs h-8",
+              filter === 'completed'
+                ? 'bg-green-500 hover:bg-green-600 text-white'
+                : 'text-green-600 border-green-500 hover:bg-green-100 hover:text-green-700'
+            )}
+          >
+            View Completed
+          </Button>
         </CardContent>
       </Card>
 
