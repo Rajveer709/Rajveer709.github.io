@@ -1,3 +1,4 @@
+
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Task } from './Index';
@@ -46,14 +47,19 @@ export const TasksViewPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, o
   const filteredTasks = tasks.filter(currentConfig.filterFn);
 
   useEffect(() => {
+    const originalTheme = currentTheme;
     if (filter === 'due-soon') {
       applyTheme('orange');
+    } else if (filter === 'overdue') {
+      applyTheme('red');
+    } else if (filter === 'completed') {
+      applyTheme('green');
     } else {
-      applyTheme(currentTheme);
+      applyTheme(originalTheme);
     }
 
     return () => {
-      applyTheme(currentTheme);
+      applyTheme(originalTheme);
     };
   }, [filter, applyTheme, currentTheme]);
 

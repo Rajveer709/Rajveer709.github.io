@@ -1,3 +1,4 @@
+
 import { useNavigate } from 'react-router-dom';
 import { Task } from '../pages/Index';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -77,7 +78,7 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
       </Card>
 
       <Card 
-        className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full cursor-pointer"
+        className="bg-orange-50 border-0 shadow-lg hover:shadow-xl hover:bg-orange-100 transition-all duration-300 h-full cursor-pointer"
         onClick={() => navigate('/tasks/due-soon')}
       >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -93,7 +94,7 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
       </Card>
 
       <Card 
-        className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full cursor-pointer"
+        className="bg-red-50 border-0 shadow-lg hover:shadow-xl hover:bg-red-100 transition-all duration-300 h-full cursor-pointer"
         onClick={() => navigate('/tasks/overdue')}
       >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -109,7 +110,7 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
       </Card>
 
       <Card 
-        className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full cursor-pointer"
+        className="bg-green-50 border-0 shadow-lg hover:shadow-xl hover:bg-green-100 transition-all duration-300 h-full cursor-pointer"
         onClick={() => navigate('/tasks/completed')}
       >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
