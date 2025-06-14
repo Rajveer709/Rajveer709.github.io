@@ -66,7 +66,7 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
           <CheckCircle className="h-4 w-4 text-blue-600" />
         </CardHeader>
         <CardContent>
-          <div className="text-xl md:text-2xl font-bold text-gray-800">{totalTasks}</div>
+          <div className="text-xl md:text-2xl font-bold text-blue-600">{totalTasks}</div>
           <p className="text-xs text-gray-500">
             {completedTasks} completed
           </p>
