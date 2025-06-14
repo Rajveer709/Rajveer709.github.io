@@ -1,9 +1,11 @@
+
 import { ArrowLeft, Moon, Sun, User, Palette, Info, RotateCcw, Lock, LogOut, EyeOff, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { themes } from '../config/themes';
+import { getRankForLevel } from '../config/ranks';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -54,6 +56,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
   const [name, setName] = useState(profile?.name || '');
   const [isEditing, setIsEditing] = useState(false);
   const hiddenTasks = tasks.filter(task => task.hidden);
+  const rank = getRankForLevel(userLevel);
   
   const handleSaveProfile = () => {
     onUpdateProfile({ name });
@@ -82,10 +85,15 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
-              <Avatar className="w-12 h-12 border">
-                <AvatarImage src={`https://api.dicebear.com/8.x/bottts/svg?seed=${user?.email}`} alt={profile?.name || 'User'} />
-                <AvatarFallback className="text-xl">{profile?.name?.charAt(0) || 'U'}</AvatarFallback>
-              </Avatar>
+              <div className="relative">
+                <Avatar className="w-12 h-12 border">
+                  <AvatarImage src={`https://api.dicebear.com/8.x/bottts/svg?seed=${user?.email}`} alt={profile?.name || 'User'} />
+                  <AvatarFallback className="text-xl">{profile?.name?.charAt(0) || 'U'}</AvatarFallback>
+                </Avatar>
+                <div className="absolute -bottom-1 -right-1 bg-card p-1 rounded-full shadow-md border">
+                  <rank.Icon className="w-4 h-4 text-primary" />
+                </div>
+              </div>
               <div className="flex-grow space-y-1">
                 {isEditing ? (
                   <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your Name" />
