@@ -57,7 +57,7 @@ const Index = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isAuthRoute = location.pathname === '/landing' || location.pathname === '/auth';
-  const showGreeting = location.pathname === '/' || location.pathname === '/challenges';
+  const showGreeting = location.pathname === '/';
 
   const [userLevel, setUserLevel] = useState(1);
   const [userXp, setUserXp] = useState(0);

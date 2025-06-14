@@ -1,8 +1,12 @@
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, Circle, ArrowLeft, Lock } from "lucide-react";
+import { CheckCircle2, Circle, ArrowLeft, Lock, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Challenge as ChallengeType } from '../config/challenges';
+import { getRankForLevel } from '../config/ranks';
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
+import { useState } from "react";
 
 export interface Challenge extends ChallengeType {
   completed: boolean;
@@ -18,6 +22,7 @@ interface ChallengePageProps {
 
 export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, onBack }: ChallengePageProps) => {
   const progressPercentage = xpToNextLevel > 0 ? Math.round((userXp / xpToNextLevel) * 100) : 0;
+  const rank = getRankForLevel(userLevel);
 
   const getChallengeLevel = (challengeId: number) => {
     if (challengeId <= 7) return 1;
@@ -33,6 +38,15 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
     return 11;
   };
   
+  const challengesByLevel = challenges.reduce<Record<number, Challenge[]>>((acc, challenge) => {
+    const level = getChallengeLevel(challenge.id);
+    if (!acc[level]) {
+      acc[level] = [];
+    }
+    acc[level].push(challenge);
+    return acc;
+  }, {});
+
   return (
     <div>
       <div className="flex items-center mb-6">
@@ -44,8 +58,15 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
 
       <Card className="mb-6 bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">
         <CardHeader>
-          <CardTitle>Level {userLevel}</CardTitle>
-          <CardDescription>Your Progress to Next Level</CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardDescription>Rank: Level {userLevel}</CardDescription>
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <rank.Icon className="w-7 h-7 text-primary" />
+                {rank.name}
+              </CardTitle>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-4 mb-2">
@@ -60,38 +81,52 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
 
       <Card>
         <CardHeader>
-          <CardTitle>Challenges</CardTitle>
+          <CardTitle>Challenge Log</CardTitle>
           <CardDescription>Complete challenges to earn XP and level up!</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {challenges.map(challenge => {
-              const challengeLevel = getChallengeLevel(challenge.id);
-              const isLocked = userLevel < challengeLevel;
+          <div className="space-y-2">
+            {Object.entries(challengesByLevel)
+              .sort(([a], [b]) => Number(a) - Number(b))
+              .map(([level, levelChallenges]) => (
+              <Collapsible key={level} defaultOpen={userLevel >= Number(level) || userLevel + 1 === Number(level)} className="space-y-2">
+                <CollapsibleTrigger className="flex justify-between items-center w-full p-3 rounded-lg bg-secondary/80 hover:bg-secondary transition-colors font-bold text-left group">
+                  <span>Level {level} Challenges</span>
+                  <ChevronDown className="h-5 w-5 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="space-y-2 pl-4 border-l-2 border-primary/20 ml-1">
+                    {levelChallenges.map(challenge => {
+                      const challengeLevel = getChallengeLevel(challenge.id);
+                      const isLocked = userLevel < challengeLevel;
 
-              return (
-              <div key={challenge.id} className={`flex items-center justify-between p-3 rounded-lg transition-all ${challenge.completed ? 'bg-primary/10' : isLocked ? 'bg-muted/50' : 'bg-secondary'}`}>
-                <div className="flex items-center">
-                  {challenge.completed ? (
-                    <CheckCircle2 className="w-6 h-6 text-primary mr-4 flex-shrink-0" />
-                  ) : isLocked ? (
-                    <Lock className="w-6 h-6 text-muted-foreground mr-4 flex-shrink-0" />
-                  ) : (
-                    <Circle className="w-6 h-6 text-muted-foreground mr-4 flex-shrink-0" />
-                  )}
-                  <div>
-                    <p className={`font-medium ${challenge.completed ? 'text-primary' : isLocked ? 'text-muted-foreground' : 'text-foreground'}`}>{challenge.text}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {challenge.xp} XP
-                      {isLocked && ` | Unlocks at Level ${challengeLevel}`}
-                    </p>
+                      return (
+                      <div key={challenge.id} className={`flex items-center justify-between p-3 rounded-lg transition-all ${challenge.completed ? 'bg-primary/10' : isLocked ? 'bg-muted/50' : 'bg-secondary'}`}>
+                        <div className="flex items-center">
+                          {challenge.completed ? (
+                            <CheckCircle2 className="w-6 h-6 text-primary mr-4 flex-shrink-0" />
+                          ) : isLocked ? (
+                            <Lock className="w-6 h-6 text-muted-foreground mr-4 flex-shrink-0" />
+                          ) : (
+                            <Circle className="w-6 h-6 text-muted-foreground mr-4 flex-shrink-0" />
+                          )}
+                          <div>
+                            <p className={`font-medium ${challenge.completed ? 'text-primary' : isLocked ? 'text-muted-foreground' : 'text-foreground'}`}>{challenge.text}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {challenge.xp} XP
+                              {isLocked && ` | Unlocks at Level ${challengeLevel}`}
+                            </p>
+                          </div>
+                        </div>
+                        {challenge.completed && (
+                          <span className="text-xs font-bold text-primary bg-primary/20 px-2 py-1 rounded-full">DONE</span>
+                        )}
+                      </div>
+                    )})}
                   </div>
-                </div>
-                {challenge.completed && (
-                  <span className="text-xs font-bold text-primary bg-primary/20 px-2 py-1 rounded-full">DONE</span>
-                )}
-              </div>
-            )})}
+                </CollapsibleContent>
+              </Collapsible>
+            ))}
           </div>
         </CardContent>
       </Card>
