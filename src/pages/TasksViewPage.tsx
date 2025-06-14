@@ -5,6 +5,7 @@ import { Task } from './Index';
 import { TaskList } from '../components/TaskList';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { hexToHsl } from '../lib/colorUtils';
 
 interface TasksViewPageProps {
   tasks: Task[];
@@ -48,12 +49,30 @@ export const TasksViewPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, o
 
   useEffect(() => {
     const originalTheme = currentTheme;
+    const root = document.documentElement;
+
+    const applyCustomTheme = (hex: string) => {
+      const isDark = root.classList.contains('dark');
+      const primaryHsl = hexToHsl(hex);
+      if (primaryHsl) {
+        root.style.setProperty('--primary', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
+        root.style.setProperty('--ring', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
+        if (isDark) {
+          root.style.setProperty('--background', `${primaryHsl.h} ${primaryHsl.s * 0.15}% 8%`);
+          root.style.setProperty('--card', `${primaryHsl.h} ${primaryHsl.s * 0.25}% 12%`);
+        } else {
+          root.style.setProperty('--background', `${primaryHsl.h} 20% 99%`);
+          root.style.setProperty('--card', `${primaryHsl.h} 40% 97%`);
+        }
+      }
+    };
+
     if (filter === 'due-soon') {
       applyTheme('orange');
     } else if (filter === 'overdue') {
-      applyTheme('red');
+      applyCustomTheme('#dc2626'); // More intense red
     } else if (filter === 'completed') {
-      applyTheme('green');
+      applyCustomTheme('#16a34a'); // Darker green
     } else if (filter === 'all') {
       applyTheme('blue');
     } else {
