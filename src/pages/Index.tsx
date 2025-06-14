@@ -1,14 +1,11 @@
-
 import { useState, useEffect, useCallback } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { toast } from "sonner";
 import { DashboardPage } from './DashboardPage';
 import { AddTaskPage } from './AddTaskPage';
 import { CalendarPage } from './CalendarPage';
 import { SettingsPage } from './SettingsPage';
-import { Header } from '../components/Header';
 import { LandingPage } from '../components/LandingPage';
-import { BottomNavBar } from '../components/BottomNavBar';
 import { themes, defaultTheme } from '../config/themes';
 import { ALL_CHALLENGES_DEFINITIONS } from '../config/challenges';
 import { hexToHsl } from '../lib/colorUtils';
@@ -18,6 +15,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { Session, User } from '@supabase/supabase-js';
 import { AnimatePresence } from 'framer-motion';
 import { PageTransition } from '../components/PageTransition';
+import { MainLayout } from '../components/MainLayout';
+import { ProtectedRoute } from '../components/ProtectedRoute';
+import { PublicRoute } from '../components/PublicRoute';
 
 export interface Task {
   id: string;
@@ -35,7 +35,7 @@ import { ChallengePage, Challenge as ChallengeWithCompleted } from './ChallengeP
 
 export type Challenge = ChallengeWithCompleted;
 
-interface Profile {
+export interface Profile {
   id: string;
   name: string | null;
   email: string | null;
@@ -129,16 +129,6 @@ const Index = () => {
       setProfile(null);
     }
   }, [user, fetchProfile]);
-
-  useEffect(() => {
-    if (!loading) {
-      if (session && isAuthRoute) {
-        navigate('/', { replace: true });
-      } else if (!session && !isAuthRoute) {
-        navigate('/landing', { replace: true });
-      }
-    }
-  }, [session, isAuthRoute, loading, navigate]);
 
   useEffect(() => {
     if (!user) return; // Don't run this effect if user is not logged in
@@ -408,80 +398,76 @@ const Index = () => {
     <div className="min-h-screen">
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          <Route path="/landing" element={<PageTransition><LandingPage onGetStarted={handleGetStarted} currentTheme={currentTheme} /></PageTransition>} />
-          <Route path="/auth" element={<PageTransition><AuthPage /></PageTransition>} />
+          <Route element={<PublicRoute session={session} />}>
+            <Route path="/landing" element={<PageTransition><LandingPage onGetStarted={handleGetStarted} currentTheme={currentTheme} /></PageTransition>} />
+            <Route path="/auth" element={<PageTransition><AuthPage /></PageTransition>} />
+          </Route>
           
-          <Route path="*" element={
-            !session ? null : (
-            <>
-              <div className="container mx-auto px-4 pt-4 md:pt-6 max-w-6xl pb-20 md:pb-8">
-                <Header
-                  onThemeChange={handleThemeChange}
-                  currentTheme={currentTheme}
-                  onCalendarClick={() => navigate('/calendar')}
-                  profile={profile}
-                  showGreeting={showGreeting}
+          <Route element={<ProtectedRoute session={session} />}>
+            <Route 
+              element={
+                <MainLayout 
+                  onThemeChange={handleThemeChange} 
+                  currentTheme={currentTheme} 
+                  profile={profile} 
+                  showGreeting={showGreeting} 
                 />
-                <main>
-                  <Routes>
-                    <Route path="/" element={<PageTransition><DashboardPage tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} onHideTask={hideTask} /></PageTransition>} />
-                    <Route path="/add-task" element={<PageTransition><AddTaskPage onAddTask={addTask} onBack={() => navigate(-1)} currentTheme={currentTheme} profile={profile} /></PageTransition>} />
-                    <Route path="/calendar" element={<PageTransition><CalendarPage tasks={tasks} onBack={() => navigate(-1)} /></PageTransition>} />
-                    <Route path="/challenges" element={
-                      <PageTransition>
-                        <ChallengePage 
-                          userLevel={userLevel}
-                          userXp={userXp}
-                          xpToNextLevel={userLevel * XP_FOR_LEVEL}
-                          challenges={challenges}
-                          onBack={() => navigate(-1)}
-                        />
-                      </PageTransition>
-                    } />
-                    <Route path="/tasks/:filter" element={
-                      <PageTransition>
-                        <TasksViewPage 
-                          tasks={tasks}
-                          onToggleTask={toggleTask}
-                          onDeleteTask={deleteTask}
-                          onEditTask={editTask}
-                          onHideTask={hideTask}
-                          onBack={() => navigate(-1)}
-                          applyTheme={(theme) => applyTheme(theme, isDarkMode)}
-                          currentTheme={currentTheme}
-                        />
-                      </PageTransition>
-                    } />
-                    <Route path="/settings" element={
-                      <PageTransition>
-                        <SettingsPage 
-                          onBack={() => navigate('/')} 
-                          currentTheme={currentTheme}
-                          onThemeChange={handleThemeChange}
-                          isDarkMode={isDarkMode}
-                          onToggleDarkMode={handleToggleDarkMode}
-                          onStartOver={handleStartOver}
-                          userLevel={userLevel}
-                          user={user}
-                          profile={profile}
-                          onUpdateProfile={handleUpdateProfile}
-                          onSignOut={handleSignOut}
-                          backgroundLightness={backgroundLightness}
-                          onBackgroundLightnessChange={handleBackgroundLightnessChange}
-                          cardLightness={cardLightness}
-                          onCardLightnessChange={handleCardLightnessChange}
-                          tasks={tasks}
-                          onRestoreTask={restoreTask}
-                        />
-                      </PageTransition>
-                    } />
-                  </Routes>
-                </main>
-              </div>
-              <BottomNavBar />
-            </>
-            )
-          } />
+              }
+            >
+              <Route path="/" element={<PageTransition><DashboardPage tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} onHideTask={hideTask} /></PageTransition>} />
+              <Route path="/add-task" element={<PageTransition><AddTaskPage onAddTask={addTask} onBack={() => navigate(-1)} currentTheme={currentTheme} profile={profile} /></PageTransition>} />
+              <Route path="/calendar" element={<PageTransition><CalendarPage tasks={tasks} onBack={() => navigate(-1)} /></PageTransition>} />
+              <Route path="/challenges" element={
+                <PageTransition>
+                  <ChallengePage 
+                    userLevel={userLevel}
+                    userXp={userXp}
+                    xpToNextLevel={userLevel * XP_FOR_LEVEL}
+                    challenges={challenges}
+                    onBack={() => navigate(-1)}
+                  />
+                </PageTransition>
+              } />
+              <Route path="/tasks/:filter" element={
+                <PageTransition>
+                  <TasksViewPage 
+                    tasks={tasks}
+                    onToggleTask={toggleTask}
+                    onDeleteTask={deleteTask}
+                    onEditTask={editTask}
+                    onHideTask={hideTask}
+                    onBack={() => navigate(-1)}
+                    applyTheme={(theme) => applyTheme(theme, isDarkMode)}
+                    currentTheme={currentTheme}
+                  />
+                </PageTransition>
+              } />
+              <Route path="/settings" element={
+                <PageTransition>
+                  <SettingsPage 
+                    onBack={() => navigate('/')} 
+                    currentTheme={currentTheme}
+                    onThemeChange={handleThemeChange}
+                    isDarkMode={isDarkMode}
+                    onToggleDarkMode={handleToggleDarkMode}
+                    onStartOver={handleStartOver}
+                    userLevel={userLevel}
+                    user={user}
+                    profile={profile}
+                    onUpdateProfile={handleUpdateProfile}
+                    onSignOut={handleSignOut}
+                    backgroundLightness={backgroundLightness}
+                    onBackgroundLightnessChange={handleBackgroundLightnessChange}
+                    cardLightness={cardLightness}
+                    onCardLightnessChange={handleCardLightnessChange}
+                    tasks={tasks}
+                    onRestoreTask={restoreTask}
+                  />
+                </PageTransition>
+              } />
+            </Route>
+          </Route>
+          <Route path="*" element={<Navigate to={session ? "/" : "/landing"} replace />} />
         </Routes>
       </AnimatePresence>
     </div>
