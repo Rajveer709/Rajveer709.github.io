@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Task } from './Index';
 import { Button } from '@/components/ui/button';
@@ -117,7 +118,7 @@ const getThemeBackgroundStyle = (currentTheme: string, resolvedTheme: string | u
     
     const isDark = resolvedTheme === 'dark';
     const startColorOpacity = isDark ? 0.2 : 0.1;
-    const endColor = isDark ? 'hsl(var(--background))' : 'white';
+    const endColor = isDark ? 'hsl(222.2, 84%, 4.9%)' : 'white';
 
     return {
         background: `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, ${startColorOpacity}), ${endColor})`
