@@ -76,7 +76,11 @@ const taskCategories = {
     'Child-Related activities': ['School', 'Appointments'],
     'Deliveries': ['Parcel Tracking', 'Home Deliveries']
   }
-};
+} as const;
+
+type TaskCategoriesType = typeof taskCategories;
+type CategoryKey = keyof TaskCategoriesType;
+type SubCategoryKey<T extends CategoryKey> = keyof TaskCategoriesType[T];
 
 const vehicleFluidOptions = [
   'Engine Oil',
@@ -198,6 +202,20 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
     onBack();
   };
 
+  const getSubCategories = () => {
+    if (!selectedCategory) return [];
+    const category = taskCategories[selectedCategory as CategoryKey];
+    return category ? Object.keys(category) : [];
+  };
+
+  const getTasks = () => {
+    if (!selectedCategory || !selectedSubCategory) return [];
+    const category = taskCategories[selectedCategory as CategoryKey];
+    if (!category) return [];
+    const subCategory = category[selectedSubCategory as SubCategoryKey<CategoryKey>];
+    return Array.isArray(subCategory) ? subCategory : [];
+  };
+
   return (
     <div className={`min-h-screen ${getThemeGradient(currentTheme)}`}>
       <div className="container mx-auto px-4 py-6 max-w-4xl">
@@ -240,7 +258,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
                 <h3 className="text-lg font-semibold text-white mb-4">Select Subcategory</h3>
                 <div className="space-y-2">
-                  {Object.keys(taskCategories[selectedCategory as keyof typeof taskCategories]).map((subCategory) => (
+                  {getSubCategories().map((subCategory) => (
                     <Button
                       key={subCategory}
                       variant={selectedSubCategory === subCategory ? "default" : "ghost"}
@@ -262,7 +280,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
                 <h3 className="text-lg font-semibold text-white mb-4">Select Task</h3>
                 <div className="space-y-2">
-                  {taskCategories[selectedCategory as keyof typeof taskCategories][selectedSubCategory as keyof typeof taskCategories[keyof typeof taskCategories]].map((task) => (
+                  {getTasks().map((task) => (
                     <Button
                       key={task}
                       variant={selectedTask === task ? "default" : "ghost"}
