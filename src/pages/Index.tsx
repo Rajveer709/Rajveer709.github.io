@@ -382,7 +382,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Routes>
         <Route path="/landing" element={<LandingPage onGetStarted={handleGetStarted} currentTheme={currentTheme} />} />
         <Route path="/auth" element={<AuthPage />} />
