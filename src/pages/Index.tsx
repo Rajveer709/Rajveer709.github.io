@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { DashboardPage } from './DashboardPage';
@@ -160,7 +159,7 @@ const Index = () => {
                       onDeleteTask={deleteTask}
                       onEditTask={editTask}
                       onBack={() => navigate(-1)}
-                      applyTheme={applyTheme}
+                      applyTheme={(theme) => applyTheme(theme, isDarkMode)}
                       currentTheme={currentTheme}
                     />
                   } />
