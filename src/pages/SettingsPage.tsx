@@ -41,9 +41,11 @@ interface SettingsPageProps {
   onSignOut: () => void;
   backgroundLightness: number;
   onBackgroundLightnessChange: (value: number) => void;
+  cardLightness: number;
+  onCardLightnessChange: (value: number) => void;
 }
 
-export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver, userLevel, user, profile, onUpdateProfile, onSignOut, backgroundLightness, onBackgroundLightnessChange }: SettingsPageProps) => {
+export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver, userLevel, user, profile, onUpdateProfile, onSignOut, backgroundLightness, onBackgroundLightnessChange, cardLightness, onCardLightnessChange }: SettingsPageProps) => {
   const [name, setName] = useState(profile?.name || '');
   const [isEditing, setIsEditing] = useState(false);
   
@@ -123,7 +125,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
             </div>
 
             <div>
-              <label htmlFor="bg-lightness-slider" className="text-sm font-medium">Background Lightness</label>
+              <label htmlFor="bg-lightness-slider" className="text-sm font-medium">Page Background Lightness</label>
               <Slider
                 id="bg-lightness-slider"
                 min={isDarkMode ? 5 : 80}
@@ -131,6 +133,19 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
                 step={1}
                 value={[backgroundLightness]}
                 onValueChange={(value) => onBackgroundLightnessChange(value[0])}
+                className="mt-3"
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="card-lightness-slider" className="text-sm font-medium">Card Background Lightness</label>
+              <Slider
+                id="card-lightness-slider"
+                min={isDarkMode ? 8 : 80}
+                max={isDarkMode ? 30 : 100}
+                step={1}
+                value={[cardLightness]}
+                onValueChange={(value) => onCardLightnessChange(value[0])}
                 className="mt-3"
               />
             </div>
