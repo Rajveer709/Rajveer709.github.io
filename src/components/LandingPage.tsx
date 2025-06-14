@@ -1,32 +1,37 @@
 
+import * as React from 'react';
 import { CheckSquare, Calendar, Bell, Target, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { themes, defaultTheme } from '@/config/themes';
 
 interface LandingPageProps {
   onGetStarted: () => void;
+  currentTheme: string;
 }
 
-export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
+export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) => {
+  const theme = themes.find(t => t.value === currentTheme) || themes.find(t => t.value === defaultTheme);
+
   const features = [
     {
-      icon: <CheckSquare className="w-8 h-8 text-blue-600" />,
+      icon: <CheckSquare className="w-8 h-8" />,
       title: "Organize Life Admin Tasks",
-      description: "Keep track of bills, appointments, renewals, and all those important tasks that slip through the cracks."
+      description: "Keep track of bills, appointments, renewals, and all those important tasks."
     },
     {
-      icon: <Calendar className="w-8 h-8 text-green-600" />,
+      icon: <Calendar className="w-8 h-8" />,
       title: "Smart Scheduling",
-      description: "Set due dates and priorities to stay on top of deadlines with our intuitive calendar system."
+      description: "Set due dates and priorities to stay on top of deadlines with our intuitive calendar."
     },
     {
-      icon: <Bell className="w-8 h-8 text-orange-600" />,
+      icon: <Bell className="w-8 h-8" />,
       title: "Never Miss Again",
-      description: "Get organized with categorized tasks and visual progress tracking to maintain your life admin."
+      description: "Get organized with categorized tasks and visual progress tracking."
     },
     {
-      icon: <Target className="w-8 h-8 text-purple-600" />,
+      icon: <Target className="w-8 h-8" />,
       title: "Stay Focused",
-      description: "Streamlined interface designed specifically for life admin tasks - no distractions, just results."
+      description: "Streamlined interface designed specifically for life admin tasks - no distractions."
     }
   ];
   
@@ -36,7 +41,7 @@ export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       items: ["Utility bills & rent payments", "Insurance premiums", "Tax deadlines", "Subscription renewals"]
     },
     {
-      title: "🏥 Health & Wellness",
+      title: "🏥 Health",
       items: ["Doctor appointments", "Medication schedules", "Dental check-ups", "Fitness tracking"]
     },
     {
@@ -52,21 +57,32 @@ export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
       items: ["Important birthdays", "Travel planning", "Learning goals", "Social events"]
     },
     {
-      title: "📱 Digital Life",
+      title: "📱 Digital",
       items: ["Password updates", "Backup schedules", "Device upgrades", "Email management"]
     }
   ];
 
   return (
-    <div className="min-h-screen animate-fade-in">
-      <div className="container mx-auto px-4 py-8 md:py-16 max-w-6xl">
+    <div className="min-h-screen animate-fade-in bg-background/50">
+       <div 
+        className="absolute top-0 left-0 w-full h-full -z-10 opacity-10 dark:opacity-20"
+        style={{
+          backgroundImage: `radial-gradient(${theme?.colors.primary} 1px, transparent 1px), radial-gradient(${theme?.colors.secondary} 1px, transparent 1px)`,
+          backgroundSize: '40px 40px',
+          backgroundPosition: '0 0, 20px 20px',
+        }}
+      />
+      <div className="container mx-auto px-4 py-12 md:py-16 max-w-6xl">
         {/* Hero Section */}
-        <div className="text-center mb-12 md:mb-16">
+        <div className="text-center mb-16 md:mb-24">
           <div className="flex items-center justify-center mb-6">
             <div className="bg-background/20 backdrop-blur-sm p-3 md:p-4 rounded-2xl md:rounded-3xl shadow-lg mr-3 md:mr-4 border">
               <CheckSquare className="w-8 h-8 md:w-12 md:h-12 text-primary" />
             </div>
-            <h1 className="text-3xl md:text-5xl font-bold text-foreground">
+            <h1 
+              className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r"
+              style={{ backgroundImage: `linear-gradient(to right, ${theme?.colors.primary}, ${theme?.colors.secondary})` }}
+            >
               Life Admin
             </h1>
           </div>
@@ -80,72 +96,79 @@ export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             to renewals and deadlines. Never let important tasks slip through the cracks again.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button 
-              onClick={onGetStarted}
-              size="lg"
-              className="bg-foreground/10 hover:bg-foreground/20 text-foreground px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200 border border-border"
-            >
-              Get Started
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-            <Button 
-              variant="outline"
-              size="lg"
-              className="border-border bg-transparent backdrop-blur-sm text-foreground hover:bg-foreground/10 px-8 py-3 text-lg"
-            >
-              Explore Features
-            </Button>
+          <Button 
+            onClick={onGetStarted}
+            size="lg"
+            className="px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white animate-pulse-glow"
+            style={{ backgroundColor: theme?.colors.primary }}
+          >
+            Get Started for Free
+            <ArrowRight className="w-5 h-5 ml-2" />
+          </Button>
+        </div>
+
+        {/* Features Grid */}
+        <div className="mb-16 md:mb-24">
+           <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-10 md:mb-12">
+            Everything You Need to Get Organized
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {features.map((feature, index) => {
+              const color = index % 2 === 0 ? theme?.colors.primary : theme?.colors.secondary;
+              const bgColor = index % 2 === 0 ? `${theme?.colors.primary}20` : `${theme?.colors.secondary}20`;
+              return (
+                <div key={index} className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-border/50 hover:-translate-y-1 flex items-start gap-4">
+                  <div className="p-3 rounded-full" style={{backgroundColor: bgColor}}>
+                    {React.cloneElement(feature.icon, { style: { color: color } })}
+                  </div>
+                  <div>
+                    <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm md:text-base">
+                      {feature.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Features Grid - Mobile Responsive */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 md:mb-16">
-          {features.map((feature, index) => (
-            <div key={index} className="bg-background/20 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-border hover:-translate-y-1">
-              <div className="mb-4">
-                {feature.icon}
-              </div>
-              <h3 className="text-lg md:text-xl font-semibold text-foreground mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-muted-foreground text-sm md:text-base">
-                {feature.description}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Task Categories Preview - Mobile Responsive */}
-        <div className="bg-background/20 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-border">
-          <h2 className="text-2xl md:text-3xl font-bold text-center text-foreground mb-6 md:mb-8">
+        {/* Task Categories Preview */}
+        <div className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-border/50 mb-16 md:mb-24">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-8 md:mb-10">
             Organize Every Aspect of Your Life
           </h2>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-6 md:gap-8">
             {categoryLists.map((category) => (
-              <div key={category.title} className="space-y-2">
-                <h3 className="font-semibold text-foreground text-base md:text-lg">{category.title}</h3>
-                <ul className="text-xs md:text-sm text-muted-foreground space-y-1">
-                  {category.items.map(item => <li key={item}>• {item}</li>)}
+              <div key={category.title} className="space-y-3">
+                <h3 className="font-semibold text-foreground text-base md:text-lg flex items-center gap-2">
+                  <span className="text-2xl">{category.title.split(' ')[0]}</span>
+                  {category.title.split(' ').slice(1).join(' ')}
+                </h3>
+                <ul className="text-xs md:text-sm text-muted-foreground space-y-1.5 pl-2">
+                  {category.items.map(item => <li key={item} className="flex items-start gap-2"><CheckSquare className="w-3 h-3 mt-0.5 flex-shrink-0 text-primary" /><span>{item}</span></li>)}
                 </ul>
               </div>
             ))}
           </div>
         </div>
 
-        {/* CTA Section - Mobile Responsive */}
-        <div className="text-center mt-12 md:mt-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+        {/* CTA Section */}
+        <div className="text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Ready to Take Control?
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto px-4">
-            Join thousands who have simplified their life admin with our focused task management system.
+            Stop juggling tasks in your head. Start organizing your life admin today and reclaim your peace of mind.
           </p>
           <Button 
             onClick={onGetStarted}
             size="lg"
-            className="bg-foreground/10 hover:bg-foreground/20 text-foreground px-8 md:px-12 py-3 md:py-4 text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-200 border border-border"
+            className="px-8 md:px-12 py-3 md:py-4 text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white animate-pulse-glow"
+             style={{ backgroundColor: theme?.colors.primary }}
           >
             Start Organizing Today
             <ArrowRight className="w-5 h-5 md:w-6 md:h-6 ml-2" />
