@@ -240,8 +240,8 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
                       <div className="pl-4">
                         <Accordion type="single" collapsible className="w-full" value={selectedSubCategory} onValueChange={handleSubCategorySelect}>
                           {Object.keys(taskCategories[category as CategoryKey]).map((subCategory) => (
-                            <AccordionItem value={subCategory} key={subCategory}>
-                              <AccordionTrigger className="text-sm">{subCategory}</AccordionTrigger>
+                            <AccordionItem value={subCategory} key={subCategory} className="border border-muted rounded-md mb-1 last:mb-0">
+                              <AccordionTrigger className="text-sm hover:no-underline px-4">{subCategory}</AccordionTrigger>
                               <AccordionContent>
                                 <div className="pl-4 space-y-2">
                                   {(taskCategories[category as CategoryKey][subCategory as SubCategoryKey<CategoryKey>] as readonly string[]).map((task) => (
