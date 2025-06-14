@@ -1,4 +1,3 @@
-
 import { useNavigate } from 'react-router-dom';
 import { Task } from '../pages/Index';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -62,15 +61,15 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       {/* Overview Cards */}
       <Card 
-        className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full cursor-pointer"
+        className="bg-blue-50 border-0 shadow-lg hover:shadow-xl hover:bg-blue-100 transition-all duration-300 h-full cursor-pointer"
         onClick={() => navigate('/tasks/all')}
       >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium text-gray-600">Total Tasks</CardTitle>
-          <CheckCircle className="h-5 w-5 text-primary" />
+          <CheckCircle className="h-5 w-5 text-blue-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl md:text-3xl font-bold text-primary">{totalTasks}</div>
+          <div className="text-2xl md:text-3xl font-bold text-blue-600">{totalTasks}</div>
           <p className="text-sm text-gray-500">
             {completedTasks} completed
           </p>

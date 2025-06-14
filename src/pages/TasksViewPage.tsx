@@ -54,6 +54,8 @@ export const TasksViewPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, o
       applyTheme('red');
     } else if (filter === 'completed') {
       applyTheme('green');
+    } else if (filter === 'all') {
+      applyTheme('blue');
     } else {
       applyTheme(originalTheme);
     }
