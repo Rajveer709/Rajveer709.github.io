@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -23,6 +22,13 @@ const signInSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
   password: z.string().min(1, { message: "Password is required." }),
 });
+
+const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <title>Google</title>
+    <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.85 3.18-1.73 4.1-1.02 1.02-2.9 2.04-5.07 2.04-4.35 0-7.88-3.58-7.88-7.98s3.53-7.98 7.88-7.98c2.18 0 3.84.88 4.78 1.82l2.6-2.6C18.5 1.73 15.87 0 12.48 0 5.88 0 0 5.58 0 12s5.88 12 12.48 12c7.2 0 12.03-4.12 12.03-12.24 0-.76-.08-1.47-.2-2.16H12.48z" />
+  </svg>
+);
 
 export const AuthPage = () => {
   const navigate = useNavigate();
@@ -72,6 +78,21 @@ export const AuthPage = () => {
       navigate('/');
     }
     setLoading(false);
+  };
+
+  const handleSignInWithGoogle = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: window.location.origin,
+        },
+    });
+    if (error) {
+        toast.error(error.message);
+        setLoading(false);
+    }
+    // On success, Supabase handles the redirect, so no need to set loading to false.
   };
 
   return (
@@ -129,6 +150,20 @@ export const AuthPage = () => {
                     </Button>
                   </form>
                 </Form>
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-card px-2 text-muted-foreground">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+                <Button variant="outline" className="w-full" onClick={handleSignInWithGoogle} disabled={loading}>
+                  <GoogleIcon className="mr-2 h-4 w-4" />
+                  Sign In with Google
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -184,6 +219,20 @@ export const AuthPage = () => {
                     </Button>
                   </form>
                 </Form>
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-card px-2 text-muted-foreground">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+                <Button variant="outline" className="w-full" onClick={handleSignInWithGoogle} disabled={loading}>
+                  <GoogleIcon className="mr-2 h-4 w-4" />
+                  Sign Up with Google
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>
