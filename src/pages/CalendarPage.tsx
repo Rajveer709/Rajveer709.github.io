@@ -26,7 +26,7 @@ export const CalendarPage = ({ tasks, onBack, currentTheme }: CalendarPageProps)
     const b = parseInt(primaryColor.slice(5, 7), 16);
     
     return {
-        background: `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 0.2), hsl(var(--background)))`
+        background: `linear-gradient(to top, rgba(${r}, ${g}, ${b}, 0.2), hsl(var(--background)))`
     };
   };
 
