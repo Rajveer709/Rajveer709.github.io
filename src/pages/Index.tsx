@@ -227,6 +227,26 @@ const Index = () => {
     navigate('/');
   };
 
+  const handleStartOver = () => {
+    localStorage.removeItem('lifeAdminTasks');
+    localStorage.removeItem('lifeAdminTheme');
+    localStorage.removeItem('lifeAdminDarkMode');
+    localStorage.removeItem('lifeAdminUserLevel');
+    localStorage.removeItem('lifeAdminUserXp');
+    localStorage.removeItem('lifeAdminChallenges');
+    sessionStorage.removeItem('userHasOnboarded');
+
+    setTasks([]);
+    setCurrentTheme(defaultTheme);
+    setIsDarkMode(false);
+    setUserLevel(1);
+    setUserXp(0);
+    setChallenges(ALL_CHALLENGES_DEFINITIONS.map(c => ({...c, completed: false})));
+    
+    navigate('/landing', { replace: true });
+    toast.info("App has been reset. Welcome back!");
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Routes>
@@ -268,6 +288,7 @@ const Index = () => {
                       onThemeChange={handleThemeChange}
                       isDarkMode={isDarkMode}
                       onToggleDarkMode={handleToggleDarkMode}
+                      onStartOver={handleStartOver}
                     />
                   } />
                 </Routes>

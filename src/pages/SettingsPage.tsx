@@ -1,9 +1,20 @@
-import { ArrowLeft, Moon, Sun, User, Palette, Info } from 'lucide-react';
+import { ArrowLeft, Moon, Sun, User, Palette, Info, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { themes } from '../config/themes';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface SettingsPageProps {
   onBack: () => void;
@@ -11,9 +22,10 @@ interface SettingsPageProps {
   onThemeChange: (theme: string) => void;
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
+  onStartOver: () => void;
 }
 
-export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode }: SettingsPageProps) => {
+export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver }: SettingsPageProps) => {
   return (
     <div className="animate-fade-in space-y-6">
       <div className="flex items-center gap-4">
@@ -98,6 +110,27 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           </div>
         </CardContent>
       </Card>
+
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button variant="destructive" className="w-full">
+            <RotateCcw className="w-4 h-4 mr-2" />
+            Start Over
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete all your tasks, challenges, and settings, and return you to the landing page.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={onStartOver}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
