@@ -11,6 +11,8 @@ import { BottomNavBar } from '../components/BottomNavBar';
 import { themes, defaultTheme } from '../config/themes';
 import { ALL_CHALLENGES_DEFINITIONS } from '../config/challenges';
 import { hexToHsl } from '../lib/colorUtils';
+import { TasksViewPage } from './TasksViewPage';
+
 export interface Task {
   id: string;
   title: string;
@@ -23,17 +25,6 @@ export interface Task {
 }
 
 import { FunctionalChallengePage, Challenge as ChallengeWithCompleted } from './FunctionalChallengePage';
-
-export interface Task {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  dueDate: Date;
-  completed: boolean;
-  createdAt: Date;
-}
 
 export type Challenge = ChallengeWithCompleted;
 
@@ -108,8 +99,8 @@ const Index = () => {
     if (savedLevel) setUserLevel(JSON.parse(savedLevel));
     if (savedXp) setUserXp(JSON.parse(savedXp));
     if (savedChallenges) {
-      const parsedChallenges = JSON.parse(savedChallenges);
-      const challengeMap = new Map(parsedChallenges.map((c: Challenge) => [c.id, c.completed]));
+      const parsedChallenges: { id: number, completed: boolean }[] = JSON.parse(savedChallenges);
+      const challengeMap = new Map(parsedChallenges.map(c => [c.id, c.completed]));
       setChallenges(ALL_CHALLENGES_DEFINITIONS.map(c => ({
         ...c,
         completed: challengeMap.get(c.id) || false
