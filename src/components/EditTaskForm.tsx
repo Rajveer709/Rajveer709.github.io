@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Task } from '../pages/Index';
 import { Button } from '@/components/ui/button';
@@ -27,14 +26,15 @@ const categories = [
 const priorities = [
   { value: 'low', label: 'Low Priority' },
   { value: 'medium', label: 'Medium Priority' },
-  { value: 'high', label: 'High Priority' }
+  { value: 'high', label: 'High Priority' },
+  { value: 'urgent', label: 'Urgent Priority' }
 ];
 
 export const EditTaskForm = ({ task, onEditTask }: EditTaskFormProps) => {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [category, setCategory] = useState(task.category);
-  const [priority, setPriority] = useState<'low' | 'medium' | 'high'>(task.priority);
+  const [priority, setPriority] = useState<'low' | 'medium' | 'high' | 'urgent'>(task.priority);
   const [dueDate, setDueDate] = useState<Date>(new Date(task.dueDate));
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -92,7 +92,7 @@ export const EditTaskForm = ({ task, onEditTask }: EditTaskFormProps) => {
         </div>
 
         <div>
-          <Select value={priority} onValueChange={(value: 'low' | 'medium' | 'high') => setPriority(value)}>
+          <Select value={priority} onValueChange={(value: 'low' | 'medium' | 'high' | 'urgent') => setPriority(value)}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
