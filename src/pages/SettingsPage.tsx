@@ -1,4 +1,3 @@
-
 import { ArrowLeft, Moon, Sun, User, Palette, Info, RotateCcw, Lock, LogOut, EyeOff, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,6 +24,7 @@ import { Slider } from '@/components/ui/slider';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { format } from 'date-fns';
 import { Task } from './Index';
+import { HackDialog } from '../components/HackDialog';
 
 interface Profile {
   id: string;
@@ -50,9 +50,10 @@ interface SettingsPageProps {
   onCardLightnessChange: (value: number) => void;
   tasks: Task[];
   onRestoreTask: (taskId: string) => void;
+  onUnlockAll: () => void;
 }
 
-export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver, userLevel, user, profile, onUpdateProfile, onSignOut, backgroundLightness, onBackgroundLightnessChange, cardLightness, onCardLightnessChange, tasks, onRestoreTask }: SettingsPageProps) => {
+export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver, userLevel, user, profile, onUpdateProfile, onSignOut, backgroundLightness, onBackgroundLightnessChange, cardLightness, onCardLightnessChange, tasks, onRestoreTask, onUnlockAll }: SettingsPageProps) => {
   const [name, setName] = useState(profile?.name || '');
   const [isEditing, setIsEditing] = useState(false);
   const hiddenTasks = tasks.filter(task => task.hidden);
@@ -65,7 +66,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
 
   return (
     <TooltipProvider>
-      <div className="animate-fade-in space-y-6">
+      <div className="animate-fade-in space-y-6 pb-8">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={onBack}>
             <ArrowLeft className="w-5 h-5" />
@@ -289,6 +290,10 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        <div className="pt-2 text-center">
+          <HackDialog onUnlock={onUnlockAll} />
+        </div>
       </div>
     </TooltipProvider>
   );

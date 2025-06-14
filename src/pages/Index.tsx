@@ -31,8 +31,6 @@ export interface Task {
   hidden?: boolean;
 }
 
-import { ChallengePage, Challenge as ChallengeWithCompleted } from './ChallengePage';
-
 export type Challenge = ChallengeWithCompleted;
 
 export interface Profile {
@@ -366,6 +364,14 @@ const Index = () => {
     toast.info("App has been reset. Welcome back!");
   };
   
+  const handleUnlockAll = () => {
+    setUserLevel(100);
+    setUserXp(0);
+    toast.success("Cheats activated! Everything unlocked.", {
+        description: "Enjoy your god-like status!",
+    });
+  };
+
   const handleUpdateProfile = async (updatedProfile: Partial<Profile>) => {
     if (!user || !profile) return;
 
@@ -462,6 +468,7 @@ const Index = () => {
                     onCardLightnessChange={handleCardLightnessChange}
                     tasks={tasks}
                     onRestoreTask={restoreTask}
+                    onUnlockAll={handleUnlockAll}
                   />
                 </PageTransition>
               } />
