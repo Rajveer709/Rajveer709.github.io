@@ -1,3 +1,4 @@
+
 import { Task } from '../pages/Index';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -63,7 +64,7 @@ export const TaskDashboard = ({ tasks, filter, onFilterChange }: TaskDashboardPr
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       {/* Overview Cards */}
-      <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+      <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Total Tasks</CardTitle>
           <CheckCircle className="h-4 w-4 text-primary" />
@@ -76,7 +77,7 @@ export const TaskDashboard = ({ tasks, filter, onFilterChange }: TaskDashboardPr
         </CardContent>
       </Card>
 
-      <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+      <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Overdue</CardTitle>
           <AlertTriangle className="h-4 w-4 text-destructive" />
@@ -89,55 +90,59 @@ export const TaskDashboard = ({ tasks, filter, onFilterChange }: TaskDashboardPr
         </CardContent>
       </Card>
 
-      <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+      <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Due This Week</CardTitle>
           <Clock className="h-4 w-4 text-orange-500" />
         </CardHeader>
-        <CardContent>
-          <div className="text-xl md:text-2xl font-bold text-orange-600">{upcomingTasks}</div>
-          <p className="text-xs text-gray-500 mb-2">
-            Coming up soon
-          </p>
+        <CardContent className="flex flex-col h-full">
+          <div>
+            <div className="text-xl md:text-2xl font-bold text-orange-600">{upcomingTasks}</div>
+            <p className="text-xs text-gray-500 mb-2">
+              Coming up soon
+            </p>
+          </div>
           <Button
             onClick={() => onFilterChange('pending')}
             variant={filter === 'pending' ? 'default' : 'outline'}
             className={cn(
-              "w-full mt-1 text-xs h-8",
+              "w-full mt-auto text-xs h-8",
               filter === 'pending'
                 ? 'bg-orange-500 hover:bg-orange-600 text-white'
-                : 'text-orange-600 border-orange-500 hover:bg-orange-100 hover:text-orange-700'
+                : 'text-orange-600 border-orange-500 hover:bg-orange-100 hover:text-orange-700 dark:text-orange-400 dark:border-orange-500 dark:hover:bg-orange-900 dark:hover:text-orange-300'
             )}
           >
-            View Pending
+            View Pending Task
           </Button>
         </CardContent>
       </Card>
 
-      <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+      <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Completion</CardTitle>
           <Calendar className="h-4 w-4 text-green-500" />
         </CardHeader>
-        <CardContent>
-          <div className="text-xl md:text-2xl font-bold text-green-600">
-            {completionPercentage}%
+        <CardContent className="flex flex-col h-full">
+          <div>
+            <div className="text-xl md:text-2xl font-bold text-green-600">
+              {completionPercentage}%
+            </div>
+            <Progress value={completionPercentage} className="h-2 mt-2" />
+            <p className="text-xs text-gray-500 mt-1 mb-2">
+              {completedTasks} of {totalTasks} tasks
+            </p>
           </div>
-          <Progress value={completionPercentage} className="h-2 mt-2" />
-          <p className="text-xs text-gray-500 mt-1 mb-2">
-            {completedTasks} of {totalTasks} tasks
-          </p>
           <Button
             onClick={() => onFilterChange('completed')}
             variant={filter === 'completed' ? 'default' : 'outline'}
             className={cn(
-              "w-full mt-1 text-xs h-8",
+              "w-full mt-auto text-xs h-8",
               filter === 'completed'
                 ? 'bg-green-500 hover:bg-green-600 text-white'
-                : 'text-green-600 border-green-500 hover:bg-green-100 hover:text-green-700'
+                : 'text-green-600 border-green-500 hover:bg-green-100 hover:text-green-700 dark:text-green-400 dark:border-green-500 dark:hover:bg-green-900 dark:hover:text-green-300'
             )}
           >
-            View Completed
+            View Completed Task
           </Button>
         </CardContent>
       </Card>
