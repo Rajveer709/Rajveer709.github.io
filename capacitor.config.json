@@ -1,0 +1,10 @@
+
+{
+  "appId": "app.lovable.ec18fd2a3dec46dd9e4f59c8fa9be4db",
+  "appName": "life-admin-zen",
+  "webDir": "dist",
+  "server": {
+    "url": "https://ec18fd2a-3dec-46dd-9e4f-59c8fa9be4db.lovableproject.com?forceHideBadge=true",
+    "cleartext": true
+  }
+}

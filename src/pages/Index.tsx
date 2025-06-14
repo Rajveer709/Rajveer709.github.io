@@ -1,12 +1,12 @@
+
 import { useState, useEffect } from 'react';
-import { TaskDashboard } from '../components/TaskDashboard';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { DashboardPage } from './DashboardPage';
 import { AddTaskPage } from './AddTaskPage';
-import { TaskList } from '../components/TaskList';
+import { CalendarPage } from './CalendarPage';
 import { Header } from '../components/Header';
 import { LandingPage } from '../components/LandingPage';
-import { CalendarPage } from './CalendarPage';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { BottomNavBar } from '../components/BottomNavBar';
 import { themes, defaultTheme } from '../config/themes';
 import { hexToHsl } from '../lib/colorUtils';
 
@@ -23,10 +23,10 @@ export interface Task {
 
 const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [showApp, setShowApp] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [showAddTask, setShowAddTask] = useState(false);
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isLandingPage = location.pathname === '/landing';
 
   const applyTheme = (themeValue: string) => {
     const theme = themes.find(t => t.value === themeValue) || themes.find(t => t.value === defaultTheme);
@@ -41,7 +41,17 @@ const Index = () => {
     }
   };
 
-  // Load tasks from localStorage on component mount
+  useEffect(() => {
+    const savedTasks = localStorage.getItem('lifeAdminTasks');
+    const hasTasks = savedTasks && JSON.parse(savedTasks).length > 0;
+
+    if (isLandingPage && hasTasks) {
+      navigate('/', { replace: true });
+    } else if (!isLandingPage && !hasTasks) {
+      navigate('/landing', { replace: true });
+    }
+  }, [isLandingPage, navigate]);
+
   useEffect(() => {
     const savedTasks = localStorage.getItem('lifeAdminTasks');
     if (savedTasks) {
@@ -51,17 +61,12 @@ const Index = () => {
         createdAt: new Date(task.createdAt)
       }));
       setTasks(parsedTasks);
-      // If user has tasks, show the app directly
-      if (parsedTasks.length > 0) {
-        setShowApp(true);
-      }
     }
     const savedTheme = localStorage.getItem('lifeAdminTheme') || defaultTheme;
     setCurrentTheme(savedTheme);
     applyTheme(savedTheme);
   }, []);
 
-  // Save tasks to localStorage whenever tasks change
   useEffect(() => {
     localStorage.setItem('lifeAdminTasks', JSON.stringify(tasks));
   }, [tasks]);
@@ -72,7 +77,8 @@ const Index = () => {
       id: Date.now().toString(),
       createdAt: new Date()
     };
-    setTasks(prev => [...prev, task]);
+    setTasks(prev => [...prev, task].sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime()));
+    navigate('/');
   };
 
   const toggleTask = (taskId: string) => {
@@ -95,12 +101,8 @@ const Index = () => {
         task.id === taskId 
           ? { ...task, ...updatedTask }
           : task
-      )
+      ).sort((a, b) => a.dueDate.getTime() - b.dueDate.getTime())
     );
-  };
-
-  const handleGetStarted = () => {
-    setShowApp(true);
   };
 
   const getThemeBackgroundStyle = () => {
@@ -113,7 +115,7 @@ const Index = () => {
     const b = parseInt(primaryColor.slice(5, 7), 16);
     
     return {
-        background: `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 0.1), white)`
+        background: `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 0.05), hsl(var(--background)))`
     };
   };
 
@@ -123,76 +125,27 @@ const Index = () => {
     applyTheme(theme);
   };
 
-  const handleCalendarClick = () => {
-    setShowCalendar(true);
-  };
-
-  const handleBackFromCalendar = () => {
-    setShowCalendar(false);
-  };
-
-  const handleAddTaskClick = () => {
-    setShowAddTask(true);
-  };
-
-  const handleBackFromAddTask = () => {
-    setShowAddTask(false);
-  };
-
-  if (!showApp) {
-    return <LandingPage onGetStarted={handleGetStarted} currentTheme={currentTheme} />;
-  }
-
-  if (showCalendar) {
-    return (
-      <CalendarPage 
-        tasks={tasks} 
-        onBack={handleBackFromCalendar} 
-        currentTheme={currentTheme}
-      />
-    );
-  }
-
-  if (showAddTask) {
-    return (
-      <AddTaskPage 
-        onAddTask={addTask}
-        onBack={handleBackFromAddTask}
-        currentTheme={currentTheme}
-      />
-    );
-  }
-
   return (
     <div className="min-h-screen" style={getThemeBackgroundStyle()}>
-      <div className="container mx-auto px-4 py-6 md:py-8 max-w-6xl">
-        <Header 
-          onThemeChange={handleThemeChange} 
-          currentTheme={currentTheme}
-          onCalendarClick={handleCalendarClick}
-        />
+      <Routes>
+        <Route path="/landing" element={<LandingPage onGetStarted={() => navigate('/')} currentTheme={currentTheme} />} />
         
-        <div className="mb-6 md:mb-8">
-          <TaskDashboard tasks={tasks} />
-        </div>
-
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <h2 className="text-xl md:text-2xl font-semibold text-primary">Your Tasks</h2>
-          <Button 
-            onClick={handleAddTaskClick}
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Task
-          </Button>
-        </div>
-
-        <TaskList 
-          tasks={tasks}
-          onToggleTask={toggleTask}
-          onDeleteTask={deleteTask}
-          onEditTask={editTask}
-        />
-      </div>
+        <Route path="*" element={
+          <>
+            <div className="container mx-auto px-4 py-6 md:py-8 max-w-6xl pb-20 md:pb-8">
+              <Header onThemeChange={handleThemeChange} currentTheme={currentTheme} onCalendarClick={() => navigate('/calendar')} />
+              <main className="animate-fade-in">
+                <Routes>
+                  <Route path="/" element={<DashboardPage tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} />} />
+                  <Route path="/add-task" element={<AddTaskPage onAddTask={addTask} onBack={() => navigate(-1)} currentTheme={currentTheme} />} />
+                  <Route path="/calendar" element={<CalendarPage tasks={tasks} onBack={() => navigate(-1)} currentTheme={currentTheme} />} />
+                </Routes>
+              </main>
+            </div>
+            <BottomNavBar onThemeChange={handleThemeChange} currentTheme={currentTheme} />
+          </>
+        } />
+      </Routes>
     </div>
   );
 };

@@ -27,11 +27,13 @@ export const Header = ({ onThemeChange, currentTheme, onCalendarClick }: HeaderP
             variant="ghost" 
             size="icon" 
             onClick={onCalendarClick}
-            className="text-foreground/80 hover:text-foreground hover:bg-foreground/10"
+            className="hidden md:inline-flex text-foreground/80 hover:text-foreground hover:bg-foreground/10"
           >
             <Calendar className="w-5 h-5" />
           </Button>
-          <SettingsDialog onThemeChange={onThemeChange} currentTheme={currentTheme} />
+          <div className="hidden md:block">
+            <SettingsDialog onThemeChange={onThemeChange} currentTheme={currentTheme} />
+          </div>
         </div>
       </div>
       <p className="text-lg md:text-xl font-medium text-foreground/90 mb-2">
