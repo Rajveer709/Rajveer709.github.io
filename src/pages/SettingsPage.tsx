@@ -1,4 +1,4 @@
-import { ArrowLeft, Moon, Sun, User, Palette, Info, RotateCcw, Lock, LogOut } from 'lucide-react';
+import { ArrowLeft, Moon, Sun, User, Palette, Info, RotateCcw, Lock, LogOut, EyeOff, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
@@ -20,6 +20,9 @@ import { User as SupabaseUser } from '@supabase/supabase-js';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { format } from 'date-fns';
+import { Task } from './Index';
 
 interface Profile {
   id: string;
@@ -43,11 +46,14 @@ interface SettingsPageProps {
   onBackgroundLightnessChange: (value: number) => void;
   cardLightness: number;
   onCardLightnessChange: (value: number) => void;
+  tasks: Task[];
+  onRestoreTask: (taskId: string) => void;
 }
 
-export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver, userLevel, user, profile, onUpdateProfile, onSignOut, backgroundLightness, onBackgroundLightnessChange, cardLightness, onCardLightnessChange }: SettingsPageProps) => {
+export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver, userLevel, user, profile, onUpdateProfile, onSignOut, backgroundLightness, onBackgroundLightnessChange, cardLightness, onCardLightnessChange, tasks, onRestoreTask }: SettingsPageProps) => {
   const [name, setName] = useState(profile?.name || '');
   const [isEditing, setIsEditing] = useState(false);
+  const hiddenTasks = tasks.filter(task => task.hidden);
   
   const handleSaveProfile = () => {
     onUpdateProfile({ name });
@@ -199,6 +205,46 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
             </div>
           </CardContent>
         </Card>
+
+        {hiddenTasks.length > 0 && (
+          <Card className="animate-scale-in" style={{ animationDelay: '300ms' }}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <EyeOff className="w-5 h-5" />
+                <span>Hidden Tasks</span>
+              </CardTitle>
+              <CardDescription>
+                Restore tasks that you've hidden from your main list.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible className="w-full">
+                {hiddenTasks.map((task) => (
+                  <AccordionItem value={task.id} key={task.id}>
+                    <AccordionTrigger className="hover:no-underline">
+                      <span className="truncate">{task.title}</span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm text-muted-foreground">
+                          Due: {format(new Date(task.dueDate), 'P')}
+                        </p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onRestoreTask(task.id)}
+                        >
+                          <Eye className="w-4 h-4 mr-2" />
+                          Restore Task
+                        </Button>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </CardContent>
+          </Card>
+        )}
 
         <Card className="animate-scale-in" style={{ animationDelay: '300ms' }}>
           <CardHeader>

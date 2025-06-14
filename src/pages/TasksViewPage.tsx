@@ -10,6 +10,7 @@ interface TasksViewPageProps {
   onToggleTask: (taskId: string) => void;
   onDeleteTask: (taskId: string) => void;
   onEditTask: (taskId: string, updatedTask: Partial<Task>) => void;
+  onHideTask: (taskId: string) => void;
   onBack: () => void;
   applyTheme: (theme: string) => void;
   currentTheme: string;
@@ -39,7 +40,7 @@ const filterConfig: { [key: string]: { title: string; filterFn: (task: Task) => 
   },
 };
 
-export const TasksViewPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, onBack, applyTheme, currentTheme }: TasksViewPageProps) => {
+export const TasksViewPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, onBack, applyTheme, currentTheme, onHideTask }: TasksViewPageProps) => {
   const { filter } = useParams<{ filter: string }>();
   const currentConfig = filterConfig[filter || 'all'] || filterConfig.all;
   
@@ -90,6 +91,7 @@ export const TasksViewPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, o
         onToggleTask={onToggleTask}
         onDeleteTask={onDeleteTask}
         onEditTask={onEditTask}
+        onHideTask={onHideTask}
       />
     </div>
   );

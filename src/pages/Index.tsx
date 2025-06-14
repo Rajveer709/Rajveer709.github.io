@@ -25,6 +25,7 @@ export interface Task {
   dueDate: Date;
   completed: boolean;
   createdAt: Date;
+  hidden?: boolean;
 }
 
 import { ChallengePage, Challenge as ChallengeWithCompleted } from './ChallengePage';
@@ -144,7 +145,8 @@ const Index = () => {
       const parsedTasks = JSON.parse(savedTasks).map((task: any) => ({
         ...task,
         dueDate: new Date(task.dueDate),
-        createdAt: new Date(task.createdAt)
+        createdAt: new Date(task.createdAt),
+        hidden: task.hidden || false,
       }));
       setTasks(parsedTasks);
     }
@@ -301,6 +303,24 @@ const Index = () => {
     );
   };
 
+  const hideTask = (taskId: string) => {
+    setTasks(prev =>
+      prev.map(task =>
+        task.id === taskId ? { ...task, hidden: true } : task
+      )
+    );
+    toast.info("Task hidden.");
+  };
+
+  const restoreTask = (taskId: string) => {
+    setTasks(prev =>
+      prev.map(task =>
+        task.id === taskId ? { ...task, hidden: false } : task
+      )
+    );
+    toast.success("Task restored.");
+  };
+
   const handleThemeChange = (theme: string) => {
     setCurrentTheme(theme);
     if (user) {
@@ -400,7 +420,7 @@ const Index = () => {
               />
               <main>
                 <Routes>
-                  <Route path="/" element={<DashboardPage tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} />} />
+                  <Route path="/" element={<DashboardPage tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} onHideTask={hideTask} />} />
                   <Route path="/add-task" element={<AddTaskPage onAddTask={addTask} onBack={() => navigate(-1)} currentTheme={currentTheme} profile={profile} />} />
                   <Route path="/calendar" element={<CalendarPage tasks={tasks} onBack={() => navigate(-1)} />} />
                   <Route path="/challenges" element={
@@ -418,6 +438,7 @@ const Index = () => {
                       onToggleTask={toggleTask}
                       onDeleteTask={deleteTask}
                       onEditTask={editTask}
+                      onHideTask={hideTask}
                       onBack={() => navigate(-1)}
                       applyTheme={(theme) => applyTheme(theme, isDarkMode)}
                       currentTheme={currentTheme}
@@ -440,6 +461,8 @@ const Index = () => {
                       onBackgroundLightnessChange={handleBackgroundLightnessChange}
                       cardLightness={cardLightness}
                       onCardLightnessChange={handleCardLightnessChange}
+                      tasks={tasks}
+                      onRestoreTask={restoreTask}
                     />
                   } />
                 </Routes>

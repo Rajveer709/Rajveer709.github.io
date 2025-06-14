@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Task } from '../pages/Index';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,7 +13,8 @@ import {
   Trash,
   Pencil,
   Calendar as CalendarIcon,
-  AlertTriangle
+  AlertTriangle,
+  EyeOff
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { EditTaskForm } from './EditTaskForm';
@@ -25,6 +25,7 @@ interface TaskCardProps {
   onToggle: () => void;
   onDelete: () => void;
   onEdit: (updatedTask: Partial<Task>) => void;
+  onHide: () => void;
 }
 
 const categoryIcons: { [key: string]: any } = {
@@ -49,7 +50,7 @@ const priorityColors: { [key: string]: string } = {
   'high': 'bg-red-100 text-red-800 border-red-200'
 };
 
-export const TaskCard = ({ task, onToggle, onDelete, onEdit }: TaskCardProps) => {
+export const TaskCard = ({ task, onToggle, onDelete, onEdit, onHide }: TaskCardProps) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   
   const Icon = categoryIcons[task.category] || FileText;
@@ -127,6 +128,11 @@ export const TaskCard = ({ task, onToggle, onDelete, onEdit }: TaskCardProps) =>
           </div>
           
           <div className="flex items-center space-x-2 ml-4">
+            {task.completed && (
+              <Button variant="ghost" size="sm" onClick={onHide} className="text-gray-500 hover:text-blue-600">
+                <EyeOff className="w-4 h-4" />
+              </Button>
+            )}
             <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
               <DialogTrigger asChild>
                 <Button variant="ghost" size="sm" className="text-gray-500 hover:text-blue-600">

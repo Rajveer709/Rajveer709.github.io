@@ -1,4 +1,3 @@
-
 import { Task } from './Index';
 import { TaskDashboard } from '../components/TaskDashboard';
 import { TaskList } from '../components/TaskList';
@@ -10,9 +9,10 @@ interface DashboardPageProps {
   onToggleTask: (taskId: string) => void;
   onDeleteTask: (taskId: string) => void;
   onEditTask: (taskId: string, updatedTask: Partial<Task>) => void;
+  onHideTask: (taskId: string) => void;
 }
 
-export const DashboardPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask }: DashboardPageProps) => {
+export const DashboardPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, onHideTask }: DashboardPageProps) => {
   const completedTasks = tasks.filter(task => task.completed).length;
   const totalTasks = tasks.length;
   const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
@@ -53,6 +53,7 @@ export const DashboardPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask }:
         onToggleTask={onToggleTask}
         onDeleteTask={onDeleteTask}
         onEditTask={onEditTask}
+        onHideTask={onHideTask}
       />
     </>
   );

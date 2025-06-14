@@ -7,18 +7,20 @@ interface TaskListProps {
   onToggleTask: (taskId: string) => void;
   onDeleteTask: (taskId: string) => void;
   onEditTask: (taskId: string, updatedTask: Partial<Task>) => void;
+  onHideTask: (taskId: string) => void;
 }
 
-export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onEditTask }: TaskListProps) => {
+export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onEditTask, onHideTask }: TaskListProps) => {
+  const visibleTasks = tasks.filter(task => !task.hidden);
   // Sort tasks: incomplete first (by due date), then completed
-  const sortedTasks = [...tasks].sort((a, b) => {
+  const sortedTasks = [...visibleTasks].sort((a, b) => {
     if (a.completed !== b.completed) {
       return a.completed ? 1 : -1;
     }
     return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
   });
 
-  if (tasks.length === 0) {
+  if (visibleTasks.length === 0) {
     return (
       <div className="text-center py-12 animate-fade-in">
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg max-w-md mx-auto">
@@ -38,6 +40,7 @@ export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onEditTask }: Task
               onToggle={() => onToggleTask(task.id)}
               onDelete={() => onDeleteTask(task.id)}
               onEdit={(updatedTask) => onEditTask(task.id, updatedTask)}
+              onHide={() => onHideTask(task.id)}
             />
         </div>
       ))}
