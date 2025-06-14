@@ -23,6 +23,7 @@ interface AddTaskPageProps {
   onAddTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
   onBack: () => void;
   currentTheme: string;
+  profile: { name: string | null } | null;
 }
 
 const taskCategories = {
@@ -82,6 +83,9 @@ const taskCategories = {
     'Pet Care': ['Vet Visits', 'Grooming'],
     'Child-Related activities': ['School', 'Appointments'],
     'Deliveries': ['Parcel Tracking', 'Home Deliveries']
+  },
+  'Hidden Hacking Features': {
+    'Secret Stuff': ['Click for a surprise 🎉']
   }
 } as const;
 
@@ -124,7 +128,7 @@ const getThemeBackgroundStyle = (currentTheme: string, resolvedTheme: string | u
     };
 };
 
-export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProps) => {
+export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTaskPageProps) => {
   const { resolvedTheme } = useTheme();
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedSubCategory, setSelectedSubCategory] = useState<string>('');
@@ -136,6 +140,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
   const [showStreamingDialog, setShowStreamingDialog] = useState(false);
   const [showMedicationDialog, setShowMedicationDialog] = useState(false);
   const [showVehicleDialog, setShowVehicleDialog] = useState(false);
+  const [showRickRollDialog, setShowRickRollDialog] = useState(false);
   const [streamingApp, setStreamingApp] = useState('');
   const [medicineName, setMedicineName] = useState('');
   const [selectedFluid, setSelectedFluid] = useState('');
@@ -169,6 +174,10 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
     }
     if (task === 'Oil changes & Top-up') {
       setShowVehicleDialog(true);
+      return;
+    }
+    if (task === 'Click for a surprise 🎉') {
+      setShowRickRollDialog(true);
       return;
     }
     
@@ -431,6 +440,29 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
                   Cancel
                 </Button>
               </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* RickRoll Dialog */}
+        <Dialog open={showRickRollDialog} onOpenChange={setShowRickRollDialog}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>A surprise for you!</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 text-center">
+              <img src="/lovable-uploads/0b3245b2-4eeb-423d-8ab4-93b3c1d6efc8.png" alt="Rick Astley" className="rounded-lg" />
+              <p className="text-lg font-semibold">
+                You have been RickRolled{profile?.name ? `, ${profile.name.split(' ')[0]}` : ''}!
+              </p>
+              <Button onClick={() => {
+                setShowRickRollDialog(false);
+                setSelectedCategory('');
+                setSelectedSubCategory('');
+                setSelectedTask('');
+              }}>
+                Close
+              </Button>
             </div>
           </DialogContent>
         </Dialog>

@@ -368,7 +368,7 @@ const Index = () => {
               <main>
                 <Routes>
                   <Route path="/" element={<DashboardPage tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} />} />
-                  <Route path="/add-task" element={<AddTaskPage onAddTask={addTask} onBack={() => navigate(-1)} currentTheme={currentTheme} />} />
+                  <Route path="/add-task" element={<AddTaskPage onAddTask={addTask} onBack={() => navigate(-1)} currentTheme={currentTheme} profile={profile} />} />
                   <Route path="/calendar" element={<CalendarPage tasks={tasks} onBack={() => navigate(-1)} />} />
                   <Route path="/challenges" element={
                     <ChallengePage 
