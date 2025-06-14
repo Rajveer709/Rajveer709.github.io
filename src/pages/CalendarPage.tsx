@@ -1,3 +1,4 @@
+
 import { Task } from './Index';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -61,19 +62,19 @@ export const CalendarPage = ({ tasks, onBack, currentTheme }: CalendarPageProps)
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
-          <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border">
+          <div className="bg-background/60 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-primary/20">
             <h2 className="text-lg font-semibold mb-4 text-primary text-center">Select Date</h2>
             <div className="flex justify-center">
               <Calendar
                 mode="single"
                 selected={selectedDate}
                 onSelect={(date) => date && setSelectedDate(date)}
-                className="rounded-lg border shadow-sm pointer-events-auto bg-card"
+                className="rounded-lg border border-primary/20 shadow-sm pointer-events-auto bg-transparent"
               />
             </div>
           </div>
 
-          <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border">
+          <div className="bg-background/60 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-primary/20">
             <h2 className="text-lg font-semibold mb-4 text-primary">
               Tasks for {format(selectedDate, "MMMM d, yyyy")}
             </h2>
