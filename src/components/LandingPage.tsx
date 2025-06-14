@@ -63,7 +63,7 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
   ];
 
   return (
-    <div className="min-h-screen animate-fade-in bg-background/50">
+    <div className="min-h-screen bg-background/50 overflow-x-hidden">
        <div 
         className="absolute top-0 left-0 w-full h-full -z-10 opacity-10 dark:opacity-20"
         style={{
@@ -75,7 +75,7 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
       <div className="container mx-auto px-4 py-12 md:py-16 max-w-6xl">
         {/* Hero Section */}
         <div className="text-center mb-16 md:mb-24">
-          <div className="flex items-center justify-center mb-6">
+          <div className="flex items-center justify-center mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
             <div className="bg-background/20 backdrop-blur-sm p-3 md:p-4 rounded-2xl md:rounded-3xl shadow-lg mr-3 md:mr-4 border">
               <CheckSquare className="w-8 h-8 md:w-12 md:h-12 text-primary" />
             </div>
@@ -87,29 +87,31 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
             </h1>
           </div>
           
-          <p className="text-xl md:text-2xl font-medium text-foreground/90 mb-4">
+          <p className="text-xl md:text-2xl font-medium text-foreground/90 mb-4 animate-fade-in" style={{ animationDelay: '200ms' }}>
             Simplify Life. One Task at a Time.
           </p>
           
-          <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 px-4">
+          <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 px-4 animate-fade-in" style={{ animationDelay: '300ms' }}>
             The focused task manager for all your important life admin - from bills and appointments 
             to renewals and deadlines. Never let important tasks slip through the cracks again.
           </p>
 
-          <Button 
-            onClick={onGetStarted}
-            size="lg"
-            className="px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white animate-pulse-glow"
-            style={{ backgroundColor: theme?.colors.primary }}
-          >
-            Get Started for Free
-            <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
+          <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
+            <Button 
+              onClick={onGetStarted}
+              size="lg"
+              className="px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white animate-pulse-glow"
+              style={{ backgroundColor: theme?.colors.primary }}
+            >
+              Get Started for Free
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </div>
         </div>
 
         {/* Features Grid */}
         <div className="mb-16 md:mb-24">
-           <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-10 md:mb-12">
+           <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-10 md:mb-12 animate-fade-in" style={{ animationDelay: '500ms' }}>
             Everything You Need to Get Organized
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -117,7 +119,7 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
               const color = index % 2 === 0 ? theme?.colors.primary : theme?.colors.secondary;
               const bgColor = index % 2 === 0 ? `${theme?.colors.primary}20` : `${theme?.colors.secondary}20`;
               return (
-                <div key={index} className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-border/50 hover:-translate-y-1 flex items-start gap-4">
+                <div key={index} className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-border/50 hover:-translate-y-1 flex items-start gap-4 animate-fade-in" style={{ animationDelay: `${600 + index * 100}ms`}}>
                   <div className="p-3 rounded-full" style={{backgroundColor: bgColor}}>
                     {React.cloneElement(feature.icon, { style: { color: color } })}
                   </div>
@@ -136,7 +138,7 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
         </div>
 
         {/* Task Categories Preview */}
-        <div className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-border/50 mb-16 md:mb-24">
+        <div className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-border/50 mb-16 md:mb-24 animate-fade-in" style={{ animationDelay: '1000ms' }}>
           <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-8 md:mb-10">
             Organize Every Aspect of Your Life
           </h2>
@@ -157,7 +159,7 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
         </div>
 
         {/* CTA Section */}
-        <div className="text-center">
+        <div className="text-center animate-fade-in" style={{ animationDelay: '1200ms' }}>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Ready to Take Control?
           </h2>
