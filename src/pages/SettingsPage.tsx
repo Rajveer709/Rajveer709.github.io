@@ -59,7 +59,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           <h1 className="text-2xl font-semibold">Settings</h1>
         </div>
 
-        <Card>
+        <Card className="animate-scale-in" style={{ animationDelay: '100ms' }}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <User className="w-5 h-5" />
@@ -103,7 +103,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           </CardFooter>
         </Card>
 
-        <Card>
+        <Card className="animate-scale-in" style={{ animationDelay: '200ms' }}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <Palette className="w-5 h-5" />
@@ -168,7 +168,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="animate-scale-in" style={{ animationDelay: '300ms' }}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <Info className="w-5 h-5" />
@@ -185,7 +185,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive" className="w-full">
+            <Button variant="destructive" className="w-full animate-scale-in" style={{ animationDelay: '400ms' }}>
               <RotateCcw className="w-4 h-4 mr-2" />
               Start Over
             </Button>

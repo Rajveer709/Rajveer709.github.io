@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -111,15 +112,38 @@ export default {
         'pulse-glow': {
             '0%, 100%': { boxShadow: '0 0 12px -2px hsl(var(--primary))' },
             '50%': { boxShadow: '0 0 12px 2px hsl(var(--primary))' },
-        }
+        },
+        "scale-in": {
+          "0%": {
+            transform: "scale(0.95)",
+            opacity: "0"
+          },
+          "100%": {
+            transform: "scale(1)",
+            opacity: "1"
+          }
+        },
+        "slide-in-from-left": {
+          "0%": {
+            transform: "translateX(-20px)",
+            opacity: "0"
+          },
+          "100%": {
+            transform: "translateX(0)",
+            opacity: "1"
+          }
+        },
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
         "fade-in": "fade-in 0.5s ease-out forwards",
         'pulse-glow': 'pulse-glow 2.5s ease-in-out infinite',
+        "scale-in": "scale-in 0.3s ease-out forwards",
+        "slide-in-from-left": "slide-in-from-left 0.5s ease-out forwards",
 			}
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+

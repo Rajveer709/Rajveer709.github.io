@@ -62,7 +62,7 @@ export const TaskCard = ({ task, onToggle, onDelete, onEdit }: TaskCardProps) =>
   };
 
   return (
-    <Card className={`bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 ${
+    <Card className={`bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${
       task.completed ? 'opacity-60' : ''
     } ${isOverdue ? 'ring-2 ring-red-200' : ''}`}>
       <CardContent className="p-6">
