@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -44,7 +43,10 @@ export const SettingsDialog = ({ onThemeChange, currentTheme }: SettingsDialogPr
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
-                  <div className={`w-full h-8 rounded ${theme.gradient} mb-2`}></div>
+                  <div
+                    className="w-full h-8 rounded mb-2"
+                    style={{ background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary})` }}
+                  ></div>
                   <span className="text-sm font-medium">{theme.name}</span>
                 </button>
               ))}
