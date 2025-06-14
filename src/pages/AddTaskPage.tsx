@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Task } from './Index';
 import { Button } from '@/components/ui/button';
@@ -233,8 +234,8 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
               <h2 className="text-xl font-semibold text-primary mb-4">Select Task Template</h2>
               <Accordion type="single" collapsible className="w-full" value={selectedCategory} onValueChange={handleCategorySelect}>
                 {Object.keys(taskCategories).map((category) => (
-                  <AccordionItem value={category} key={category}>
-                    <AccordionTrigger>{category}</AccordionTrigger>
+                  <AccordionItem value={category} key={category} className="border rounded-lg mb-2 overflow-hidden bg-card/95 shadow-sm last:mb-0">
+                    <AccordionTrigger className="hover:no-underline px-4 text-base">{category}</AccordionTrigger>
                     <AccordionContent>
                       <div className="pl-4">
                         <Accordion type="single" collapsible className="w-full" value={selectedSubCategory} onValueChange={handleSubCategorySelect}>
