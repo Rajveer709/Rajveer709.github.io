@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { TaskDashboard } from '../components/TaskDashboard';
-import { AddTaskForm } from '../components/AddTaskForm';
+import { AddTaskPage } from './AddTaskPage';
 import { TaskList } from '../components/TaskList';
 import { Header } from '../components/Header';
 import { LandingPage } from '../components/LandingPage';
 import { CalendarPage } from './CalendarPage';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 export interface Task {
   id: string;
@@ -22,9 +21,9 @@ export interface Task {
 
 const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [showApp, setShowApp] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [showAddTask, setShowAddTask] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('purple');
 
   // Load tasks from localStorage on component mount
@@ -56,7 +55,6 @@ const Index = () => {
       createdAt: new Date()
     };
     setTasks(prev => [...prev, task]);
-    setIsAddTaskOpen(false);
   };
 
   const toggleTask = (taskId: string) => {
@@ -111,6 +109,14 @@ const Index = () => {
     setShowCalendar(false);
   };
 
+  const handleAddTaskClick = () => {
+    setShowAddTask(true);
+  };
+
+  const handleBackFromAddTask = () => {
+    setShowAddTask(false);
+  };
+
   // Load theme from localStorage
   useEffect(() => {
     const savedTheme = localStorage.getItem('lifeAdminTheme');
@@ -133,6 +139,16 @@ const Index = () => {
     );
   }
 
+  if (showAddTask) {
+    return (
+      <AddTaskPage 
+        onAddTask={addTask}
+        onBack={handleBackFromAddTask}
+        currentTheme={currentTheme}
+      />
+    );
+  }
+
   return (
     <div className={`min-h-screen ${getThemeGradient(currentTheme)}`}>
       <div className="container mx-auto px-4 py-6 md:py-8 max-w-6xl">
@@ -148,17 +164,13 @@ const Index = () => {
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <h2 className="text-xl md:text-2xl font-semibold text-white">Your Tasks</h2>
-          <Dialog open={isAddTaskOpen} onOpenChange={setIsAddTaskOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white shadow-lg hover:shadow-xl transition-all duration-200 border border-white/30">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Task
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto p-0">
-              <AddTaskForm onAddTask={addTask} />
-            </DialogContent>
-          </Dialog>
+          <Button 
+            onClick={handleAddTaskClick}
+            className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white shadow-lg hover:shadow-xl transition-all duration-200 border border-white/30"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Task
+          </Button>
         </div>
 
         <TaskList 
