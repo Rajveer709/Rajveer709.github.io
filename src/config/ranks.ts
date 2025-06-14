@@ -1,5 +1,5 @@
 
-import { Award, Medal, Trophy, type LucideIcon, Shield, Crown, Gem } from 'lucide-react';
+import { Award, Medal, Trophy, type LucideIcon, Shield, Crown, Gem, Ghost } from 'lucide-react';
 
 export interface Rank {
   level: number;
@@ -21,6 +21,7 @@ export const RANKS: Rank[] = [
   { level: 11, name: 'Legend', Icon: Crown },
   { level: 12, name: 'Mythic', Icon: Gem },
   { level: 16, name: 'Immortal', Icon: Gem },
+  { level: 100, name: 'Avi', Icon: Ghost },
 ];
 
 export const getRankForLevel = (level: number): Rank => {
