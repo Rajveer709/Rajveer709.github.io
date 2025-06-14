@@ -1,0 +1,124 @@
+
+import { Task } from './Index';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { ArrowLeft, CheckCircle, Clock } from 'lucide-react';
+import { format, isSameDay } from 'date-fns';
+import { useState } from 'react';
+
+interface CalendarPageProps {
+  tasks: Task[];
+  onBack: () => void;
+  currentTheme: string;
+}
+
+export const CalendarPage = ({ tasks, onBack, currentTheme }: CalendarPageProps) => {
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
+  const getThemeGradient = (theme: string) => {
+    switch (theme) {
+      case 'teal': return 'bg-gradient-teal';
+      case 'orange': return 'bg-gradient-orange';
+      case 'pink': return 'bg-gradient-pink';
+      case 'blue': return 'bg-gradient-success';
+      case 'green': return 'bg-gradient-warning';
+      default: return 'bg-gradient-purple';
+    }
+  };
+
+  const tasksForSelectedDate = tasks.filter(task => 
+    isSameDay(new Date(task.dueDate), selectedDate)
+  );
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'urgent': return 'text-red-600 bg-red-50 border-red-200';
+      case 'high': return 'text-orange-600 bg-orange-50 border-orange-200';
+      case 'medium': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+      case 'low': return 'text-green-600 bg-green-50 border-green-200';
+      default: return 'text-gray-600 bg-gray-50 border-gray-200';
+    }
+  };
+
+  return (
+    <div className={`min-h-screen ${getThemeGradient(currentTheme)}`}>
+      <div className="container mx-auto px-4 py-6 max-w-6xl">
+        <div className="flex items-center mb-6">
+          <Button 
+            variant="ghost" 
+            onClick={onBack}
+            className="text-white/80 hover:text-white hover:bg-white/10 mr-4"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Back
+          </Button>
+          <h1 className="text-2xl md:text-3xl font-bold text-white">
+            Task Calendar
+          </h1>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-6">
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6">
+            <h2 className="text-lg font-semibold mb-4">Select Date</h2>
+            <Calendar
+              mode="single"
+              selected={selectedDate}
+              onSelect={(date) => date && setSelectedDate(date)}
+              className="rounded-lg border shadow-sm pointer-events-auto"
+            />
+          </div>
+
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6">
+            <h2 className="text-lg font-semibold mb-4">
+              Tasks for {format(selectedDate, "MMMM d, yyyy")}
+            </h2>
+            
+            {tasksForSelectedDate.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                <Clock className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                <p>No tasks scheduled for this date</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {tasksForSelectedDate.map((task) => (
+                  <div
+                    key={task.id}
+                    className={`p-4 rounded-lg border transition-all duration-200 ${
+                      task.completed 
+                        ? 'bg-green-50 border-green-200' 
+                        : 'bg-white border-gray-200 hover:shadow-md'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          {task.completed && <CheckCircle className="w-4 h-4 text-green-600" />}
+                          <h3 className={`font-medium ${
+                            task.completed ? 'text-green-800 line-through' : 'text-gray-800'
+                          }`}>
+                            {task.title}
+                          </h3>
+                        </div>
+                        {task.description && (
+                          <p className="text-sm text-gray-600 mb-2">{task.description}</p>
+                        )}
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full">
+                            {task.category}
+                          </span>
+                          <span className={`text-xs px-2 py-1 rounded-full border ${getPriorityColor(task.priority)}`}>
+                            {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

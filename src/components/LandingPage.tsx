@@ -1,4 +1,3 @@
-
 import { CheckSquare, Calendar, Bell, Target, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -6,7 +5,18 @@ interface LandingPageProps {
   onGetStarted: () => void;
 }
 
-export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
+export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps & { currentTheme: string }) => {
+  const getThemeGradient = (theme: string) => {
+    switch (theme) {
+      case 'teal': return 'bg-gradient-teal';
+      case 'orange': return 'bg-gradient-orange';
+      case 'pink': return 'bg-gradient-pink';
+      case 'blue': return 'bg-gradient-success';
+      case 'green': return 'bg-gradient-warning';
+      default: return 'bg-gradient-purple';
+    }
+  };
+
   const features = [
     {
       icon: <CheckSquare className="w-8 h-8 text-blue-600" />,
@@ -31,24 +41,24 @@ export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <div className="container mx-auto px-4 py-16 max-w-6xl">
+    <div className={`min-h-screen ${getThemeGradient(currentTheme)}`}>
+      <div className="container mx-auto px-4 py-8 md:py-16 max-w-6xl">
         {/* Hero Section */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-12 md:mb-16">
           <div className="flex items-center justify-center mb-6">
-            <div className="bg-blue-600 p-4 rounded-3xl shadow-lg mr-4">
-              <CheckSquare className="w-12 h-12 text-white" />
+            <div className="bg-white/20 backdrop-blur-sm p-3 md:p-4 rounded-2xl md:rounded-3xl shadow-lg mr-3 md:mr-4">
+              <CheckSquare className="w-8 h-8 md:w-12 md:h-12 text-white" />
             </div>
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <h1 className="text-3xl md:text-5xl font-bold text-white">
               Life Admin
             </h1>
           </div>
           
-          <p className="text-2xl font-semibold text-gray-700 mb-4">
+          <p className="text-xl md:text-2xl font-medium text-white/90 mb-4">
             Simplify Life. One Task at a Time.
           </p>
           
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+          <p className="text-base md:text-xl text-white/80 max-w-3xl mx-auto mb-8 px-4">
             The focused task manager for all your important life admin - from bills and appointments 
             to renewals and deadlines. Never let important tasks slip through the cracks again.
           </p>
@@ -57,7 +67,7 @@ export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             <Button 
               onClick={onGetStarted}
               size="lg"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200"
+              className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200 border border-white/30"
             >
               Get Started
               <ArrowRight className="w-5 h-5 ml-2" />
@@ -65,40 +75,40 @@ export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             <Button 
               variant="outline"
               size="lg"
-              className="border-blue-300 text-blue-700 hover:bg-blue-50 px-8 py-3 text-lg"
+              className="border-white/30 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 px-8 py-3 text-lg"
             >
               Explore Features
             </Button>
           </div>
         </div>
 
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        {/* Features Grid - Mobile Responsive */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 md:mb-16">
           {features.map((feature, index) => (
-            <div key={index} className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-200 border border-white/20">
+            <div key={index} className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-200 border border-white/20">
               <div className="mb-4">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">
+              <h3 className="text-lg md:text-xl font-semibold text-white mb-3">
                 {feature.title}
               </h3>
-              <p className="text-gray-600">
+              <p className="text-white/80 text-sm md:text-base">
                 {feature.description}
               </p>
             </div>
           ))}
         </div>
 
-        {/* Task Categories Preview */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+        {/* Task Categories Preview - Mobile Responsive */}
+        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-white/20">
+          <h2 className="text-2xl md:text-3xl font-bold text-center text-white mb-6 md:mb-8">
             Organize Every Aspect of Your Life
           </h2>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="space-y-2">
-              <h3 className="font-semibold text-blue-600 text-lg">💰 Financial</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
+              <h3 className="font-semibold text-white text-base md:text-lg">💰 Financial</h3>
+              <ul className="text-xs md:text-sm text-white/80 space-y-1">
                 <li>• Utility bills & rent payments</li>
                 <li>• Insurance premiums</li>
                 <li>• Tax deadlines</li>
@@ -158,21 +168,21 @@ export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
           </div>
         </div>
 
-        {/* CTA Section */}
-        <div className="text-center mt-16">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">
+        {/* CTA Section - Mobile Responsive */}
+        <div className="text-center mt-12 md:mt-16">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
             Ready to Take Control?
           </h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-white/80 mb-8 max-w-2xl mx-auto px-4">
             Join thousands who have simplified their life admin with our focused task management system.
           </p>
           <Button 
             onClick={onGetStarted}
             size="lg"
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-12 py-4 text-xl shadow-lg hover:shadow-xl transition-all duration-200"
+            className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-8 md:px-12 py-3 md:py-4 text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-200 border border-white/30"
           >
             Start Organizing Today
-            <ArrowRight className="w-6 h-6 ml-2" />
+            <ArrowRight className="w-5 h-5 md:w-6 md:h-6 ml-2" />
           </Button>
         </div>
       </div>

@@ -1,20 +1,20 @@
-
 import { useState, useEffect } from 'react';
 import { TaskDashboard } from '../components/TaskDashboard';
 import { AddTaskForm } from '../components/AddTaskForm';
 import { TaskList } from '../components/TaskList';
 import { Header } from '../components/Header';
 import { LandingPage } from '../components/LandingPage';
+import { CalendarPage } from './CalendarPage';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 export interface Task {
   id: string;
   title: string;
   description: string;
   category: string;
-  priority: 'low' | 'medium' | 'high';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
   dueDate: Date;
   completed: boolean;
   createdAt: Date;
@@ -24,6 +24,8 @@ const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [showApp, setShowApp] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState('purple');
 
   // Load tasks from localStorage on component mount
   useEffect(() => {
@@ -85,32 +87,75 @@ const Index = () => {
     setShowApp(true);
   };
 
+  const getThemeGradient = (theme: string) => {
+    switch (theme) {
+      case 'teal': return 'bg-gradient-teal';
+      case 'orange': return 'bg-gradient-orange';
+      case 'pink': return 'bg-gradient-pink';
+      case 'blue': return 'bg-gradient-success';
+      case 'green': return 'bg-gradient-warning';
+      default: return 'bg-gradient-purple';
+    }
+  };
+
+  const handleThemeChange = (theme: string) => {
+    setCurrentTheme(theme);
+    localStorage.setItem('lifeAdminTheme', theme);
+  };
+
+  const handleCalendarClick = () => {
+    setShowCalendar(true);
+  };
+
+  const handleBackFromCalendar = () => {
+    setShowCalendar(false);
+  };
+
+  // Load theme from localStorage
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('lifeAdminTheme');
+    if (savedTheme) {
+      setCurrentTheme(savedTheme);
+    }
+  }, []);
+
   if (!showApp) {
-    return <LandingPage onGetStarted={handleGetStarted} />;
+    return <LandingPage onGetStarted={handleGetStarted} currentTheme={currentTheme} />;
+  }
+
+  if (showCalendar) {
+    return (
+      <CalendarPage 
+        tasks={tasks} 
+        onBack={handleBackFromCalendar} 
+        currentTheme={currentTheme}
+      />
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <Header />
+    <div className={`min-h-screen ${getThemeGradient(currentTheme)}`}>
+      <div className="container mx-auto px-4 py-6 md:py-8 max-w-6xl">
+        <Header 
+          onThemeChange={handleThemeChange} 
+          currentTheme={currentTheme}
+          onCalendarClick={handleCalendarClick}
+        />
         
-        <div className="mb-8">
+        <div className="mb-6 md:mb-8">
           <TaskDashboard tasks={tasks} />
         </div>
 
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-800">Your Tasks</h2>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <h2 className="text-xl md:text-2xl font-semibold text-white">Your Tasks</h2>
           <Dialog open={isAddTaskOpen} onOpenChange={setIsAddTaskOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-200">
+              <Button className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white shadow-lg hover:shadow-xl transition-all duration-200 border border-white/30">
                 <Plus className="w-4 h-4 mr-2" />
                 Add Task
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Add New Task</DialogTitle>
-              </DialogHeader>
+            <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto p-0">
               <AddTaskForm onAddTask={addTask} />
             </DialogContent>
           </Dialog>

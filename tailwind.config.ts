@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -18,6 +19,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'sans': ['Inter', 'system-ui', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -62,6 +66,16 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				}
+			},
+			backgroundImage: {
+				'gradient-primary': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+				'gradient-secondary': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+				'gradient-success': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+				'gradient-warning': 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+				'gradient-purple': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+				'gradient-teal': 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
+				'gradient-orange': 'linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%)',
+				'gradient-pink': 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
