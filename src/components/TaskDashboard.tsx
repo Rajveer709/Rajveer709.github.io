@@ -1,4 +1,4 @@
-
+import { useNavigate } from 'react-router-dom';
 import { Task } from '../pages/Index';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -35,6 +35,7 @@ const categoryColors: { [key: string]: string } = {
 };
 
 export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
+  const navigate = useNavigate();
   const completedTasks = tasks.filter(task => task.completed).length;
   const totalTasks = tasks.length;
   const overdueTasks = tasks.filter(task => 
@@ -59,7 +60,10 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       {/* Overview Cards */}
-      <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+      <Card 
+        className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full cursor-pointer"
+        onClick={() => navigate('/all-tasks')}
+      >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium text-gray-600">Total Tasks</CardTitle>
           <CheckCircle className="h-5 w-5 text-primary" />

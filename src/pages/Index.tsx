@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { DashboardPage } from './DashboardPage';
@@ -9,6 +10,7 @@ import { LandingPage } from '../components/LandingPage';
 import { BottomNavBar } from '../components/BottomNavBar';
 import { themes, defaultTheme } from '../config/themes';
 import { hexToHsl } from '../lib/colorUtils';
+import { AllTasksPage } from './AllTasksPage';
 
 export interface Task {
   id: string;
@@ -163,6 +165,15 @@ const Index = () => {
                   <Route path="/" element={<DashboardPage tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} />} />
                   <Route path="/add-task" element={<AddTaskPage onAddTask={addTask} onBack={() => navigate(-1)} currentTheme={currentTheme} />} />
                   <Route path="/calendar" element={<CalendarPage tasks={tasks} onBack={() => navigate(-1)} currentTheme={currentTheme} />} />
+                  <Route path="/all-tasks" element={
+                    <AllTasksPage 
+                      tasks={tasks}
+                      onToggleTask={toggleTask}
+                      onDeleteTask={deleteTask}
+                      onEditTask={editTask}
+                      onBack={() => navigate(-1)}
+                    />
+                  } />
                   <Route path="/settings" element={
                     <SettingsPage 
                       onBack={() => navigate('/')} 
