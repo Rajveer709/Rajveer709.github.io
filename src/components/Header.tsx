@@ -18,7 +18,7 @@ export const Header = ({ onThemeChange, currentTheme, onCalendarClick, profile }
   return (
     <header className="flex items-center justify-between mb-8">
       <div>
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-1">
           Welcome back{profile?.name ? `, ${profile.name.split(' ')[0]}` : ''}!
         </h1>
         <p className="text-muted-foreground">Here's your life at a glance.</p>
