@@ -9,8 +9,8 @@ export const BottomNavBar = () => {
     { to: '/calendar', icon: Calendar, label: 'Calendar' },
   ];
 
-  const linkClasses = "flex flex-col items-center justify-center gap-1 transition-colors text-foreground/60 hover:text-primary";
-  const activeLinkClasses = "!text-primary";
+  const linkClasses = "flex flex-col items-center justify-center gap-1 transition-all duration-200 ease-in-out text-foreground/60 hover:text-primary";
+  const activeLinkClasses = "!text-primary transform scale-110";
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t h-16 z-50 md:hidden">

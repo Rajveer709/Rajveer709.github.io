@@ -1,3 +1,4 @@
+
 import { Task } from '../pages/Index';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -60,12 +61,12 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
       {/* Overview Cards */}
       <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Total Tasks</CardTitle>
-          <CheckCircle className="h-4 w-4 text-primary" />
+          <CardTitle className="text-sm font-medium text-gray-600">Total Tasks</CardTitle>
+          <CheckCircle className="h-5 w-5 text-primary" />
         </CardHeader>
         <CardContent>
-          <div className="text-xl md:text-2xl font-bold text-primary">{totalTasks}</div>
-          <p className="text-xs text-gray-500">
+          <div className="text-2xl md:text-3xl font-bold text-primary">{totalTasks}</div>
+          <p className="text-sm text-gray-500">
             {completedTasks} completed
           </p>
         </CardContent>
@@ -73,12 +74,12 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
 
       <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xs md:text-sm font-medium text-gray-600">OverDue Tasks</CardTitle>
-          <AlertTriangle className="h-4 w-4 text-destructive" />
+          <CardTitle className="text-sm font-medium text-gray-600">OverDue Tasks</CardTitle>
+          <AlertTriangle className="h-5 w-5 text-destructive" />
         </CardHeader>
         <CardContent>
-          <div className="text-xl md:text-2xl font-bold text-destructive">{overdueTasks}</div>
-          <p className="text-xs text-gray-500">
+          <div className="text-2xl md:text-3xl font-bold text-destructive">{overdueTasks}</div>
+          <p className="text-sm text-gray-500">
             Need attention
           </p>
         </CardContent>
@@ -86,12 +87,12 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
 
       <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Due Tasks</CardTitle>
-          <Clock className="h-4 w-4 text-orange-500" />
+          <CardTitle className="text-sm font-medium text-gray-600">Due Tasks</CardTitle>
+          <Clock className="h-5 w-5 text-orange-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-xl md:text-2xl font-bold text-orange-600">{upcomingTasks}</div>
-          <p className="text-xs text-gray-500">
+          <div className="text-2xl md:text-3xl font-bold text-orange-600">{upcomingTasks}</div>
+          <p className="text-sm text-gray-500">
             Coming up soon
           </p>
         </CardContent>
@@ -99,14 +100,14 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
 
       <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Completed Tasks</CardTitle>
-          <CheckCircle className="h-4 w-4 text-green-500" />
+          <CardTitle className="text-sm font-medium text-gray-600">Completed Tasks</CardTitle>
+          <CheckCircle className="h-5 w-5 text-green-500" />
         </CardHeader>
         <CardContent>
-            <div className="text-xl md:text-2xl font-bold text-green-600">
+            <div className="text-2xl md:text-3xl font-bold text-green-600">
               {completedTasks}
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-sm text-gray-500 mt-1">
               out of {totalTasks} tasks
             </p>
         </CardContent>
