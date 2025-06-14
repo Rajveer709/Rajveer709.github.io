@@ -7,13 +7,56 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, ChevronDown } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 
 interface AddTaskFormProps {
   onAddTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
 }
+
+const taskTemplates = {
+  'Financial': [
+    'Paying utility bills (electricity, water, gas)',
+    'Paying rent or mortgage',
+    'Credit card payments',
+    'Loan repayments (personal, auto, education)',
+    'Insurance premiums (health, auto, home, life)',
+    'Tax filing deadlines and payments',
+    'Budgeting and expense tracking',
+    'Investment monitoring (stocks, mutual funds, retirement accounts)',
+    'Subscription renewals (streaming, apps, memberships)'
+  ],
+  'Health & Wellness': [
+    'Doctor appointments (general, specialist)',
+    'Dental check-ups',
+    'Medication schedules and refills',
+    'Vaccinations',
+    'Eye exams',
+    'Fitness and workout tracking',
+    'Mental health sessions or therapy appointments'
+  ],
+  'Household': [
+    'Home maintenance tasks (cleaning, repairs, inspections)',
+    'Appliance servicing or warranties',
+    'Vehicle maintenance (oil changes, inspections, registration renewal)',
+    'Grocery shopping and meal planning',
+    'Trash and recycling collection schedules'
+  ],
+  'Personal': [
+    'Important birthdays and anniversaries',
+    'Social events and gatherings',
+    'Travel planning and bookings (tickets, hotels)',
+    'Learning goals or courses',
+    'Reading lists and progress'
+  ],
+  'Legal & Admin': [
+    'Document renewals (passport, driver\'s license, ID cards)',
+    'Form submissions (applications, claims, permits)',
+    'Voting registration and election dates',
+    'Will or estate planning updates'
+  ]
+};
 
 const categories = [
   'Financial',
@@ -35,6 +78,7 @@ export const AddTaskForm = ({ onAddTask }: AddTaskFormProps) => {
   const [category, setCategory] = useState('');
   const [priority, setPriority] = useState<'low' | 'medium' | 'high'>('medium');
   const [dueDate, setDueDate] = useState<Date>();
+  const [showTemplates, setShowTemplates] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,18 +102,57 @@ export const AddTaskForm = ({ onAddTask }: AddTaskFormProps) => {
     setCategory('');
     setPriority('medium');
     setDueDate(undefined);
+    setShowTemplates(false);
+  };
+
+  const handleTemplateSelect = (template: string, templateCategory: string) => {
+    setTitle(template);
+    setCategory(templateCategory);
+    setShowTemplates(false);
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <Input
-          placeholder="Task title (e.g., Pay electricity bill)"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-          className="w-full"
-        />
+        <div className="flex gap-2">
+          <Input
+            placeholder="Task title (e.g., Pay electricity bill)"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+            className="flex-1"
+          />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setShowTemplates(!showTemplates)}
+            className="shrink-0"
+          >
+            Templates <ChevronDown className="w-4 h-4 ml-1" />
+          </Button>
+        </div>
+        
+        {showTemplates && (
+          <div className="mt-2 max-h-64 overflow-y-auto border rounded-lg p-2 bg-gray-50">
+            {Object.entries(taskTemplates).map(([cat, templates]) => (
+              <div key={cat} className="mb-3">
+                <h4 className="font-semibold text-sm text-blue-600 mb-1">{cat}</h4>
+                <div className="space-y-1">
+                  {templates.map((template, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => handleTemplateSelect(template, cat)}
+                      className="w-full text-left text-sm p-2 hover:bg-blue-50 rounded border-l-2 border-transparent hover:border-blue-300 transition-colors"
+                    >
+                      {template}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div>

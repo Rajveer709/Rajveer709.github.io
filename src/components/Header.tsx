@@ -1,5 +1,5 @@
 
-import { Calendar, CheckSquare } from 'lucide-react';
+import { CheckSquare } from 'lucide-react';
 
 export const Header = () => {
   return (
@@ -12,7 +12,10 @@ export const Header = () => {
           Life Admin
         </h1>
       </div>
-      <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+      <p className="text-lg font-semibold text-gray-700 mb-2">
+        Simplify Life. One Task at a Time.
+      </p>
+      <p className="text-gray-600 max-w-2xl mx-auto">
         Stay on top of all your important life tasks - from bills and appointments to maintenance and deadlines. 
         Never let important admin tasks slip through the cracks again.
       </p>

@@ -4,6 +4,7 @@ import { TaskDashboard } from '../components/TaskDashboard';
 import { AddTaskForm } from '../components/AddTaskForm';
 import { TaskList } from '../components/TaskList';
 import { Header } from '../components/Header';
+import { LandingPage } from '../components/LandingPage';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -22,6 +23,7 @@ export interface Task {
 const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
+  const [showApp, setShowApp] = useState(false);
 
   // Load tasks from localStorage on component mount
   useEffect(() => {
@@ -33,6 +35,10 @@ const Index = () => {
         createdAt: new Date(task.createdAt)
       }));
       setTasks(parsedTasks);
+      // If user has tasks, show the app directly
+      if (parsedTasks.length > 0) {
+        setShowApp(true);
+      }
     }
   }, []);
 
@@ -74,6 +80,14 @@ const Index = () => {
       )
     );
   };
+
+  const handleGetStarted = () => {
+    setShowApp(true);
+  };
+
+  if (!showApp) {
+    return <LandingPage onGetStarted={handleGetStarted} />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
