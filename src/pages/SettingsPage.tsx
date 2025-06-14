@@ -1,4 +1,4 @@
-import { ArrowLeft, Moon, Sun, User, Palette, Info, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Moon, Sun, User, Palette, Info, RotateCcw, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
@@ -15,6 +15,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface SettingsPageProps {
   onBack: () => void;
@@ -23,9 +24,10 @@ interface SettingsPageProps {
   isDarkMode: boolean;
   onToggleDarkMode: () => void;
   onStartOver: () => void;
+  userLevel: number;
 }
 
-export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver }: SettingsPageProps) => {
+export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver, userLevel }: SettingsPageProps) => {
   return (
     <div className="animate-fade-in space-y-6">
       <div className="flex items-center gap-4">
@@ -74,23 +76,47 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           <div>
             <h3 className="text-sm font-medium mb-3">Color Theme</h3>
             <div className="grid grid-cols-3 gap-3">
-              {themes.map((theme) => (
-                <button
-                  key={theme.value}
-                  onClick={() => onThemeChange(theme.value)}
-                  className={`p-3 rounded-lg border-2 transition-all ${
-                    currentTheme === theme.value 
-                      ? 'border-primary shadow-md' 
-                      : 'border-border hover:border-accent'
-                  }`}
-                >
-                  <div
-                    className="w-full h-8 rounded mb-2"
-                    style={{ background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary})` }}
-                  ></div>
-                  <span className="text-sm font-medium">{theme.name}</span>
-                </button>
-              ))}
+              {themes.map((theme) => {
+                const isUnlocked = userLevel >= theme.levelToUnlock;
+                return (
+                  isUnlocked ? (
+                    <button
+                      key={theme.value}
+                      onClick={() => onThemeChange(theme.value)}
+                      className={`p-3 rounded-lg border-2 transition-all ${
+                        currentTheme === theme.value 
+                          ? 'border-primary shadow-md' 
+                          : 'border-border hover:border-accent'
+                      }`}
+                    >
+                      <div
+                        className="w-full h-8 rounded mb-2"
+                        style={{ background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary})` }}
+                      ></div>
+                      <span className="text-sm font-medium">{theme.name}</span>
+                    </button>
+                  ) : (
+                    <Tooltip key={theme.value}>
+                      <TooltipTrigger asChild>
+                        <div
+                          className="p-3 rounded-lg border-2 border-dashed border-border relative overflow-hidden"
+                        >
+                          <div
+                            className="w-full h-8 rounded mb-2 bg-muted"
+                          ></div>
+                          <span className="text-sm font-medium text-muted-foreground">{theme.name}</span>
+                          <div className="absolute inset-0 bg-background/60 backdrop-blur-sm flex items-center justify-center">
+                            <Lock className="w-5 h-5 text-muted-foreground" />
+                          </div>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Unlocks at Level {theme.levelToUnlock}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )
+                )
+              })}
             </div>
           </div>
         </CardContent>

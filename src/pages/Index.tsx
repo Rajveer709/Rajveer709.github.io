@@ -9,9 +9,20 @@ import { Header } from '../components/Header';
 import { LandingPage } from '../components/LandingPage';
 import { BottomNavBar } from '../components/BottomNavBar';
 import { themes, defaultTheme } from '../config/themes';
+import { ALL_CHALLENGES_DEFINITIONS } from '../config/challenges';
 import { hexToHsl } from '../lib/colorUtils';
-import { TasksViewPage } from './TasksViewPage';
-import { FunctionalChallengePage, Challenge } from './FunctionalChallengePage';
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  dueDate: Date;
+  completed: boolean;
+  createdAt: Date;
+}
+
+import { FunctionalChallengePage, Challenge as ChallengeWithCompleted } from './FunctionalChallengePage';
 
 export interface Task {
   id: string;
@@ -24,17 +35,9 @@ export interface Task {
   createdAt: Date;
 }
 
-const XP_FOR_LEVEL = 100;
+export type Challenge = ChallengeWithCompleted;
 
-const ALL_CHALLENGES_DEFINITIONS: Omit<Challenge, 'completed'>[] = [
-    { id: 1, text: 'First Step: Complete your first task', xp: 10 },
-    { id: 2, text: 'Task Tamer: Complete 5 tasks', xp: 25 },
-    { id: 3, text: 'High Priority: Complete an "urgent" priority task', xp: 20 },
-    { id: 4, text: 'Variety Virtuoso: Complete tasks in 3 different categories', xp: 30 },
-    { id: 5, text: 'Task Master: Complete 15 tasks', xp: 50 },
-    { id: 6, text: 'Category King: Complete tasks in 5 different categories', xp: 50 },
-    { id: 7, text: 'The Finisher: Complete 25 tasks in total', xp: 100 },
-];
+const XP_FOR_LEVEL = 100;
 
 const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -105,7 +108,12 @@ const Index = () => {
     if (savedLevel) setUserLevel(JSON.parse(savedLevel));
     if (savedXp) setUserXp(JSON.parse(savedXp));
     if (savedChallenges) {
-      setChallenges(JSON.parse(savedChallenges));
+      const parsedChallenges = JSON.parse(savedChallenges);
+      const challengeMap = new Map(parsedChallenges.map((c: Challenge) => [c.id, c.completed]));
+      setChallenges(ALL_CHALLENGES_DEFINITIONS.map(c => ({
+        ...c,
+        completed: challengeMap.get(c.id) || false
+      })));
     } else {
       setChallenges(ALL_CHALLENGES_DEFINITIONS.map(c => ({ ...c, completed: false })));
     }
@@ -130,24 +138,28 @@ const Index = () => {
 
   const checkChallenges = useCallback((currentTasks: Task[]) => {
     const completedTasks = currentTasks.filter(t => t.completed);
+    const completedCategories = new Set(completedTasks.map(t => t.category.trim()).filter(Boolean));
     let xpGained = 0;
     
+    const getChallengeLevel = (challengeId: number) => {
+        if (challengeId <= 7) return 1;
+        if (challengeId <= 14) return 2;
+        if (challengeId <= 21) return 3;
+        if (challengeId <= 28) return 4;
+        if (challengeId <= 35) return 5;
+        if (challengeId <= 42) return 6;
+        if (challengeId <= 49) return 7;
+        if (challengeId <= 56) return 8;
+        if (challengeId <= 63) return 9;
+        if (challengeId <= 70) return 10;
+        return 11;
+    };
+
     const updatedChallenges = challenges.map(challenge => {
-      if (challenge.completed) return challenge;
+      const challengeLevel = getChallengeLevel(challenge.id);
+      if (challenge.completed || userLevel < challengeLevel) return challenge;
 
-      let justCompleted = false;
-      switch (challenge.id) {
-        case 1: if (completedTasks.length >= 1) justCompleted = true; break;
-        case 2: if (completedTasks.length >= 5) justCompleted = true; break;
-        case 3: if (completedTasks.some(t => t.priority === 'urgent')) justCompleted = true; break;
-        case 4: if (new Set(completedTasks.map(t => t.category)).size >= 3) justCompleted = true; break;
-        case 5: if (completedTasks.length >= 15) justCompleted = true; break;
-        case 6: if (new Set(completedTasks.map(t => t.category)).size >= 5) justCompleted = true; break;
-        case 7: if (completedTasks.length >= 25) justCompleted = true; break;
-        default: break;
-      }
-
-      if (justCompleted) {
+      if (challenge.check(completedTasks, completedCategories)) {
         xpGained += challenge.xp;
         toast.success(`Challenge complete: ${challenge.text}`, {
           description: `You earned ${challenge.xp} XP!`,
@@ -161,11 +173,18 @@ const Index = () => {
       setUserXp(prevXp => {
         let totalXp = prevXp + xpGained;
         let currentLevel = userLevel;
+        
         while (totalXp >= currentLevel * XP_FOR_LEVEL) {
           totalXp -= currentLevel * XP_FOR_LEVEL;
           currentLevel++;
           setUserLevel(currentLevel);
           toast.info(`Congratulations! You've reached Level ${currentLevel}!`);
+          const unlockedTheme = themes.find(t => t.levelToUnlock === currentLevel);
+          if (unlockedTheme) {
+            toast.success(`New theme unlocked: ${unlockedTheme.name}!`, {
+              description: 'You can change it in the Settings.',
+            });
+          }
         }
         return totalXp;
       });
@@ -289,6 +308,7 @@ const Index = () => {
                       isDarkMode={isDarkMode}
                       onToggleDarkMode={handleToggleDarkMode}
                       onStartOver={handleStartOver}
+                      userLevel={userLevel}
                     />
                   } />
                 </Routes>
