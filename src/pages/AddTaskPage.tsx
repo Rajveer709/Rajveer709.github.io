@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Task } from './Index';
 import { Button } from '@/components/ui/button';
@@ -7,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, ChevronRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { themes, defaultTheme } from '../config/themes';
@@ -17,6 +18,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { useTheme } from 'next-themes';
 import { PageHeader } from '@/components/PageHeader';
 
@@ -145,6 +151,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   const [streamingApp, setStreamingApp] = useState('');
   const [medicineName, setMedicineName] = useState('');
   const [selectedFluid, setSelectedFluid] = useState('');
+  const [isQuickTasksOpen, setIsQuickTasksOpen] = useState(false);
 
   const selectedPriorityDetails = priorities.find(p => p.value === priority);
 
@@ -232,45 +239,55 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   return (
     <div>
       <div className="container mx-auto px-4 py-6 max-w-4xl">
-        <PageHeader title="Quick Tasks" onBack={onBack} />
+        <PageHeader title="Create Task" onBack={onBack} />
 
         <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Categories Selection */}
+            {/* Quick Tasks Section */}
             <div>
-              <h2 className="text-xl font-semibold text-primary mb-4">Select Task Template</h2>
-              <Accordion type="single" collapsible className="w-full" value={selectedCategory} onValueChange={handleCategorySelect}>
-                {Object.keys(taskCategories).map((category) => (
-                  <AccordionItem value={category} key={category} className="border rounded-lg mb-2 overflow-hidden bg-card/95 shadow-sm last:mb-0">
-                    <AccordionTrigger className="hover:no-underline px-4 text-base">{category}</AccordionTrigger>
-                    <AccordionContent>
-                      <div className="pl-4">
-                        <Accordion type="single" collapsible className="w-full" value={selectedSubCategory} onValueChange={handleSubCategorySelect}>
-                          {Object.keys(taskCategories[category as CategoryKey]).map((subCategory) => (
-                            <AccordionItem value={subCategory} key={subCategory} className="border border-muted rounded-md mb-1 last:mb-0">
-                              <AccordionTrigger className="text-sm hover:no-underline px-4">{subCategory}</AccordionTrigger>
-                              <AccordionContent>
-                                <div className="pl-4 space-y-2">
-                                  {(taskCategories[category as CategoryKey][subCategory as SubCategoryKey<CategoryKey>] as readonly string[]).map((task) => (
-                                    <Button
-                                      key={task}
-                                      variant={selectedTask === task ? "default" : "secondary"}
-                                      className="w-full justify-start text-left text-sm font-normal h-auto py-2"
-                                      onClick={() => handleTaskSelect(task)}
-                                    >
-                                      {task}
-                                    </Button>
-                                  ))}
-                                </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          ))}
-                        </Accordion>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+              <Collapsible
+                open={isQuickTasksOpen}
+                onOpenChange={setIsQuickTasksOpen}
+              >
+                <CollapsibleTrigger className="flex w-full items-center justify-between text-xl font-semibold text-primary mb-4">
+                  <span>Quick Tasks</span>
+                  <ChevronRight className={`h-6 w-6 transform transition-transform duration-300 ${isQuickTasksOpen ? 'rotate-90' : ''}`} />
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <Accordion type="single" collapsible className="w-full" value={selectedCategory} onValueChange={handleCategorySelect}>
+                    {Object.keys(taskCategories).map((category) => (
+                      <AccordionItem value={category} key={category} className="border rounded-lg mb-2 overflow-hidden bg-card/95 shadow-sm last:mb-0">
+                        <AccordionTrigger className="hover:no-underline px-4 text-base">{category}</AccordionTrigger>
+                        <AccordionContent>
+                          <div className="pl-4">
+                            <Accordion type="single" collapsible className="w-full" value={selectedSubCategory} onValueChange={handleSubCategorySelect}>
+                              {Object.keys(taskCategories[category as CategoryKey]).map((subCategory) => (
+                                <AccordionItem value={subCategory} key={subCategory} className="border border-muted rounded-md mb-1 last:mb-0">
+                                  <AccordionTrigger className="text-sm hover:no-underline px-4">{subCategory}</AccordionTrigger>
+                                  <AccordionContent>
+                                    <div className="pl-4 space-y-2">
+                                      {(taskCategories[category as CategoryKey][subCategory as SubCategoryKey<CategoryKey>] as readonly string[]).map((task) => (
+                                        <Button
+                                          key={task}
+                                          variant={selectedTask === task ? "default" : "secondary"}
+                                          className="w-full justify-start text-left text-sm font-normal h-auto py-2"
+                                          onClick={() => handleTaskSelect(task)}
+                                        >
+                                          {task}
+                                        </Button>
+                                      ))}
+                                    </div>
+                                  </AccordionContent>
+                                </AccordionItem>
+                              ))}
+                            </Accordion>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </CollapsibleContent>
+              </Collapsible>
             </div>
 
             {/* Task Form */}
