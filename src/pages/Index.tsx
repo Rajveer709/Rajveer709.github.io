@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { TaskDashboard } from '../components/TaskDashboard';
 import { AddTaskPage } from './AddTaskPage';
@@ -150,7 +151,7 @@ const Index = () => {
   }
 
   return (
-    <div className={`min-h-screen ${getThemeGradient(currentTheme)}`}>
+    <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-6 md:py-8 max-w-6xl">
         <Header 
           onThemeChange={handleThemeChange} 
@@ -163,10 +164,10 @@ const Index = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <h2 className="text-xl md:text-2xl font-semibold text-white">Your Tasks</h2>
+          <h2 className="text-xl md:text-2xl font-semibold text-gray-900">Your Tasks</h2>
           <Button 
             onClick={handleAddTaskClick}
-            className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white shadow-lg hover:shadow-xl transition-all duration-200 border border-white/30"
+            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Task

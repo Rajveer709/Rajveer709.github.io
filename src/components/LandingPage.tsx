@@ -1,3 +1,4 @@
+
 import { CheckSquare, Calendar, Bell, Target, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -117,8 +118,8 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps & {
             </div>
             
             <div className="space-y-2">
-              <h3 className="font-semibold text-green-600 text-lg">🏥 Health & Wellness</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
+              <h3 className="font-semibold text-white text-lg">🏥 Health & Wellness</h3>
+              <ul className="text-sm text-white/80 space-y-1">
                 <li>• Doctor appointments</li>
                 <li>• Medication schedules</li>
                 <li>• Dental check-ups</li>
@@ -127,8 +128,8 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps & {
             </div>
             
             <div className="space-y-2">
-              <h3 className="font-semibold text-orange-600 text-lg">🏠 Household</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
+              <h3 className="font-semibold text-white text-lg">🏠 Household</h3>
+              <ul className="text-sm text-white/80 space-y-1">
                 <li>• Home maintenance</li>
                 <li>• Vehicle servicing</li>
                 <li>• Appliance warranties</li>
@@ -137,8 +138,8 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps & {
             </div>
             
             <div className="space-y-2">
-              <h3 className="font-semibold text-purple-600 text-lg">📋 Legal & Admin</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
+              <h3 className="font-semibold text-white text-lg">📋 Legal & Admin</h3>
+              <ul className="text-sm text-white/80 space-y-1">
                 <li>• Document renewals</li>
                 <li>• Form submissions</li>
                 <li>• Voting registration</li>
@@ -147,8 +148,8 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps & {
             </div>
             
             <div className="space-y-2">
-              <h3 className="font-semibold text-indigo-600 text-lg">🎯 Personal</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
+              <h3 className="font-semibold text-white text-lg">🎯 Personal</h3>
+              <ul className="text-sm text-white/80 space-y-1">
                 <li>• Important birthdays</li>
                 <li>• Travel planning</li>
                 <li>• Learning goals</li>
@@ -157,8 +158,8 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps & {
             </div>
             
             <div className="space-y-2">
-              <h3 className="font-semibold text-pink-600 text-lg">📱 Digital Life</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
+              <h3 className="font-semibold text-white text-lg">📱 Digital Life</h3>
+              <ul className="text-sm text-white/80 space-y-1">
                 <li>• Password updates</li>
                 <li>• Backup schedules</li>
                 <li>• Device upgrades</li>

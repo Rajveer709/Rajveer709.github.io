@@ -30,7 +30,7 @@ export const SettingsDialog = ({ onThemeChange, currentTheme }: SettingsDialogPr
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="text-white/80 hover:text-white hover:bg-white/10">
+        <Button variant="ghost" size="icon" className="text-gray-600 hover:text-gray-900 hover:bg-gray-100">
           <Settings className="w-5 h-5" />
         </Button>
       </DialogTrigger>
