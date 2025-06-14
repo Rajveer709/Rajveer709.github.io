@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { DashboardPage } from './DashboardPage';
@@ -41,11 +42,11 @@ const Index = () => {
         root.style.setProperty('--primary', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
         root.style.setProperty('--ring', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
         if (isDark) {
-          root.style.setProperty('--background', `${primaryHsl.h} ${primaryHsl.s * 0.1}% 6%`);
-          root.style.setProperty('--card', `${primaryHsl.h} ${primaryHsl.s * 0.2}% 10%`);
+          root.style.setProperty('--background', `${primaryHsl.h} ${primaryHsl.s * 0.15}% 7%`);
+          root.style.setProperty('--card', `${primaryHsl.h} ${primaryHsl.s * 0.25}% 11%`);
         } else {
-          root.style.setProperty('--background', `${primaryHsl.h} 30% 98.5%`);
-          root.style.setProperty('--card', `${primaryHsl.h} 50% 96%`);
+          root.style.setProperty('--background', `${primaryHsl.h} 40% 98.5%`);
+          root.style.setProperty('--card', `${primaryHsl.h} 60% 96%`);
         }
     }
   }, []);

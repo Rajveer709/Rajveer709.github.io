@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Task } from './Index';
 import { Button } from '@/components/ui/button';
@@ -221,7 +220,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
   };
 
   return (
-    <div className="min-h-screen" style={getThemeBackgroundStyle(currentTheme, resolvedTheme)}>
+    <div>
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         <div className="flex items-center mb-6">
           <Button 
@@ -235,10 +234,10 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
           <h1 className="text-2xl md:text-3xl font-bold text-primary">Quick Tasks</h1>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Categories Selection */}
-          <div className="space-y-6">
-            <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border">
+        <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Categories Selection */}
+            <div>
               <h2 className="text-xl font-semibold text-primary mb-4">Select Task Template</h2>
               <Accordion type="single" collapsible className="w-full" value={selectedCategory} onValueChange={handleCategorySelect}>
                 {Object.keys(taskCategories).map((category) => (
@@ -273,87 +272,87 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
                 ))}
               </Accordion>
             </div>
-          </div>
 
-          {/* Task Form */}
-          <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border">
-            <h2 className="text-xl font-semibold text-primary mb-6">Task Details</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <Input
-                  placeholder="Task title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                />
-              </div>
+            {/* Task Form */}
+            <div>
+              <h2 className="text-xl font-semibold text-primary mb-6">Task Details</h2>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <Input
+                    placeholder="Task title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                  />
+                </div>
 
-              <div>
-                <Textarea
-                  placeholder="Description (optional)"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  rows={3}
-                />
-              </div>
+                <div>
+                  <Textarea
+                    placeholder="Description (optional)"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows={3}
+                  />
+                </div>
 
-              <div>
-                <Select value={priority} onValueChange={(value: 'low' | 'medium' | 'high' | 'urgent') => setPriority(value)}>
-                  <SelectTrigger>
-                    {selectedPriorityDetails && (
-                      <div className="flex items-center gap-2">
-                        <span className={cn("h-2.5 w-2.5 rounded-full", selectedPriorityDetails.color)} />
-                        <span>{selectedPriorityDetails.label}</span>
-                        {selectedPriorityDetails.emoji && <span>{selectedPriorityDetails.emoji}</span>}
-                      </div>
-                    )}
-                  </SelectTrigger>
-                  <SelectContent>
-                    {priorities.map((p) => (
-                      <SelectItem key={p.value} value={p.value}>
+                <div>
+                  <Select value={priority} onValueChange={(value: 'low' | 'medium' | 'high' | 'urgent') => setPriority(value)}>
+                    <SelectTrigger>
+                      {selectedPriorityDetails && (
                         <div className="flex items-center gap-2">
-                          <span className={cn("h-2.5 w-2.5 rounded-full", p.color)} />
-                          <span>{p.label}</span>
-                          {p.emoji && <span className="ml-auto">{p.emoji}</span>}
+                          <span className={cn("h-2.5 w-2.5 rounded-full", selectedPriorityDetails.color)} />
+                          <span>{selectedPriorityDetails.label}</span>
+                          {selectedPriorityDetails.emoji && <span>{selectedPriorityDetails.emoji}</span>}
                         </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start text-left font-normal"
                       )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {format(dueDate, "PPP")}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={dueDate}
-                      onSelect={(date) => date && setDueDate(date)}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {priorities.map((p) => (
+                        <SelectItem key={p.value} value={p.value}>
+                          <div className="flex items-center gap-2">
+                            <span className={cn("h-2.5 w-2.5 rounded-full", p.color)} />
+                            <span>{p.label}</span>
+                            {p.emoji && <span className="ml-auto">{p.emoji}</span>}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              <Button 
-                type="submit" 
-                className="w-full"
-                disabled={!title || !selectedCategory}
-              >
-                Add Task
-              </Button>
-            </form>
+                <div>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {format(dueDate, "PPP")}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={dueDate}
+                        onSelect={(date) => date && setDueDate(date)}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                <Button 
+                  type="submit" 
+                  className="w-full"
+                  disabled={!title || !selectedCategory}
+                >
+                  Add Task
+                </Button>
+              </form>
+            </div>
           </div>
         </div>
 
