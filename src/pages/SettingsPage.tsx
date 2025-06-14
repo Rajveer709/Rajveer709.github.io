@@ -1,3 +1,4 @@
+
 import { ArrowLeft, Moon, Sun, User, Palette, Info, RotateCcw, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -74,7 +75,8 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
             <Switch id="dark-mode-switch" checked={isDarkMode} onCheckedChange={onToggleDarkMode} />
           </div>
           <div>
-            <h3 className="text-sm font-medium mb-3">Color Theme</h3>
+            <h3 className="text-sm font-medium mb-1">Color Theme</h3>
+            <p className="text-xs text-muted-foreground mb-3">Unlocks with Challenges.</p>
             <div className="grid grid-cols-3 gap-3">
               {themes.map((theme) => {
                 const isUnlocked = userLevel >= theme.levelToUnlock;

@@ -9,7 +9,7 @@ export interface Challenge extends ChallengeType {
   completed: boolean;
 }
 
-interface FunctionalChallengePageProps {
+interface ChallengePageProps {
   userLevel: number;
   userXp: number;
   xpToNextLevel: number;
@@ -17,7 +17,7 @@ interface FunctionalChallengePageProps {
   onBack: () => void;
 }
 
-export const FunctionalChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, onBack }: FunctionalChallengePageProps) => {
+export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, onBack }: ChallengePageProps) => {
   const progressPercentage = xpToNextLevel > 0 ? Math.round((userXp / xpToNextLevel) * 100) : 0;
 
   const getChallengeLevel = (challengeId: number) => {
@@ -40,7 +40,7 @@ export const FunctionalChallengePage = ({ userLevel, userXp, xpToNextLevel, chal
         <Button variant="ghost" size="icon" onClick={onBack} className="mr-2 md:hidden">
           <ArrowLeft className="h-5 w-5" />
         </Button>
-        <h1 className="text-2xl md:text-3xl font-bold text-primary">Functional Challenges</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-primary">Challenges</h1>
       </div>
 
       <Card className="mb-6 bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">

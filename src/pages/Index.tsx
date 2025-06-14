@@ -24,7 +24,7 @@ export interface Task {
   createdAt: Date;
 }
 
-import { FunctionalChallengePage, Challenge as ChallengeWithCompleted } from './FunctionalChallengePage';
+import { ChallengePage, Challenge as ChallengeWithCompleted } from './ChallengePage';
 
 export type Challenge = ChallengeWithCompleted;
 
@@ -272,7 +272,7 @@ const Index = () => {
                   <Route path="/add-task" element={<AddTaskPage onAddTask={addTask} onBack={() => navigate(-1)} currentTheme={currentTheme} />} />
                   <Route path="/calendar" element={<CalendarPage tasks={tasks} onBack={() => navigate(-1)} currentTheme={currentTheme} />} />
                   <Route path="/challenges" element={
-                    <FunctionalChallengePage 
+                    <ChallengePage 
                       userLevel={userLevel}
                       userXp={userXp}
                       xpToNextLevel={userLevel * XP_FOR_LEVEL}
