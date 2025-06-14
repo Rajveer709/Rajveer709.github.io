@@ -357,7 +357,7 @@ const Index = () => {
         <Route path="*" element={
           !session ? null : (
           <>
-            <div className="container mx-auto px-4 py-6 md:py-8 max-w-6xl pb-20 md:pb-8">
+            <div className="container mx-auto px-4 pt-4 md:pt-6 max-w-6xl pb-20 md:pb-8">
               <Header
                 onThemeChange={handleThemeChange}
                 currentTheme={currentTheme}
@@ -369,7 +369,7 @@ const Index = () => {
                 <Routes>
                   <Route path="/" element={<DashboardPage tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} />} />
                   <Route path="/add-task" element={<AddTaskPage onAddTask={addTask} onBack={() => navigate(-1)} currentTheme={currentTheme} />} />
-                  <Route path="/calendar" element={<CalendarPage tasks={tasks} onBack={() => navigate(-1)} currentTheme={currentTheme} />} />
+                  <Route path="/calendar" element={<CalendarPage tasks={tasks} onBack={() => navigate(-1)} />} />
                   <Route path="/challenges" element={
                     <ChallengePage 
                       userLevel={userLevel}
