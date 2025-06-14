@@ -7,6 +7,8 @@ import { LandingPage } from '../components/LandingPage';
 import { CalendarPage } from './CalendarPage';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
+import { themes, defaultTheme } from '../config/themes';
+import { hexToHsl } from '../lib/colorUtils';
 
 export interface Task {
   id: string;
@@ -24,7 +26,20 @@ const Index = () => {
   const [showApp, setShowApp] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [showAddTask, setShowAddTask] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState('purple');
+  const [currentTheme, setCurrentTheme] = useState(defaultTheme);
+
+  const applyTheme = (themeValue: string) => {
+    const theme = themes.find(t => t.value === themeValue) || themes.find(t => t.value === defaultTheme);
+    if (!theme) return;
+
+    const root = document.documentElement;
+    const primaryHsl = hexToHsl(theme.colors.primary);
+
+    if (primaryHsl) {
+        root.style.setProperty('--primary', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
+        root.style.setProperty('--ring', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
+    }
+  };
 
   // Load tasks from localStorage on component mount
   useEffect(() => {
@@ -41,6 +56,9 @@ const Index = () => {
         setShowApp(true);
       }
     }
+    const savedTheme = localStorage.getItem('lifeAdminTheme') || defaultTheme;
+    setCurrentTheme(savedTheme);
+    applyTheme(savedTheme);
   }, []);
 
   // Save tasks to localStorage whenever tasks change
@@ -85,20 +103,24 @@ const Index = () => {
     setShowApp(true);
   };
 
-  const getThemeGradient = (theme: string) => {
-    switch (theme) {
-      case 'teal': return 'bg-gradient-teal';
-      case 'orange': return 'bg-gradient-orange';
-      case 'pink': return 'bg-gradient-pink';
-      case 'blue': return 'bg-gradient-success';
-      case 'green': return 'bg-gradient-warning';
-      default: return 'bg-gradient-purple';
-    }
+  const getThemeBackgroundStyle = () => {
+    const theme = themes.find(t => t.value === currentTheme) || themes.find(t => t.value === defaultTheme);
+    if (!theme) return {};
+
+    const primaryColor = theme.colors.primary;
+    const r = parseInt(primaryColor.slice(1, 3), 16);
+    const g = parseInt(primaryColor.slice(3, 5), 16);
+    const b = parseInt(primaryColor.slice(5, 7), 16);
+    
+    return {
+        background: `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 0.1), white)`
+    };
   };
 
   const handleThemeChange = (theme: string) => {
     setCurrentTheme(theme);
     localStorage.setItem('lifeAdminTheme', theme);
+    applyTheme(theme);
   };
 
   const handleCalendarClick = () => {
@@ -116,14 +138,6 @@ const Index = () => {
   const handleBackFromAddTask = () => {
     setShowAddTask(false);
   };
-
-  // Load theme from localStorage
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('lifeAdminTheme');
-    if (savedTheme) {
-      setCurrentTheme(savedTheme);
-    }
-  }, []);
 
   if (!showApp) {
     return <LandingPage onGetStarted={handleGetStarted} currentTheme={currentTheme} />;
@@ -150,7 +164,7 @@ const Index = () => {
   }
 
   return (
-    <div className={`min-h-screen ${getThemeGradient(currentTheme)}`}>
+    <div className="min-h-screen" style={getThemeBackgroundStyle()}>
       <div className="container mx-auto px-4 py-6 md:py-8 max-w-6xl">
         <Header 
           onThemeChange={handleThemeChange} 
@@ -163,10 +177,9 @@ const Index = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <h2 className="text-xl md:text-2xl font-semibold text-white">Your Tasks</h2>
+          <h2 className="text-xl md:text-2xl font-semibold text-primary">Your Tasks</h2>
           <Button 
             onClick={handleAddTaskClick}
-            className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white shadow-lg hover:shadow-xl transition-all duration-200 border border-white/30"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Task

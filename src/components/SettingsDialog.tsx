@@ -1,22 +1,14 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Settings } from 'lucide-react';
+import { themes } from '../config/themes';
 
 interface SettingsDialogProps {
   onThemeChange: (theme: string) => void;
   currentTheme: string;
 }
-
-const themes = [
-  { name: 'Purple', value: 'purple', gradient: 'bg-gradient-purple', colors: { primary: '#667eea', secondary: '#764ba2' } },
-  { name: 'Teal', value: 'teal', gradient: 'bg-gradient-teal', colors: { primary: '#11998e', secondary: '#38ef7d' } },
-  { name: 'Orange', value: 'orange', gradient: 'bg-gradient-orange', colors: { primary: '#fc4a1a', secondary: '#f7b733' } },
-  { name: 'Pink', value: 'pink', gradient: 'bg-gradient-pink', colors: { primary: '#ff9a9e', secondary: '#fecfef' } },
-  { name: 'Blue', value: 'blue', gradient: 'bg-gradient-success', colors: { primary: '#4facfe', secondary: '#00f2fe' } },
-  { name: 'Green', value: 'green', gradient: 'bg-gradient-warning', colors: { primary: '#43e97b', secondary: '#38f9d7' } }
-];
 
 export const SettingsDialog = ({ onThemeChange, currentTheme }: SettingsDialogProps) => {
   const [selectedTheme, setSelectedTheme] = useState(currentTheme);
@@ -30,7 +22,7 @@ export const SettingsDialog = ({ onThemeChange, currentTheme }: SettingsDialogPr
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="text-white/80 hover:text-white hover:bg-white/10">
+        <Button variant="ghost" size="icon" className="text-foreground/80 hover:text-foreground hover:bg-foreground/10">
           <Settings className="w-5 h-5" />
         </Button>
       </DialogTrigger>
@@ -48,7 +40,7 @@ export const SettingsDialog = ({ onThemeChange, currentTheme }: SettingsDialogPr
                   onClick={() => setSelectedTheme(theme.value)}
                   className={`p-3 rounded-lg border-2 transition-all ${
                     selectedTheme === theme.value 
-                      ? 'border-blue-500 shadow-md' 
+                      ? 'border-primary shadow-md' 
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Task } from './Index';
 import { Button } from '@/components/ui/button';
@@ -7,10 +6,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { CalendarIcon, ArrowLeft } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { themes, defaultTheme } from '../config/themes';
 
 interface AddTaskPageProps {
   onAddTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
@@ -99,15 +99,18 @@ const priorities = [
   { value: 'urgent', label: 'Urgent Priority' }
 ];
 
-const getThemeGradient = (theme: string) => {
-  switch (theme) {
-    case 'teal': return 'bg-gradient-teal';
-    case 'orange': return 'bg-gradient-orange';
-    case 'pink': return 'bg-gradient-pink';
-    case 'blue': return 'bg-gradient-success';
-    case 'green': return 'bg-gradient-warning';
-    default: return 'bg-gradient-purple';
-  }
+const getThemeBackgroundStyle = (currentTheme: string) => {
+    const theme = themes.find(t => t.value === currentTheme) || themes.find(t => t.value === defaultTheme);
+    if (!theme) return {};
+    
+    const primaryColor = theme.colors.primary;
+    const r = parseInt(primaryColor.slice(1, 3), 16);
+    const g = parseInt(primaryColor.slice(3, 5), 16);
+    const b = parseInt(primaryColor.slice(5, 7), 16);
+    
+    return {
+        background: `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 0.1), white)`
+    };
 };
 
 export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProps) => {
@@ -217,35 +220,31 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
   };
 
   return (
-    <div className={`min-h-screen ${getThemeGradient(currentTheme)}`}>
+    <div className="min-h-screen" style={getThemeBackgroundStyle(currentTheme)}>
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         <div className="flex items-center mb-6">
           <Button 
             variant="ghost" 
             onClick={onBack}
-            className="text-white/80 hover:text-white hover:bg-white/10 mr-4"
+            className="text-foreground/80 hover:text-foreground mr-4"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
             Back
           </Button>
-          <h1 className="text-2xl md:text-3xl font-bold text-white">Quick Tasks</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-primary">Quick Tasks</h1>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Categories Selection */}
           <div className="space-y-6">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <h2 className="text-xl font-semibold text-white mb-4">Select Category</h2>
+            <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border">
+              <h2 className="text-xl font-semibold text-primary mb-4">Select Category</h2>
               <div className="space-y-2">
                 {Object.keys(taskCategories).map((category) => (
                   <Button
                     key={category}
-                    variant={selectedCategory === category ? "default" : "ghost"}
-                    className={`w-full justify-start text-left ${
-                      selectedCategory === category 
-                        ? "bg-white text-gray-900 hover:bg-white/90" 
-                        : "text-white/80 hover:text-white hover:bg-white/10"
-                    }`}
+                    variant={selectedCategory === category ? "default" : "secondary"}
+                    className="w-full justify-start text-left"
                     onClick={() => handleCategorySelect(category)}
                   >
                     {category}
@@ -255,18 +254,14 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
             </div>
 
             {selectedCategory && (
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">Select Subcategory</h3>
+              <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border">
+                <h3 className="text-lg font-semibold text-primary mb-4">Select Subcategory</h3>
                 <div className="space-y-2">
                   {getSubCategories().map((subCategory) => (
                     <Button
                       key={subCategory}
-                      variant={selectedSubCategory === subCategory ? "default" : "ghost"}
-                      className={`w-full justify-start text-left text-sm ${
-                        selectedSubCategory === subCategory 
-                          ? "bg-white text-gray-900 hover:bg-white/90" 
-                          : "text-white/80 hover:text-white hover:bg-white/10"
-                      }`}
+                      variant={selectedSubCategory === subCategory ? "default" : "secondary"}
+                      className="w-full justify-start text-left text-sm"
                       onClick={() => handleSubCategorySelect(subCategory)}
                     >
                       {subCategory}
@@ -277,19 +272,15 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
             )}
 
             {selectedSubCategory && (
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">Select Task</h3>
+              <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border">
+                <h3 className="text-lg font-semibold text-primary mb-4">Select Task</h3>
                 <div className="space-y-2">
                   {getTasks().map((task) => (
                     <Button
                       key={task}
-                      variant={selectedTask === task ? "default" : "ghost"}
-                      className={`w-full justify-start text-left text-sm ${
-                        selectedTask === task 
-                          ? "bg-white text-gray-900 hover:bg-white/90" 
-                          : "text-white/80 hover:text-white hover:bg-white/10"
-                      }`}
-                      onClick={() => handleTaskSelect(task)}
+                      variant={selectedTask === task ? "default" : "secondary"}
+                      className="w-full justify-start text-left text-sm"
+                      onClick={() => handleTaskSelect(task as string)}
                     >
                       {task}
                     </Button>
@@ -300,8 +291,8 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
           </div>
 
           {/* Task Form */}
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-            <h2 className="text-xl font-semibold text-white mb-6">Task Details</h2>
+          <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border">
+            <h2 className="text-xl font-semibold text-primary mb-6">Task Details</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Input
@@ -309,7 +300,6 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
-                  className="bg-white/20 border-white/30 text-white placeholder:text-white/60"
                 />
               </div>
 
@@ -318,14 +308,13 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
                   placeholder="Description (optional)"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="bg-white/20 border-white/30 text-white placeholder:text-white/60"
                   rows={3}
                 />
               </div>
 
               <div>
                 <Select value={priority} onValueChange={(value: 'low' | 'medium' | 'high' | 'urgent') => setPriority(value)}>
-                  <SelectTrigger className="bg-white/20 border-white/30 text-white">
+                  <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -344,7 +333,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
                     <Button
                       variant="outline"
                       className={cn(
-                        "w-full justify-start text-left font-normal bg-white/20 border-white/30 text-white hover:bg-white/30"
+                        "w-full justify-start text-left font-normal"
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
@@ -364,7 +353,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
 
               <Button 
                 type="submit" 
-                className="w-full bg-white text-gray-900 hover:bg-white/90"
+                className="w-full"
                 disabled={!title || !selectedCategory}
               >
                 Add Task

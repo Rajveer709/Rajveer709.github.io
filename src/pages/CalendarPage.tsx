@@ -5,6 +5,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { ArrowLeft, CheckCircle, Clock } from 'lucide-react';
 import { format, isSameDay } from 'date-fns';
 import { useState } from 'react';
+import { themes } from '../config/themes';
 
 interface CalendarPageProps {
   tasks: Task[];
@@ -15,15 +16,18 @@ interface CalendarPageProps {
 export const CalendarPage = ({ tasks, onBack, currentTheme }: CalendarPageProps) => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-  const getThemeGradient = (theme: string) => {
-    switch (theme) {
-      case 'teal': return 'bg-gradient-teal';
-      case 'orange': return 'bg-gradient-orange';
-      case 'pink': return 'bg-gradient-pink';
-      case 'blue': return 'bg-gradient-success';
-      case 'green': return 'bg-gradient-warning';
-      default: return 'bg-gradient-purple';
-    }
+  const getThemeBackgroundStyle = () => {
+    const theme = themes.find(t => t.value === currentTheme) || themes[0];
+    if (!theme) return {};
+
+    const primaryColor = theme.colors.primary;
+    const r = parseInt(primaryColor.slice(1, 3), 16);
+    const g = parseInt(primaryColor.slice(3, 5), 16);
+    const b = parseInt(primaryColor.slice(5, 7), 16);
+    
+    return {
+        background: `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 0.1), white)`
+    };
   };
 
   const tasksForSelectedDate = tasks.filter(task => 
@@ -41,35 +45,35 @@ export const CalendarPage = ({ tasks, onBack, currentTheme }: CalendarPageProps)
   };
 
   return (
-    <div className={`min-h-screen ${getThemeGradient(currentTheme)}`}>
+    <div className="min-h-screen" style={getThemeBackgroundStyle()}>
       <div className="container mx-auto px-4 py-6 max-w-6xl">
         <div className="flex items-center mb-6">
           <Button 
             variant="ghost" 
             onClick={onBack}
-            className="text-white/80 hover:text-white hover:bg-white/10 mr-4"
+            className="text-foreground/80 hover:text-foreground mr-4"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
             Back
           </Button>
-          <h1 className="text-2xl md:text-3xl font-bold text-white">
+          <h1 className="text-2xl md:text-3xl font-bold text-primary">
             Task Calendar
           </h1>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6">
-            <h2 className="text-lg font-semibold mb-4">Select Date</h2>
+          <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border">
+            <h2 className="text-lg font-semibold mb-4 text-primary">Select Date</h2>
             <Calendar
               mode="single"
               selected={selectedDate}
               onSelect={(date) => date && setSelectedDate(date)}
-              className="rounded-lg border shadow-sm pointer-events-auto"
+              className="rounded-lg border shadow-sm pointer-events-auto bg-card"
             />
           </div>
 
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-6">
-            <h2 className="text-lg font-semibold mb-4">
+          <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border">
+            <h2 className="text-lg font-semibold mb-4 text-primary">
               Tasks for {format(selectedDate, "MMMM d, yyyy")}
             </h2>
             
@@ -86,7 +90,7 @@ export const CalendarPage = ({ tasks, onBack, currentTheme }: CalendarPageProps)
                     className={`p-4 rounded-lg border transition-all duration-200 ${
                       task.completed 
                         ? 'bg-green-50 border-green-200' 
-                        : 'bg-white border-gray-200 hover:shadow-md'
+                        : 'bg-card border-border hover:shadow-md'
                     }`}
                   >
                     <div className="flex items-start justify-between">
