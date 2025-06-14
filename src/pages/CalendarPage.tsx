@@ -1,4 +1,3 @@
-
 import { Task } from './Index';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -63,7 +62,7 @@ export const CalendarPage = ({ tasks, onBack, currentTheme }: CalendarPageProps)
 
         <div className="grid lg:grid-cols-2 gap-6">
           <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border">
-            <h2 className="text-lg font-semibold mb-4 text-primary">Select Date</h2>
+            <h2 className="text-lg font-semibold mb-4 text-primary text-center">Select Date</h2>
             <div className="flex justify-center">
               <Calendar
                 mode="single"
