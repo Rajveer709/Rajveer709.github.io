@@ -357,7 +357,7 @@ const Index = () => {
           !session ? null : (
           <>
             <div className="container mx-auto px-4 py-6 md:py-8 max-w-6xl pb-20 md:pb-8">
-              <Header onThemeChange={handleThemeChange} currentTheme={currentTheme} onCalendarClick={() => navigate('/calendar')} profile={profile} />
+              <Header onThemeChange={handleThemeChange} currentTheme={currentTheme} onCalendarClick={() => navigate('/calendar')} />
               <main>
                 <Routes>
                   <Route path="/" element={<DashboardPage tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} />} />
