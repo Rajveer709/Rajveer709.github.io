@@ -5,7 +5,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { ArrowLeft, CheckCircle, Clock } from 'lucide-react';
 import { format, isSameDay } from 'date-fns';
 import { useState } from 'react';
-import { themes } from '../config/themes';
+import { themes, defaultTheme } from '../config/themes';
 
 interface CalendarPageProps {
   tasks: Task[];
@@ -17,7 +17,7 @@ export const CalendarPage = ({ tasks, onBack, currentTheme }: CalendarPageProps)
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const getThemeBackgroundStyle = () => {
-    const theme = themes.find(t => t.value === currentTheme) || themes[0];
+    const theme = themes.find(t => t.value === currentTheme) || themes.find(t => t.value === defaultTheme);
     if (!theme) return {};
 
     const primaryColor = theme.colors.primary;
@@ -26,7 +26,7 @@ export const CalendarPage = ({ tasks, onBack, currentTheme }: CalendarPageProps)
     const b = parseInt(primaryColor.slice(5, 7), 16);
     
     return {
-        background: `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 0.1), white)`
+        background: `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 0.2), hsl(var(--background)))`
     };
   };
 
