@@ -42,11 +42,11 @@ const Index = () => {
         root.style.setProperty('--primary', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
         root.style.setProperty('--ring', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
         if (isDark) {
-          root.style.setProperty('--background', `${primaryHsl.h} ${primaryHsl.s * 0.15}% 7%`);
-          root.style.setProperty('--card', `${primaryHsl.h} ${primaryHsl.s * 0.25}% 11%`);
+          root.style.setProperty('--background', `${primaryHsl.h} ${primaryHsl.s * 0.15}% 8%`);
+          root.style.setProperty('--card', `${primaryHsl.h} ${primaryHsl.s * 0.25}% 12%`);
         } else {
-          root.style.setProperty('--background', `${primaryHsl.h} 40% 98.5%`);
-          root.style.setProperty('--card', `${primaryHsl.h} 60% 96%`);
+          root.style.setProperty('--background', `${primaryHsl.h} 20% 99%`);
+          root.style.setProperty('--card', `${primaryHsl.h} 40% 97%`);
         }
     }
   }, []);
@@ -160,7 +160,7 @@ const Index = () => {
                       onDeleteTask={deleteTask}
                       onEditTask={editTask}
                       onBack={() => navigate(-1)}
-                      applyTheme={(theme) => applyTheme(theme, isDarkMode)}
+                      applyTheme={applyTheme}
                       currentTheme={currentTheme}
                     />
                   } />
