@@ -2,6 +2,7 @@
 import { Task } from '../pages/Index';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { 
   Calendar, 
   DollarSign, 
@@ -47,6 +48,8 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
     return !task.completed && taskDate >= today && taskDate <= nextWeek;
   }).length;
 
+  const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
   const categoryCounts = tasks.reduce((acc, task) => {
     if (!task.completed) {
       acc[task.category] = (acc[task.category] || 0) + 1;
@@ -55,15 +58,15 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
   }, {} as { [key: string]: number });
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       {/* Overview Cards */}
       <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-600">Total Tasks</CardTitle>
+          <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Total Tasks</CardTitle>
           <CheckCircle className="h-4 w-4 text-blue-600" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-gray-800">{totalTasks}</div>
+          <div className="text-xl md:text-2xl font-bold text-gray-800">{totalTasks}</div>
           <p className="text-xs text-gray-500">
             {completedTasks} completed
           </p>
@@ -72,11 +75,11 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
 
       <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-600">Overdue</CardTitle>
+          <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Overdue</CardTitle>
           <AlertTriangle className="h-4 w-4 text-red-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-red-600">{overdueTasks}</div>
+          <div className="text-xl md:text-2xl font-bold text-red-600">{overdueTasks}</div>
           <p className="text-xs text-gray-500">
             Need attention
           </p>
@@ -85,11 +88,11 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
 
       <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-600">Due This Week</CardTitle>
+          <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Due This Week</CardTitle>
           <Clock className="h-4 w-4 text-orange-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-orange-600">{upcomingTasks}</div>
+          <div className="text-xl md:text-2xl font-bold text-orange-600">{upcomingTasks}</div>
           <p className="text-xs text-gray-500">
             Coming up soon
           </p>
@@ -98,15 +101,16 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
 
       <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-600">Completion Rate</CardTitle>
+          <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Completion</CardTitle>
           <Calendar className="h-4 w-4 text-green-500" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-green-600">
-            {totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}%
+          <div className="text-xl md:text-2xl font-bold text-green-600">
+            {completionPercentage}%
           </div>
-          <p className="text-xs text-gray-500">
-            Tasks completed
+          <Progress value={completionPercentage} className="h-2 mt-2" />
+          <p className="text-xs text-gray-500 mt-1">
+            {completedTasks} of {totalTasks} tasks
           </p>
         </CardContent>
       </Card>
