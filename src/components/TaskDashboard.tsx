@@ -73,7 +73,7 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
 
       <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Overdue</CardTitle>
+          <CardTitle className="text-xs md:text-sm font-medium text-gray-600">OverDue Tasks</CardTitle>
           <AlertTriangle className="h-4 w-4 text-destructive" />
         </CardHeader>
         <CardContent>
@@ -86,7 +86,7 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
 
       <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Due This Week</CardTitle>
+          <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Due Tasks</CardTitle>
           <Clock className="h-4 w-4 text-orange-500" />
         </CardHeader>
         <CardContent>
