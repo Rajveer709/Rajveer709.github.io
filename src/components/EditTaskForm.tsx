@@ -54,7 +54,7 @@ export const EditTaskForm = ({ task, onEditTask }: EditTaskFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 animate-scale-in">
       <div>
         <Input
           placeholder="Task title"
@@ -134,7 +134,7 @@ export const EditTaskForm = ({ task, onEditTask }: EditTaskFormProps) => {
 
       <Button 
         type="submit" 
-        className="w-full bg-blue-600 hover:bg-blue-700"
+        className="w-full"
         disabled={!title || !category}
       >
         Update Task

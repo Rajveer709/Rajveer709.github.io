@@ -1,10 +1,9 @@
-
 import { Task } from './Index';
-import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import { ArrowLeft, CheckCircle, Clock } from 'lucide-react';
+import { CheckCircle, Clock } from 'lucide-react';
 import { format, isSameDay } from 'date-fns';
 import { useState } from 'react';
+import { PageHeader } from '../components/PageHeader';
 
 interface CalendarPageProps {
   tasks: Task[];
@@ -30,19 +29,7 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
 
   return (
     <div className="animate-fade-in space-y-6">
-      <div className="flex items-center">
-        <Button 
-          variant="ghost" 
-          onClick={onBack}
-          className="text-foreground/80 hover:text-foreground mr-4"
-        >
-          <ArrowLeft className="w-5 h-5 mr-2" />
-          Back
-        </Button>
-        <h1 className="text-2xl md:text-3xl font-bold text-primary">
-          Task Calendar
-        </h1>
-      </div>
+      <PageHeader onBack={onBack} title="Task Calendar" />
 
       <div className="grid lg:grid-cols-2 gap-6 items-start">
         <div className="bg-background/60 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-primary/20">

@@ -2,9 +2,8 @@ import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Task } from './Index';
 import { TaskList } from '../components/TaskList';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
 import { hexToHsl } from '../lib/colorUtils';
+import { PageHeader } from '../components/PageHeader';
 
 interface TasksViewPageProps {
   tasks: Task[];
@@ -85,13 +84,7 @@ export const TasksViewPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, o
 
   return (
     <div className="animate-fade-in">
-      <div className="flex items-center gap-4 mb-6">
-        <Button variant="ghost" size="icon" onClick={onBack}>
-          <ArrowLeft className="h-5 w-5" />
-          <span className="sr-only">Back</span>
-        </Button>
-        <h1 className="text-2xl md:text-3xl font-bold text-primary">{currentConfig.title}</h1>
-      </div>
+      <PageHeader onBack={onBack} title={currentConfig.title} />
       <TaskList
         tasks={filteredTasks}
         onToggleTask={onToggleTask}
