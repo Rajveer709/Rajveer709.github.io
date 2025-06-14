@@ -1,4 +1,3 @@
-
 import { Task } from '../pages/Index';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -63,10 +62,10 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
       <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Total Tasks</CardTitle>
-          <CheckCircle className="h-4 w-4 text-blue-600" />
+          <CheckCircle className="h-4 w-4 text-primary" />
         </CardHeader>
         <CardContent>
-          <div className="text-xl md:text-2xl font-bold text-blue-600">{totalTasks}</div>
+          <div className="text-xl md:text-2xl font-bold text-primary">{totalTasks}</div>
           <p className="text-xs text-gray-500">
             {completedTasks} completed
           </p>
@@ -76,10 +75,10 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
       <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Overdue</CardTitle>
-          <AlertTriangle className="h-4 w-4 text-red-500" />
+          <AlertTriangle className="h-4 w-4 text-destructive" />
         </CardHeader>
         <CardContent>
-          <div className="text-xl md:text-2xl font-bold text-red-600">{overdueTasks}</div>
+          <div className="text-xl md:text-2xl font-bold text-destructive">{overdueTasks}</div>
           <p className="text-xs text-gray-500">
             Need attention
           </p>

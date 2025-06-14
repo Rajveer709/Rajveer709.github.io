@@ -1,4 +1,3 @@
-
 import { CheckSquare, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SettingsDialog } from './SettingsDialog';
@@ -37,7 +36,7 @@ export const Header = ({ onThemeChange, currentTheme, onCalendarClick }: HeaderP
         </div>
       </div>
       <p className="text-lg md:text-xl font-medium text-foreground/90">
-        Simplify Life. One Task at a Time.
+        Stay organized, achieve more.
       </p>
     </div>
   );
