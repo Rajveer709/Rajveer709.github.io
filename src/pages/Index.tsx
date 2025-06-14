@@ -159,7 +159,7 @@ const Index = () => {
                       onDeleteTask={deleteTask}
                       onEditTask={editTask}
                       onBack={() => navigate(-1)}
-                      applyTheme={applyTheme}
+                      applyTheme={(theme) => applyTheme(theme, isDarkMode)}
                       currentTheme={currentTheme}
                     />
                   } />
