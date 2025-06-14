@@ -1,11 +1,8 @@
 import { Task } from '../pages/Index';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { 
-  Calendar, 
   DollarSign, 
   Heart, 
   Home, 
@@ -102,16 +99,15 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
 
       <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Completion</CardTitle>
-          <Calendar className="h-4 w-4 text-green-500" />
+          <CardTitle className="text-xs md:text-sm font-medium text-gray-600">Completed Tasks</CardTitle>
+          <CheckCircle className="h-4 w-4 text-green-500" />
         </CardHeader>
         <CardContent>
             <div className="text-xl md:text-2xl font-bold text-green-600">
-              {completionPercentage}%
+              {completedTasks}
             </div>
-            <Progress value={completionPercentage} className="h-2 mt-2" />
             <p className="text-xs text-gray-500 mt-1">
-              {completedTasks} of {totalTasks} tasks
+              out of {totalTasks} tasks
             </p>
         </CardContent>
       </Card>
