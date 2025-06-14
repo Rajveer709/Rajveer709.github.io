@@ -19,13 +19,21 @@ export const DashboardPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask }:
 
   return (
     <>
-      <Card className="mb-6 bg-white/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">
+      <Card className="mb-6 bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">
         <CardHeader className="pb-2 pt-4">
           <CardTitle className="text-md font-medium text-foreground/80">Overall Progress</CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
           <div className="flex items-center gap-4">
-            <Progress value={completionPercentage} className="h-2" />
+            <Progress 
+              value={completionPercentage} 
+              className="h-2"
+              indicatorClassName={
+                completionPercentage === 100 
+                  ? 'animate-pulse-glow' 
+                  : 'shadow-[0_0_10px_hsl(var(--primary))]'
+              }
+            />
             <span className="text-lg font-bold text-primary">{`${completionPercentage}%`}</span>
           </div>
           <p className="text-sm text-muted-foreground mt-1">{completedTasks} of {totalTasks} tasks completed.</p>

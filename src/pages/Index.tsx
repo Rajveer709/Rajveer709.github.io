@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { DashboardPage } from './DashboardPage';
@@ -31,7 +30,7 @@ const Index = () => {
   const location = useLocation();
   const isLandingPage = location.pathname === '/landing';
 
-  const applyTheme = useCallback((themeValue: string) => {
+  const applyTheme = useCallback((themeValue: string, isDark: boolean) => {
     const theme = themes.find(t => t.value === themeValue) || themes.find(t => t.value === defaultTheme);
     if (!theme) return;
 
@@ -41,6 +40,13 @@ const Index = () => {
     if (primaryHsl) {
         root.style.setProperty('--primary', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
         root.style.setProperty('--ring', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
+        if (isDark) {
+          root.style.setProperty('--background', `${primaryHsl.h} ${primaryHsl.s * 0.1}% 6%`);
+          root.style.setProperty('--card', `${primaryHsl.h} ${primaryHsl.s * 0.2}% 10%`);
+        } else {
+          root.style.setProperty('--background', `${primaryHsl.h} 30% 98.5%`);
+          root.style.setProperty('--card', `${primaryHsl.h} 50% 96%`);
+        }
     }
   }, []);
 
@@ -68,21 +74,17 @@ const Index = () => {
     }
     const savedTheme = localStorage.getItem('lifeAdminTheme') || defaultTheme;
     setCurrentTheme(savedTheme);
-    applyTheme(savedTheme);
 
     const savedDarkMode = localStorage.getItem('lifeAdminDarkMode') === 'true';
     setIsDarkMode(savedDarkMode);
-  }, [applyTheme]);
+  }, []);
 
   useEffect(() => {
     const root = window.document.documentElement;
-    if (isDarkMode) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
+    root.classList.toggle('dark', isDarkMode);
     localStorage.setItem('lifeAdminDarkMode', isDarkMode.toString());
-  }, [isDarkMode]);
+    applyTheme(currentTheme, isDarkMode);
+  }, [isDarkMode, currentTheme, applyTheme]);
 
   useEffect(() => {
     localStorage.setItem('lifeAdminTasks', JSON.stringify(tasks));
@@ -122,25 +124,10 @@ const Index = () => {
     );
   };
 
-  const getThemeBackgroundStyle = () => {
-    const theme = themes.find(t => t.value === currentTheme) || themes.find(t => t.value === defaultTheme);
-    if (!theme) return {};
-
-    const primaryColor = theme.colors.primary;
-    const r = parseInt(primaryColor.slice(1, 3), 16);
-    const g = parseInt(primaryColor.slice(3, 5), 16);
-    const b = parseInt(primaryColor.slice(5, 7), 16);
-    
-    return {
-        backgroundColor: `rgba(${r}, ${g}, ${b}, 0.15)`
-    };
-  };
-
   const handleThemeChange = useCallback((theme: string) => {
     setCurrentTheme(theme);
     localStorage.setItem('lifeAdminTheme', theme);
-    applyTheme(theme);
-  }, [applyTheme]);
+  }, []);
 
   const handleToggleDarkMode = () => {
     setIsDarkMode(prev => !prev);
@@ -152,7 +139,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background" style={getThemeBackgroundStyle()}>
+    <div className="min-h-screen bg-background">
       <Routes>
         <Route path="/landing" element={<LandingPage onGetStarted={handleGetStarted} />} />
         

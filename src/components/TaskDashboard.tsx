@@ -128,7 +128,7 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
       </Card>
 
       {/* Category Breakdown */}
-      <Card className="col-span-full bg-white/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">
+      <Card className="col-span-full bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">
         <CardHeader>
           <CardTitle className="text-lg font-semibold text-gray-800 dark:text-gray-200">Active Tasks by Category</CardTitle>
         </CardHeader>
