@@ -28,7 +28,7 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
   };
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="space-y-6">
       <PageHeader onBack={onBack} title="Task Calendar" />
 
       <div className="grid lg:grid-cols-2 gap-6 items-start">

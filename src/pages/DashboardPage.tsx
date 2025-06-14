@@ -1,3 +1,4 @@
+
 import { Task } from './Index';
 import { TaskDashboard } from '../components/TaskDashboard';
 import { TaskList } from '../components/TaskList';
@@ -19,7 +20,7 @@ export const DashboardPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, o
 
   return (
     <>
-      <Card className="mb-6 bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg animate-fade-in">
+      <Card className="mb-6 bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">
         <CardHeader className="pb-2 pt-4">
           <CardTitle className="text-md font-medium text-foreground/80">Overall Progress</CardTitle>
         </CardHeader>
@@ -40,11 +41,11 @@ export const DashboardPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, o
         </CardContent>
       </Card>
 
-      <div className="mb-6 md:mb-8 animate-fade-in" style={{ animationDelay: '150ms' }}>
+      <div className="mb-6 md:mb-8">
         <TaskDashboard tasks={tasks} />
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 animate-fade-in" style={{ animationDelay: '300ms' }}>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h2 className="text-xl md:text-2xl font-semibold text-primary">Your Tasks</h2>
       </div>
 

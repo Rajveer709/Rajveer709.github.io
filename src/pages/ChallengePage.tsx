@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, Circle, ArrowLeft, Lock } from "lucide-react";
@@ -35,7 +34,7 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
   };
   
   return (
-    <div className="animate-fade-in">
+    <div>
       <div className="flex items-center mb-6">
         <Button variant="ghost" size="icon" onClick={onBack} className="mr-2 md:hidden">
           <ArrowLeft className="h-5 w-5" />

@@ -84,7 +84,7 @@ export const TasksViewPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, o
   }, [filter, applyTheme, currentTheme]);
 
   return (
-    <div className="animate-fade-in">
+    <div>
       <PageHeader onBack={onBack} title={currentConfig.title} />
       <TaskList
         tasks={filteredTasks}

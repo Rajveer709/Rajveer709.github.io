@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from "sonner";
@@ -15,6 +16,8 @@ import { TasksViewPage } from './TasksViewPage';
 import { AuthPage } from './AuthPage';
 import { supabase } from '@/integrations/supabase/client';
 import { Session, User } from '@supabase/supabase-js';
+import { AnimatePresence } from 'framer-motion';
+import { PageTransition } from '../components/PageTransition';
 
 export interface Task {
   id: string;
@@ -403,76 +406,84 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      <Routes>
-        <Route path="/landing" element={<LandingPage onGetStarted={handleGetStarted} currentTheme={currentTheme} />} />
-        <Route path="/auth" element={<AuthPage />} />
-        
-        <Route path="*" element={
-          !session ? null : (
-          <>
-            <div className="container mx-auto px-4 pt-4 md:pt-6 max-w-6xl pb-20 md:pb-8">
-              <Header
-                onThemeChange={handleThemeChange}
-                currentTheme={currentTheme}
-                onCalendarClick={() => navigate('/calendar')}
-                profile={profile}
-                showGreeting={showGreeting}
-              />
-              <main>
-                <Routes>
-                  <Route path="/" element={<DashboardPage tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} onHideTask={hideTask} />} />
-                  <Route path="/add-task" element={<AddTaskPage onAddTask={addTask} onBack={() => navigate(-1)} currentTheme={currentTheme} profile={profile} />} />
-                  <Route path="/calendar" element={<CalendarPage tasks={tasks} onBack={() => navigate(-1)} />} />
-                  <Route path="/challenges" element={
-                    <ChallengePage 
-                      userLevel={userLevel}
-                      userXp={userXp}
-                      xpToNextLevel={userLevel * XP_FOR_LEVEL}
-                      challenges={challenges}
-                      onBack={() => navigate(-1)}
-                    />
-                  } />
-                  <Route path="/tasks/:filter" element={
-                    <TasksViewPage 
-                      tasks={tasks}
-                      onToggleTask={toggleTask}
-                      onDeleteTask={deleteTask}
-                      onEditTask={editTask}
-                      onHideTask={hideTask}
-                      onBack={() => navigate(-1)}
-                      applyTheme={(theme) => applyTheme(theme, isDarkMode)}
-                      currentTheme={currentTheme}
-                    />
-                  } />
-                  <Route path="/settings" element={
-                    <SettingsPage 
-                      onBack={() => navigate('/')} 
-                      currentTheme={currentTheme}
-                      onThemeChange={handleThemeChange}
-                      isDarkMode={isDarkMode}
-                      onToggleDarkMode={handleToggleDarkMode}
-                      onStartOver={handleStartOver}
-                      userLevel={userLevel}
-                      user={user}
-                      profile={profile}
-                      onUpdateProfile={handleUpdateProfile}
-                      onSignOut={handleSignOut}
-                      backgroundLightness={backgroundLightness}
-                      onBackgroundLightnessChange={handleBackgroundLightnessChange}
-                      cardLightness={cardLightness}
-                      onCardLightnessChange={handleCardLightnessChange}
-                      tasks={tasks}
-                      onRestoreTask={restoreTask}
-                    />
-                  } />
-                </Routes>
-              </main>
-            </div>
-            <BottomNavBar />
-          </>
-          )
-        } />
-      </Routes>
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/landing" element={<PageTransition><LandingPage onGetStarted={handleGetStarted} currentTheme={currentTheme} /></PageTransition>} />
+          <Route path="/auth" element={<PageTransition><AuthPage /></PageTransition>} />
+          
+          <Route path="*" element={
+            !session ? null : (
+            <>
+              <div className="container mx-auto px-4 pt-4 md:pt-6 max-w-6xl pb-20 md:pb-8">
+                <Header
+                  onThemeChange={handleThemeChange}
+                  currentTheme={currentTheme}
+                  onCalendarClick={() => navigate('/calendar')}
+                  profile={profile}
+                  showGreeting={showGreeting}
+                />
+                <main>
+                  <Routes>
+                    <Route path="/" element={<PageTransition><DashboardPage tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} onHideTask={hideTask} /></PageTransition>} />
+                    <Route path="/add-task" element={<PageTransition><AddTaskPage onAddTask={addTask} onBack={() => navigate(-1)} currentTheme={currentTheme} profile={profile} /></PageTransition>} />
+                    <Route path="/calendar" element={<PageTransition><CalendarPage tasks={tasks} onBack={() => navigate(-1)} /></PageTransition>} />
+                    <Route path="/challenges" element={
+                      <PageTransition>
+                        <ChallengePage 
+                          userLevel={userLevel}
+                          userXp={userXp}
+                          xpToNextLevel={userLevel * XP_FOR_LEVEL}
+                          challenges={challenges}
+                          onBack={() => navigate(-1)}
+                        />
+                      </PageTransition>
+                    } />
+                    <Route path="/tasks/:filter" element={
+                      <PageTransition>
+                        <TasksViewPage 
+                          tasks={tasks}
+                          onToggleTask={toggleTask}
+                          onDeleteTask={deleteTask}
+                          onEditTask={editTask}
+                          onHideTask={hideTask}
+                          onBack={() => navigate(-1)}
+                          applyTheme={(theme) => applyTheme(theme, isDarkMode)}
+                          currentTheme={currentTheme}
+                        />
+                      </PageTransition>
+                    } />
+                    <Route path="/settings" element={
+                      <PageTransition>
+                        <SettingsPage 
+                          onBack={() => navigate('/')} 
+                          currentTheme={currentTheme}
+                          onThemeChange={handleThemeChange}
+                          isDarkMode={isDarkMode}
+                          onToggleDarkMode={handleToggleDarkMode}
+                          onStartOver={handleStartOver}
+                          userLevel={userLevel}
+                          user={user}
+                          profile={profile}
+                          onUpdateProfile={handleUpdateProfile}
+                          onSignOut={handleSignOut}
+                          backgroundLightness={backgroundLightness}
+                          onBackgroundLightnessChange={handleBackgroundLightnessChange}
+                          cardLightness={cardLightness}
+                          onCardLightnessChange={handleCardLightnessChange}
+                          tasks={tasks}
+                          onRestoreTask={restoreTask}
+                        />
+                      </PageTransition>
+                    } />
+                  </Routes>
+                </main>
+              </div>
+              <BottomNavBar />
+            </>
+            )
+          } />
+        </Routes>
+      </AnimatePresence>
     </div>
   );
 };
