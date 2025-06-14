@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CalendarIcon, ArrowLeft } from 'lucide-react';
+import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { themes, defaultTheme } from '../config/themes';
@@ -18,6 +18,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useTheme } from 'next-themes';
+import { PageHeader } from '@/components/PageHeader';
 
 interface AddTaskPageProps {
   onAddTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
@@ -231,17 +232,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   return (
     <div>
       <div className="container mx-auto px-4 py-6 max-w-4xl">
-        <div className="flex items-center mb-6">
-          <Button 
-            variant="ghost" 
-            onClick={onBack}
-            className="text-foreground/80 hover:text-foreground mr-4"
-          >
-            <ArrowLeft className="w-5 h-5 mr-2" />
-            Back
-          </Button>
-          <h1 className="text-2xl md:text-3xl font-bold text-primary">Quick Tasks</h1>
-        </div>
+        <PageHeader title="Quick Tasks" onBack={onBack} />
 
         <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
