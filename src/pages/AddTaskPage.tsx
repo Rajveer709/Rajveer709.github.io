@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Task } from './Index';
 import { Button } from '@/components/ui/button';
@@ -18,6 +17,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useTheme } from 'next-themes';
 
 interface AddTaskPageProps {
   onAddTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
@@ -106,7 +106,7 @@ const priorities = [
   { value: 'urgent', label: 'Urgent Priority', color: 'bg-red-500', emoji: '🚨' }
 ];
 
-const getThemeBackgroundStyle = (currentTheme: string) => {
+const getThemeBackgroundStyle = (currentTheme: string, resolvedTheme: string | undefined) => {
     const theme = themes.find(t => t.value === currentTheme) || themes.find(t => t.value === defaultTheme);
     if (!theme) return {};
     
@@ -115,12 +115,17 @@ const getThemeBackgroundStyle = (currentTheme: string) => {
     const g = parseInt(primaryColor.slice(3, 5), 16);
     const b = parseInt(primaryColor.slice(5, 7), 16);
     
+    const isDark = resolvedTheme === 'dark';
+    const startColorOpacity = isDark ? 0.2 : 0.1;
+    const endColor = isDark ? 'hsl(var(--background))' : 'white';
+
     return {
-        background: `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, 0.1), white)`
+        background: `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, ${startColorOpacity}), ${endColor})`
     };
 };
 
 export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProps) => {
+  const { resolvedTheme } = useTheme();
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedSubCategory, setSelectedSubCategory] = useState<string>('');
   const [selectedTask, setSelectedTask] = useState<string>('');
@@ -215,7 +220,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
   };
 
   return (
-    <div className="min-h-screen" style={getThemeBackgroundStyle(currentTheme)}>
+    <div className="min-h-screen" style={getThemeBackgroundStyle(currentTheme, resolvedTheme)}>
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         <div className="flex items-center mb-6">
           <Button 
