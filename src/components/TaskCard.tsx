@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Task } from '../pages/Index';
 import { Card, CardContent } from '@/components/ui/card';
@@ -63,9 +64,9 @@ export const TaskCard = ({ task, onToggle, onDelete, onEdit, onHide }: TaskCardP
   };
 
   return (
-    <Card className={`bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${
+    <Card className={`bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${
       task.completed ? 'opacity-60' : ''
-    } ${isOverdue ? 'ring-2 ring-red-200' : ''}`}>
+    } ${isOverdue ? 'ring-2 ring-destructive/50' : ''}`}>
       <CardContent className="p-6">
         <div className="flex items-start justify-between">
           <div className="flex items-start space-x-4 flex-1">

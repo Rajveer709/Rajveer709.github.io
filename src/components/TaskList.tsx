@@ -1,6 +1,7 @@
 
 import { Task } from '../pages/Index';
 import { TaskCard } from './TaskCard';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface TaskListProps {
   tasks: Task[];
@@ -22,12 +23,12 @@ export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onEditTask, onHide
 
   if (visibleTasks.length === 0) {
     return (
-      <div className="text-center py-12 animate-fade-in">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg max-w-md mx-auto">
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">No tasks yet</h3>
-          <p className="text-gray-600">Get started by adding your first life admin task!</p>
-        </div>
-      </div>
+      <Card className="bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg text-center animate-fade-in">
+        <CardContent className="p-12">
+          <h3 className="text-xl font-semibold mb-2">No tasks yet</h3>
+          <p className="text-muted-foreground">Get started by adding your first life admin task!</p>
+        </CardContent>
+      </Card>
     );
   }
 

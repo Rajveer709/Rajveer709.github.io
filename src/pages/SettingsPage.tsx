@@ -74,7 +74,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           <h1 className="text-2xl font-semibold">Settings</h1>
         </div>
 
-        <Card className="animate-scale-in" style={{ animationDelay: '100ms' }}>
+        <Card className="animate-scale-in bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg" style={{ animationDelay: '100ms' }}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <User className="w-5 h-5" />
@@ -123,7 +123,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           </CardFooter>
         </Card>
 
-        <Card className="animate-scale-in" style={{ animationDelay: '200ms' }}>
+        <Card className="animate-scale-in bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg" style={{ animationDelay: '200ms' }}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <Palette className="w-5 h-5" />
@@ -216,7 +216,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
         </Card>
 
         {hiddenTasks.length > 0 && (
-          <Card className="animate-scale-in" style={{ animationDelay: '300ms' }}>
+          <Card className="animate-scale-in bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg" style={{ animationDelay: '300ms' }}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <EyeOff className="w-5 h-5" />
@@ -255,7 +255,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           </Card>
         )}
 
-        <Card className="animate-scale-in" style={{ animationDelay: '300ms' }}>
+        <Card className="animate-scale-in bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg" style={{ animationDelay: '300ms' }}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <Info className="w-5 h-5" />
