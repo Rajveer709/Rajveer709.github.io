@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { DashboardPage } from './DashboardPage';
@@ -131,7 +132,7 @@ const Index = () => {
     const b = parseInt(primaryColor.slice(5, 7), 16);
     
     return {
-        background: `linear-gradient(to top, rgba(${r}, ${g}, ${b}, 0.2), hsl(var(--background)))`
+        backgroundColor: `rgba(${r}, ${g}, ${b}, 0.15)`
     };
   };
 
@@ -151,9 +152,9 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen" style={getThemeBackgroundStyle()}>
+    <div className="min-h-screen bg-background" style={getThemeBackgroundStyle()}>
       <Routes>
-        <Route path="/landing" element={<LandingPage onGetStarted={handleGetStarted} currentTheme={currentTheme} />} />
+        <Route path="/landing" element={<LandingPage onGetStarted={handleGetStarted} />} />
         
         <Route path="*" element={
           <>

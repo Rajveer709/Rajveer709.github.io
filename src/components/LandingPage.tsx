@@ -1,23 +1,12 @@
-
 import { CheckSquare, Calendar, Bell, Target, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface LandingPageProps {
   onGetStarted: () => void;
+  currentTheme: string;
 }
 
 export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps & { currentTheme: string }) => {
-  const getThemeGradient = (theme: string) => {
-    switch (theme) {
-      case 'teal': return 'bg-gradient-teal';
-      case 'orange': return 'bg-gradient-orange';
-      case 'pink': return 'bg-gradient-pink';
-      case 'blue': return 'bg-gradient-success';
-      case 'green': return 'bg-gradient-warning';
-      default: return 'bg-gradient-purple';
-    }
-  };
-
   const features = [
     {
       icon: <CheckSquare className="w-8 h-8 text-blue-600" />,
@@ -69,7 +58,7 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps & {
   ];
 
   return (
-    <div className={`min-h-screen ${getThemeGradient(currentTheme)} animate-fade-in`}>
+    <div className="min-h-screen animate-fade-in">
       <div className="container mx-auto px-4 py-8 md:py-16 max-w-6xl">
         {/* Hero Section */}
         <div className="text-center mb-12 md:mb-16">
