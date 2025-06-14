@@ -94,7 +94,7 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
       </Card>
 
       <Card 
-        className="bg-red-50 dark:bg-destructive/10 border-0 shadow-lg hover:shadow-xl hover:bg-red-100 dark:hover:bg-destructive/20 transition-all duration-300 h-full cursor-pointer"
+        className="bg-red-50 dark:bg-destructive/25 border-0 shadow-lg hover:shadow-xl hover:bg-red-100 dark:hover:bg-destructive/35 transition-all duration-300 h-full cursor-pointer"
         onClick={() => navigate('/tasks/overdue')}
       >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
