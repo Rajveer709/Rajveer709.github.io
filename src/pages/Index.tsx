@@ -12,6 +12,9 @@ import { themes, defaultTheme } from '../config/themes';
 import { ALL_CHALLENGES_DEFINITIONS } from '../config/challenges';
 import { hexToHsl } from '../lib/colorUtils';
 import { TasksViewPage } from './TasksViewPage';
+import { AuthPage } from './AuthPage';
+import { supabase } from '@/integrations/supabase/client';
+import { Session, User } from '@supabase/supabase-js';
 
 export interface Task {
   id: string;
@@ -28,15 +31,26 @@ import { ChallengePage, Challenge as ChallengeWithCompleted } from './ChallengeP
 
 export type Challenge = ChallengeWithCompleted;
 
+interface Profile {
+  id: string;
+  name: string | null;
+  email: string | null;
+}
+
 const XP_FOR_LEVEL = 100;
 
 const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(true);
+
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const isLandingPage = location.pathname === '/landing';
+  const isAuthRoute = location.pathname === '/landing' || location.pathname === '/auth';
 
   const [userLevel, setUserLevel] = useState(1);
   const [userXp, setUserXp] = useState(0);
@@ -65,19 +79,58 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    const savedTasks = localStorage.getItem('lifeAdminTasks');
-    const hasTasks = savedTasks && JSON.parse(savedTasks).length > 0;
-    const userHasOnboarded = sessionStorage.getItem('userHasOnboarded') === 'true';
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
 
-    if (isLandingPage && hasTasks) {
-      navigate('/', { replace: true });
-    } else if (!isLandingPage && !hasTasks && !userHasOnboarded) {
-      navigate('/landing', { replace: true });
+    setLoading(true);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const fetchProfile = useCallback(async (user: User) => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+
+    if (error) {
+      console.error('Error fetching profile:', error);
+    } else if (data) {
+      setProfile(data);
     }
-  }, [isLandingPage, navigate]);
+  }, []);
 
   useEffect(() => {
-    const savedTasks = localStorage.getItem('lifeAdminTasks');
+    if (user) {
+      fetchProfile(user);
+    } else {
+      setProfile(null);
+    }
+  }, [user, fetchProfile]);
+
+  useEffect(() => {
+    if (!loading) {
+      if (session && isAuthRoute) {
+        navigate('/', { replace: true });
+      } else if (!session && !isAuthRoute) {
+        navigate('/landing', { replace: true });
+      }
+    }
+  }, [session, isAuthRoute, loading, navigate]);
+
+  useEffect(() => {
+    if (!user) return; // Don't run this effect if user is not logged in
+
+    const savedTasks = localStorage.getItem(`lifeAdminTasks_${user.id}`);
     if (savedTasks) {
       const parsedTasks = JSON.parse(savedTasks).map((task: any) => ({
         ...task,
@@ -86,15 +139,15 @@ const Index = () => {
       }));
       setTasks(parsedTasks);
     }
-    const savedTheme = localStorage.getItem('lifeAdminTheme') || defaultTheme;
+    const savedTheme = localStorage.getItem(`lifeAdminTheme_${user.id}`) || defaultTheme;
     setCurrentTheme(savedTheme);
 
-    const savedDarkMode = localStorage.getItem('lifeAdminDarkMode') === 'true';
+    const savedDarkMode = localStorage.getItem(`lifeAdminDarkMode_${user.id}`) === 'true';
     setIsDarkMode(savedDarkMode);
 
-    const savedLevel = localStorage.getItem('lifeAdminUserLevel');
-    const savedXp = localStorage.getItem('lifeAdminUserXp');
-    const savedChallenges = localStorage.getItem('lifeAdminChallenges');
+    const savedLevel = localStorage.getItem(`lifeAdminUserLevel_${user.id}`);
+    const savedXp = localStorage.getItem(`lifeAdminUserXp_${user.id}`);
+    const savedChallenges = localStorage.getItem(`lifeAdminChallenges_${user.id}`);
 
     if (savedLevel) setUserLevel(JSON.parse(savedLevel));
     if (savedXp) setUserXp(JSON.parse(savedXp));
@@ -108,24 +161,30 @@ const Index = () => {
     } else {
       setChallenges(ALL_CHALLENGES_DEFINITIONS.map(c => ({ ...c, completed: false })));
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.toggle('dark', isDarkMode);
-    localStorage.setItem('lifeAdminDarkMode', isDarkMode.toString());
+    if (user) {
+      localStorage.setItem(`lifeAdminDarkMode_${user.id}`, isDarkMode.toString());
+    }
     applyTheme(currentTheme, isDarkMode);
-  }, [isDarkMode, currentTheme, applyTheme]);
+  }, [isDarkMode, currentTheme, applyTheme, user]);
 
   useEffect(() => {
-    localStorage.setItem('lifeAdminTasks', JSON.stringify(tasks));
-  }, [tasks]);
+    if (user) {
+      localStorage.setItem(`lifeAdminTasks_${user.id}`, JSON.stringify(tasks));
+    }
+  }, [tasks, user]);
   
   useEffect(() => {
-    localStorage.setItem('lifeAdminUserLevel', JSON.stringify(userLevel));
-    localStorage.setItem('lifeAdminUserXp', JSON.stringify(userXp));
-    localStorage.setItem('lifeAdminChallenges', JSON.stringify(challenges));
-  }, [userLevel, userXp, challenges]);
+    if (user) {
+      localStorage.setItem(`lifeAdminUserLevel_${user.id}`, JSON.stringify(userLevel));
+      localStorage.setItem(`lifeAdminUserXp_${user.id}`, JSON.stringify(userXp));
+      localStorage.setItem(`lifeAdminChallenges_${user.id}`, JSON.stringify(challenges));
+    }
+  }, [userLevel, userXp, challenges, user]);
 
   const checkChallenges = useCallback((currentTasks: Task[]) => {
     const completedTasks = currentTasks.filter(t => t.completed);
@@ -225,26 +284,29 @@ const Index = () => {
 
   const handleThemeChange = useCallback((theme: string) => {
     setCurrentTheme(theme);
-    localStorage.setItem('lifeAdminTheme', theme);
-  }, []);
+    if (user) {
+      localStorage.setItem(`lifeAdminTheme_${user.id}`, theme);
+    }
+  }, [user]);
 
   const handleToggleDarkMode = () => {
     setIsDarkMode(prev => !prev);
   };
 
   const handleGetStarted = () => {
-    sessionStorage.setItem('userHasOnboarded', 'true');
-    navigate('/');
+    navigate('/auth');
   };
 
-  const handleStartOver = () => {
-    localStorage.removeItem('lifeAdminTasks');
-    localStorage.removeItem('lifeAdminTheme');
-    localStorage.removeItem('lifeAdminDarkMode');
-    localStorage.removeItem('lifeAdminUserLevel');
-    localStorage.removeItem('lifeAdminUserXp');
-    localStorage.removeItem('lifeAdminChallenges');
-    sessionStorage.removeItem('userHasOnboarded');
+  const handleStartOver = async () => {
+    await supabase.auth.signOut();
+    if(user) {
+        localStorage.removeItem(`lifeAdminTasks_${user.id}`);
+        localStorage.removeItem(`lifeAdminTheme_${user.id}`);
+        localStorage.removeItem(`lifeAdminDarkMode_${user.id}`);
+        localStorage.removeItem(`lifeAdminUserLevel_${user.id}`);
+        localStorage.removeItem(`lifeAdminUserXp_${user.id}`);
+        localStorage.removeItem(`lifeAdminChallenges_${user.id}`);
+    }
 
     setTasks([]);
     setCurrentTheme(defaultTheme);
@@ -256,13 +318,43 @@ const Index = () => {
     navigate('/landing', { replace: true });
     toast.info("App has been reset. Welcome back!");
   };
+  
+  const handleUpdateProfile = async (updatedProfile: Partial<Profile>) => {
+    if (!user || !profile) return;
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(updatedProfile)
+      .eq('id', user.id)
+      .select()
+      .single();
+
+    if (error) {
+      toast.error('Failed to update profile.');
+      console.error(error);
+    } else if (data) {
+      setProfile(data);
+      toast.success('Profile updated successfully!');
+    }
+  };
+  
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate('/landing');
+  };
+
+  if (loading) {
+    return <div className="min-h-screen bg-background flex items-center justify-center"><p>Loading...</p></div>;
+  }
 
   return (
     <div className="min-h-screen bg-background">
       <Routes>
         <Route path="/landing" element={<LandingPage onGetStarted={handleGetStarted} />} />
+        <Route path="/auth" element={<AuthPage />} />
         
         <Route path="*" element={
+          !session ? null : (
           <>
             <div className="container mx-auto px-4 py-6 md:py-8 max-w-6xl pb-20 md:pb-8">
               <Header onThemeChange={handleThemeChange} currentTheme={currentTheme} onCalendarClick={() => navigate('/calendar')} />
@@ -300,6 +392,10 @@ const Index = () => {
                       onToggleDarkMode={handleToggleDarkMode}
                       onStartOver={handleStartOver}
                       userLevel={userLevel}
+                      user={user}
+                      profile={profile}
+                      onUpdateProfile={handleUpdateProfile}
+                      onSignOut={handleSignOut}
                     />
                   } />
                 </Routes>
@@ -307,6 +403,7 @@ const Index = () => {
             </div>
             <BottomNavBar />
           </>
+          )
         } />
       </Routes>
     </div>

@@ -1,6 +1,6 @@
-import { ArrowLeft, Moon, Sun, User, Palette, Info, RotateCcw, Lock } from 'lucide-react';
+import { ArrowLeft, Moon, Sun, User, Palette, Info, RotateCcw, Lock, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { themes } from '../config/themes';
@@ -16,6 +16,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
+import { User as SupabaseUser } from '@supabase/supabase-js';
+import { useState } from 'react';
+import { Input } from '@/components/ui/input';
+
+interface Profile {
+  id: string;
+  name: string | null;
+  email: string | null;
+}
 
 interface SettingsPageProps {
   onBack: () => void;
@@ -25,9 +34,21 @@ interface SettingsPageProps {
   onToggleDarkMode: () => void;
   onStartOver: () => void;
   userLevel: number;
+  user: SupabaseUser | null;
+  profile: Profile | null;
+  onUpdateProfile: (updatedProfile: Partial<Profile>) => void;
+  onSignOut: () => void;
 }
 
-export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver, userLevel }: SettingsPageProps) => {
+export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver, userLevel, user, profile, onUpdateProfile, onSignOut }: SettingsPageProps) => {
+  const [name, setName] = useState(profile?.name || '');
+  const [isEditing, setIsEditing] = useState(false);
+  
+  const handleSaveProfile = () => {
+    onUpdateProfile({ name });
+    setIsEditing(false);
+  }
+
   return (
     <TooltipProvider>
       <div className="animate-fade-in space-y-6">
@@ -44,19 +65,41 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
               <User className="w-5 h-5" />
               <span>Account</span>
             </CardTitle>
+            <CardDescription>
+              Manage your account settings and profile.
+            </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
               <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarImage src={`https://api.dicebear.com/8.x/bottts/svg?seed=${user?.email}`} alt={profile?.name || 'User'} />
+                <AvatarFallback>{profile?.name?.charAt(0) || 'U'}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="font-semibold">Demo User</p>
-                <p className="text-sm text-muted-foreground">demo@example.com</p>
+                {isEditing ? (
+                  <div className="flex gap-2 items-center">
+                    <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your Name" />
+                    <Button onClick={handleSaveProfile} size="sm">Save</Button>
+                    <Button onClick={() => setIsEditing(false)} variant="ghost" size="sm">Cancel</Button>
+                  </div>
+                ) : (
+                  <>
+                    <p className="font-semibold">{profile?.name || 'No name set'}</p>
+                    <p className="text-sm text-muted-foreground">{user?.email}</p>
+                  </>
+                )}
               </div>
             </div>
+            {!isEditing && (
+              <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>Edit Profile</Button>
+            )}
           </CardContent>
+          <CardFooter className="border-t px-6 py-4 flex justify-end">
+            <Button variant="ghost" onClick={onSignOut}>
+              <LogOut className="w-4 h-4 mr-2" />
+              Sign Out
+            </Button>
+          </CardFooter>
         </Card>
 
         <Card>
