@@ -71,28 +71,29 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
-              <Avatar>
+              <Avatar className="w-12 h-12 border">
                 <AvatarImage src={`https://api.dicebear.com/8.x/bottts/svg?seed=${user?.email}`} alt={profile?.name || 'User'} />
-                <AvatarFallback>{profile?.name?.charAt(0) || 'U'}</AvatarFallback>
+                <AvatarFallback className="text-xl">{profile?.name?.charAt(0) || 'U'}</AvatarFallback>
               </Avatar>
-              <div>
+              <div className="flex-grow space-y-1">
                 {isEditing ? (
-                  <div className="flex gap-2 items-center">
-                    <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your Name" />
-                    <Button onClick={handleSaveProfile} size="sm">Save</Button>
-                    <Button onClick={() => setIsEditing(false)} variant="ghost" size="sm">Cancel</Button>
-                  </div>
+                  <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your Name" />
                 ) : (
-                  <>
-                    <p className="font-semibold">{profile?.name || 'No name set'}</p>
-                    <p className="text-sm text-muted-foreground">{user?.email}</p>
-                  </>
+                  <p className="font-semibold">{profile?.name || 'No name set'}</p>
                 )}
+                <p className="text-sm text-muted-foreground">{user?.email}</p>
               </div>
             </div>
-            {!isEditing && (
-              <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>Edit Profile</Button>
-            )}
+            <div className="flex justify-end gap-2">
+              {isEditing ? (
+                <>
+                  <Button onClick={() => { setIsEditing(false); setName(profile?.name || ''); }} variant="ghost" size="sm">Cancel</Button>
+                  <Button onClick={handleSaveProfile} size="sm">Save Changes</Button>
+                </>
+              ) : (
+                <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>Edit Profile</Button>
+              )}
+            </div>
           </CardContent>
           <CardFooter className="border-t px-6 py-4 flex justify-end">
             <Button variant="ghost" onClick={onSignOut}>
