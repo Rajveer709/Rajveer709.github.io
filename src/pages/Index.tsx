@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { DashboardPage } from './DashboardPage';
@@ -11,6 +10,8 @@ import { BottomNavBar } from '../components/BottomNavBar';
 import { themes, defaultTheme } from '../config/themes';
 import { hexToHsl } from '../lib/colorUtils';
 import { AllTasksPage } from './AllTasksPage';
+import { IframePreview } from './IframePreview';
+import { TasksViewPage } from './TasksViewPage';
 
 export interface Task {
   id: string;
@@ -164,9 +165,10 @@ const Index = () => {
                 <Routes>
                   <Route path="/" element={<DashboardPage tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} />} />
                   <Route path="/add-task" element={<AddTaskPage onAddTask={addTask} onBack={() => navigate(-1)} currentTheme={currentTheme} />} />
+                  <IframePreview path="/add-task" />
                   <Route path="/calendar" element={<CalendarPage tasks={tasks} onBack={() => navigate(-1)} currentTheme={currentTheme} />} />
-                  <Route path="/all-tasks" element={
-                    <AllTasksPage 
+                  <Route path="/tasks/:filter" element={
+                    <TasksViewPage 
                       tasks={tasks}
                       onToggleTask={toggleTask}
                       onDeleteTask={deleteTask}

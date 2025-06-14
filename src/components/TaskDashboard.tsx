@@ -62,7 +62,7 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
       {/* Overview Cards */}
       <Card 
         className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full cursor-pointer"
-        onClick={() => navigate('/all-tasks')}
+        onClick={() => navigate('/tasks/all')}
       >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium text-gray-600">Total Tasks</CardTitle>
@@ -76,7 +76,10 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
         </CardContent>
       </Card>
 
-      <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+      <Card 
+        className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full cursor-pointer"
+        onClick={() => navigate('/tasks/overdue')}
+      >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium text-gray-600">OverDue Tasks</CardTitle>
           <AlertTriangle className="h-5 w-5 text-destructive" />
@@ -89,7 +92,10 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
         </CardContent>
       </Card>
 
-      <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+      <Card 
+        className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full cursor-pointer"
+        onClick={() => navigate('/tasks/due-soon')}
+      >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium text-gray-600">Due Tasks</CardTitle>
           <Clock className="h-5 w-5 text-orange-500" />
@@ -102,7 +108,10 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
         </CardContent>
       </Card>
 
-      <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full">
+      <Card 
+        className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full cursor-pointer"
+        onClick={() => navigate('/tasks/completed')}
+      >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium text-gray-600">Completed Tasks</CardTitle>
           <CheckCircle className="h-5 w-5 text-green-500" />
