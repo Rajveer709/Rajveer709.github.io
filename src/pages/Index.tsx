@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { DashboardPage } from './DashboardPage';
 import { AddTaskPage } from './AddTaskPage';
 import { CalendarPage } from './CalendarPage';
+import { SettingsPage } from './SettingsPage';
 import { Header } from '../components/Header';
 import { LandingPage } from '../components/LandingPage';
 import { BottomNavBar } from '../components/BottomNavBar';
@@ -23,6 +24,7 @@ export interface Task {
 const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const isLandingPage = location.pathname === '/landing';
@@ -65,7 +67,20 @@ const Index = () => {
     const savedTheme = localStorage.getItem('lifeAdminTheme') || defaultTheme;
     setCurrentTheme(savedTheme);
     applyTheme(savedTheme);
+
+    const savedDarkMode = localStorage.getItem('lifeAdminDarkMode') === 'true';
+    setIsDarkMode(savedDarkMode);
   }, []);
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (isDarkMode) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('lifeAdminDarkMode', isDarkMode.toString());
+  }, [isDarkMode]);
 
   useEffect(() => {
     localStorage.setItem('lifeAdminTasks', JSON.stringify(tasks));
@@ -125,6 +140,10 @@ const Index = () => {
     applyTheme(theme);
   };
 
+  const handleToggleDarkMode = () => {
+    setIsDarkMode(prev => !prev);
+  };
+
   const handleGetStarted = () => {
     sessionStorage.setItem('userHasOnboarded', 'true');
     navigate('/');
@@ -144,10 +163,19 @@ const Index = () => {
                   <Route path="/" element={<DashboardPage tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} />} />
                   <Route path="/add-task" element={<AddTaskPage onAddTask={addTask} onBack={() => navigate(-1)} currentTheme={currentTheme} />} />
                   <Route path="/calendar" element={<CalendarPage tasks={tasks} onBack={() => navigate(-1)} currentTheme={currentTheme} />} />
+                  <Route path="/settings" element={
+                    <SettingsPage 
+                      onBack={() => navigate('/')} 
+                      currentTheme={currentTheme}
+                      onThemeChange={handleThemeChange}
+                      isDarkMode={isDarkMode}
+                      onToggleDarkMode={handleToggleDarkMode}
+                    />
+                  } />
                 </Routes>
               </main>
             </div>
-            <BottomNavBar onThemeChange={handleThemeChange} currentTheme={currentTheme} />
+            <BottomNavBar />
           </>
         } />
       </Routes>

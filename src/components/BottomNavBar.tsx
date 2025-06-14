@@ -1,15 +1,8 @@
 
 import { NavLink } from 'react-router-dom';
-import { Home, PlusSquare, Calendar } from 'lucide-react';
-import { SettingsDialog } from './SettingsDialog';
-import { Button } from './ui/button';
+import { Home, PlusSquare, Calendar, Settings } from 'lucide-react';
 
-interface BottomNavBarProps {
-  onThemeChange: (theme: string) => void;
-  currentTheme: string;
-}
-
-export const BottomNavBar = ({ onThemeChange, currentTheme }: BottomNavBarProps) => {
+export const BottomNavBar = () => {
   const navItems = [
     { to: '/', icon: Home, label: 'Home' },
     { to: '/add-task', icon: PlusSquare, label: 'Add Task' },
@@ -33,10 +26,13 @@ export const BottomNavBar = ({ onThemeChange, currentTheme }: BottomNavBarProps)
             <span className="text-xs font-medium">{item.label}</span>
           </NavLink>
         ))}
-        <div className={linkClasses}>
-          <SettingsDialog onThemeChange={onThemeChange} currentTheme={currentTheme} />
-          <span className="text-xs font-medium -mt-1.5">Settings</span>
-        </div>
+        <NavLink
+          to="/settings"
+          className={({ isActive }) => `${linkClasses} ${isActive ? activeLinkClasses : ''}`}
+        >
+          <Settings className="w-5 h-5" />
+          <span className="text-xs font-medium">Settings</span>
+        </NavLink>
       </div>
     </nav>
   );
