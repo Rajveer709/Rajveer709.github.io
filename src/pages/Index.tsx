@@ -48,6 +48,7 @@ const Index = () => {
 
   const [currentTheme, setCurrentTheme] = useState(defaultTheme);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [backgroundLightness, setBackgroundLightness] = useState(96);
   const navigate = useNavigate();
   const location = useLocation();
   const isAuthRoute = location.pathname === '/landing' || location.pathname === '/auth';
@@ -59,7 +60,7 @@ const Index = () => {
     ALL_CHALLENGES_DEFINITIONS.map(c => ({...c, completed: false}))
   );
 
-  const applyTheme = useCallback((themeValue: string, isDark: boolean) => {
+  const applyTheme = (themeValue: string, isDark: boolean, lightness?: number) => {
     const theme = themes.find(t => t.value === themeValue) || themes.find(t => t.value === defaultTheme);
     if (!theme) return;
 
@@ -69,15 +70,20 @@ const Index = () => {
     if (primaryHsl) {
         root.style.setProperty('--primary', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
         root.style.setProperty('--ring', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
+        
+        const bgLightness = lightness !== undefined ? lightness : (isDark ? 15 : 96);
+
         if (isDark) {
-          root.style.setProperty('--background', `${primaryHsl.h} ${primaryHsl.s * 0.3}% 12%`);
-          root.style.setProperty('--card', `${primaryHsl.h} ${primaryHsl.s * 0.4}% 15%`);
+          root.style.setProperty('--background-gradient-start', `${primaryHsl.h} ${primaryHsl.s * 0.3}% ${bgLightness}%`);
+          root.style.setProperty('--background-gradient-end', `${primaryHsl.h} ${primaryHsl.s * 0.3}% ${bgLightness - 5}%`);
+          root.style.setProperty('--card', `${primaryHsl.h} ${primaryHsl.s * 0.4}% ${bgLightness + 3}%`);
         } else {
-          root.style.setProperty('--background', `${primaryHsl.h} 50% 96%`);
-          root.style.setProperty('--card', `${primaryHsl.h} 60% 94%`);
+          root.style.setProperty('--background-gradient-start', `${primaryHsl.h} 50% ${bgLightness}%`);
+          root.style.setProperty('--background-gradient-end', `0 0% 100%`); // to white
+          root.style.setProperty('--card', `${primaryHsl.h} 60% ${bgLightness - 2}%`);
         }
     }
-  }, []);
+  };
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -146,6 +152,13 @@ const Index = () => {
     const savedDarkMode = localStorage.getItem(`lifeAdminDarkMode_${user.id}`) === 'true';
     setIsDarkMode(savedDarkMode);
 
+    const savedLightness = localStorage.getItem(`lifeAdminBgLightness_${user.id}`);
+    if (savedLightness) {
+      setBackgroundLightness(JSON.parse(savedLightness));
+    } else {
+      setBackgroundLightness(savedDarkMode ? 15 : 96);
+    }
+
     const savedLevel = localStorage.getItem(`lifeAdminUserLevel_${user.id}`);
     const savedXp = localStorage.getItem(`lifeAdminUserXp_${user.id}`);
     const savedChallenges = localStorage.getItem(`lifeAdminChallenges_${user.id}`);
@@ -167,25 +180,20 @@ const Index = () => {
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.toggle('dark', isDarkMode);
-    if (user) {
-      localStorage.setItem(`lifeAdminDarkMode_${user.id}`, isDarkMode.toString());
-    }
-    applyTheme(currentTheme, isDarkMode);
-  }, [isDarkMode, currentTheme, applyTheme, user]);
+    applyTheme(currentTheme, isDarkMode, backgroundLightness);
+  }, [isDarkMode, currentTheme, backgroundLightness]);
 
   useEffect(() => {
     if (user) {
       localStorage.setItem(`lifeAdminTasks_${user.id}`, JSON.stringify(tasks));
-    }
-  }, [tasks, user]);
-  
-  useEffect(() => {
-    if (user) {
+      localStorage.setItem(`lifeAdminTheme_${user.id}`, currentTheme);
+      localStorage.setItem(`lifeAdminDarkMode_${user.id}`, isDarkMode.toString());
+      localStorage.setItem(`lifeAdminBgLightness_${user.id}`, JSON.stringify(backgroundLightness));
       localStorage.setItem(`lifeAdminUserLevel_${user.id}`, JSON.stringify(userLevel));
       localStorage.setItem(`lifeAdminUserXp_${user.id}`, JSON.stringify(userXp));
       localStorage.setItem(`lifeAdminChallenges_${user.id}`, JSON.stringify(challenges));
     }
-  }, [userLevel, userXp, challenges, user]);
+  }, [tasks, currentTheme, isDarkMode, backgroundLightness, userLevel, userXp, challenges, user]);
 
   const checkChallenges = useCallback((currentTasks: Task[]) => {
     const completedTasks = currentTasks.filter(t => t.completed);
@@ -283,15 +291,23 @@ const Index = () => {
     );
   };
 
-  const handleThemeChange = useCallback((theme: string) => {
+  const handleThemeChange = (theme: string) => {
     setCurrentTheme(theme);
     if (user) {
       localStorage.setItem(`lifeAdminTheme_${user.id}`, theme);
     }
-  }, [user]);
+  };
 
   const handleToggleDarkMode = () => {
-    setIsDarkMode(prev => !prev);
+    setIsDarkMode(prev => {
+        const newIsDarkMode = !prev;
+        setBackgroundLightness(newIsDarkMode ? 15 : 96); // reset to default on toggle
+        return newIsDarkMode;
+    });
+  };
+
+  const handleBackgroundLightnessChange = (lightness: number) => {
+    setBackgroundLightness(lightness);
   };
 
   const handleGetStarted = () => {
@@ -307,6 +323,7 @@ const Index = () => {
         localStorage.removeItem(`lifeAdminUserLevel_${user.id}`);
         localStorage.removeItem(`lifeAdminUserXp_${user.id}`);
         localStorage.removeItem(`lifeAdminChallenges_${user.id}`);
+        localStorage.removeItem(`lifeAdminBgLightness_${user.id}`);
     }
 
     setTasks([]);
@@ -403,6 +420,8 @@ const Index = () => {
                       profile={profile}
                       onUpdateProfile={handleUpdateProfile}
                       onSignOut={handleSignOut}
+                      backgroundLightness={backgroundLightness}
+                      onBackgroundLightnessChange={handleBackgroundLightnessChange}
                     />
                   } />
                 </Routes>

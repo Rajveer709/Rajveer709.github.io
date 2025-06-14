@@ -19,6 +19,7 @@ import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/comp
 import { User as SupabaseUser } from '@supabase/supabase-js';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
+import { Slider } from '@/components/ui/slider';
 
 interface Profile {
   id: string;
@@ -38,9 +39,11 @@ interface SettingsPageProps {
   profile: Profile | null;
   onUpdateProfile: (updatedProfile: Partial<Profile>) => void;
   onSignOut: () => void;
+  backgroundLightness: number;
+  onBackgroundLightnessChange: (value: number) => void;
 }
 
-export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver, userLevel, user, profile, onUpdateProfile, onSignOut }: SettingsPageProps) => {
+export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver, userLevel, user, profile, onUpdateProfile, onSignOut, backgroundLightness, onBackgroundLightnessChange }: SettingsPageProps) => {
   const [name, setName] = useState(profile?.name || '');
   const [isEditing, setIsEditing] = useState(false);
   
@@ -118,6 +121,20 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
               </label>
               <Switch id="dark-mode-switch" checked={isDarkMode} onCheckedChange={onToggleDarkMode} />
             </div>
+
+            <div>
+              <label htmlFor="bg-lightness-slider" className="text-sm font-medium">Background Lightness</label>
+              <Slider
+                id="bg-lightness-slider"
+                min={isDarkMode ? 5 : 80}
+                max={isDarkMode ? 25 : 100}
+                step={1}
+                value={[backgroundLightness]}
+                onValueChange={(value) => onBackgroundLightnessChange(value[0])}
+                className="mt-3"
+              />
+            </div>
+
             <div>
               <h3 className="text-sm font-medium mb-1">Color Theme</h3>
               <p className="text-xs text-muted-foreground mb-3">Unlocks with Challenges.</p>
