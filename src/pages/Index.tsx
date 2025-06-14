@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { toast } from "sonner";
@@ -18,6 +19,7 @@ import { PageTransition } from '../components/PageTransition';
 import { MainLayout } from '../components/MainLayout';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import { PublicRoute } from '../components/PublicRoute';
+import { ChallengePage, type Challenge } from './ChallengePage';
 
 export interface Task {
   id: string;
@@ -30,8 +32,6 @@ export interface Task {
   createdAt: Date;
   hidden?: boolean;
 }
-
-export type Challenge = ChallengeWithCompleted;
 
 export interface Profile {
   id: string;
