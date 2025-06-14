@@ -44,10 +44,11 @@ const Index = () => {
   useEffect(() => {
     const savedTasks = localStorage.getItem('lifeAdminTasks');
     const hasTasks = savedTasks && JSON.parse(savedTasks).length > 0;
+    const userHasOnboarded = sessionStorage.getItem('userHasOnboarded') === 'true';
 
     if (isLandingPage && hasTasks) {
       navigate('/', { replace: true });
-    } else if (!isLandingPage && !hasTasks) {
+    } else if (!isLandingPage && !hasTasks && !userHasOnboarded) {
       navigate('/landing', { replace: true });
     }
   }, [isLandingPage, navigate]);
@@ -125,10 +126,15 @@ const Index = () => {
     applyTheme(theme);
   };
 
+  const handleGetStarted = () => {
+    sessionStorage.setItem('userHasOnboarded', 'true');
+    navigate('/');
+  };
+
   return (
     <div className="min-h-screen" style={getThemeBackgroundStyle()}>
       <Routes>
-        <Route path="/landing" element={<LandingPage onGetStarted={() => navigate('/')} currentTheme={currentTheme} />} />
+        <Route path="/landing" element={<LandingPage onGetStarted={handleGetStarted} currentTheme={currentTheme} />} />
         
         <Route path="*" element={
           <>

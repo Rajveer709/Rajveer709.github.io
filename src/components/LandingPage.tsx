@@ -1,3 +1,4 @@
+
 import { CheckSquare, Calendar, Bell, Target, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -39,9 +40,36 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps & {
       description: "Streamlined interface designed specifically for life admin tasks - no distractions, just results."
     }
   ];
+  
+  const categoryLists = [
+    {
+      title: "💰 Financial",
+      items: ["Utility bills & rent payments", "Insurance premiums", "Tax deadlines", "Subscription renewals"]
+    },
+    {
+      title: "🏥 Health & Wellness",
+      items: ["Doctor appointments", "Medication schedules", "Dental check-ups", "Fitness tracking"]
+    },
+    {
+      title: "🏠 Household",
+      items: ["Home maintenance", "Vehicle servicing", "Appliance warranties", "Grocery planning"]
+    },
+    {
+      title: "📋 Legal & Admin",
+      items: ["Document renewals", "Form submissions", "Voting registration", "Estate planning"]
+    },
+    {
+      title: "🎯 Personal",
+      items: ["Important birthdays", "Travel planning", "Learning goals", "Social events"]
+    },
+    {
+      title: "📱 Digital Life",
+      items: ["Password updates", "Backup schedules", "Device upgrades", "Email management"]
+    }
+  ];
 
   return (
-    <div className={`min-h-screen ${getThemeGradient(currentTheme)}`}>
+    <div className={`min-h-screen ${getThemeGradient(currentTheme)} animate-fade-in`}>
       <div className="container mx-auto px-4 py-8 md:py-16 max-w-6xl">
         {/* Hero Section */}
         <div className="text-center mb-12 md:mb-16">
@@ -85,7 +113,7 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps & {
         {/* Features Grid - Mobile Responsive */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 md:mb-16">
           {features.map((feature, index) => (
-            <div key={index} className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-200 border border-white/20">
+            <div key={index} className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:-translate-y-1">
               <div className="mb-4">
                 {feature.icon}
               </div>
@@ -105,66 +133,15 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps & {
             Organize Every Aspect of Your Life
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <h3 className="font-semibold text-white text-base md:text-lg">💰 Financial</h3>
-              <ul className="text-xs md:text-sm text-white/80 space-y-1">
-                <li>• Utility bills & rent payments</li>
-                <li>• Insurance premiums</li>
-                <li>• Tax deadlines</li>
-                <li>• Subscription renewals</li>
-              </ul>
-            </div>
-            
-            <div className="space-y-2">
-              <h3 className="font-semibold text-green-600 text-lg">🏥 Health & Wellness</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Doctor appointments</li>
-                <li>• Medication schedules</li>
-                <li>• Dental check-ups</li>
-                <li>• Fitness tracking</li>
-              </ul>
-            </div>
-            
-            <div className="space-y-2">
-              <h3 className="font-semibold text-orange-600 text-lg">🏠 Household</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Home maintenance</li>
-                <li>• Vehicle servicing</li>
-                <li>• Appliance warranties</li>
-                <li>• Grocery planning</li>
-              </ul>
-            </div>
-            
-            <div className="space-y-2">
-              <h3 className="font-semibold text-purple-600 text-lg">📋 Legal & Admin</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Document renewals</li>
-                <li>• Form submissions</li>
-                <li>• Voting registration</li>
-                <li>• Estate planning</li>
-              </ul>
-            </div>
-            
-            <div className="space-y-2">
-              <h3 className="font-semibold text-indigo-600 text-lg">🎯 Personal</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Important birthdays</li>
-                <li>• Travel planning</li>
-                <li>• Learning goals</li>
-                <li>• Social events</li>
-              </ul>
-            </div>
-            
-            <div className="space-y-2">
-              <h3 className="font-semibold text-pink-600 text-lg">📱 Digital Life</h3>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Password updates</li>
-                <li>• Backup schedules</li>
-                <li>• Device upgrades</li>
-                <li>• Email management</li>
-              </ul>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {categoryLists.map((category) => (
+              <div key={category.title} className="space-y-2">
+                <h3 className="font-semibold text-white text-base md:text-lg">{category.title}</h3>
+                <ul className="text-xs md:text-sm text-white/80 space-y-1">
+                  {category.items.map(item => <li key={item}>• {item}</li>)}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
 
