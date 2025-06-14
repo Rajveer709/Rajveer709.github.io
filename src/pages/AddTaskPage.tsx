@@ -11,6 +11,12 @@ import { CalendarIcon, ArrowLeft } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { themes, defaultTheme } from '../config/themes';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface AddTaskPageProps {
   onAddTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
@@ -205,20 +211,6 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
     onBack();
   };
 
-  const getSubCategories = () => {
-    if (!selectedCategory) return [];
-    const category = taskCategories[selectedCategory as CategoryKey];
-    return category ? Object.keys(category) : [];
-  };
-
-  const getTasks = () => {
-    if (!selectedCategory || !selectedSubCategory) return [];
-    const category = taskCategories[selectedCategory as CategoryKey];
-    if (!category) return [];
-    const subCategory = category[selectedSubCategory as SubCategoryKey<CategoryKey>];
-    return Array.isArray(subCategory) ? subCategory : [];
-  };
-
   return (
     <div className="min-h-screen" style={getThemeBackgroundStyle(currentTheme)}>
       <div className="container mx-auto px-4 py-6 max-w-4xl">
@@ -238,56 +230,40 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme }: AddTaskPageProp
           {/* Categories Selection */}
           <div className="space-y-6">
             <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border">
-              <h2 className="text-xl font-semibold text-primary mb-4">Select Category</h2>
-              <div className="space-y-2">
+              <h2 className="text-xl font-semibold text-primary mb-4">Select Task Template</h2>
+              <Accordion type="single" collapsible className="w-full" value={selectedCategory} onValueChange={handleCategorySelect}>
                 {Object.keys(taskCategories).map((category) => (
-                  <Button
-                    key={category}
-                    variant={selectedCategory === category ? "default" : "secondary"}
-                    className="w-full justify-start text-left"
-                    onClick={() => handleCategorySelect(category)}
-                  >
-                    {category}
-                  </Button>
+                  <AccordionItem value={category} key={category}>
+                    <AccordionTrigger>{category}</AccordionTrigger>
+                    <AccordionContent>
+                      <div className="pl-4">
+                        <Accordion type="single" collapsible className="w-full" value={selectedSubCategory} onValueChange={handleSubCategorySelect}>
+                          {Object.keys(taskCategories[category as CategoryKey]).map((subCategory) => (
+                            <AccordionItem value={subCategory} key={subCategory}>
+                              <AccordionTrigger className="text-sm">{subCategory}</AccordionTrigger>
+                              <AccordionContent>
+                                <div className="pl-4 space-y-2">
+                                  {(taskCategories[category as CategoryKey][subCategory as SubCategoryKey<CategoryKey>] as readonly string[]).map((task) => (
+                                    <Button
+                                      key={task}
+                                      variant={selectedTask === task ? "default" : "secondary"}
+                                      className="w-full justify-start text-left text-sm font-normal h-auto py-2"
+                                      onClick={() => handleTaskSelect(task)}
+                                    >
+                                      {task}
+                                    </Button>
+                                  ))}
+                                </div>
+                              </AccordionContent>
+                            </AccordionItem>
+                          ))}
+                        </Accordion>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
                 ))}
-              </div>
+              </Accordion>
             </div>
-
-            {selectedCategory && (
-              <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border">
-                <h3 className="text-lg font-semibold text-primary mb-4">Select Subcategory</h3>
-                <div className="space-y-2">
-                  {getSubCategories().map((subCategory) => (
-                    <Button
-                      key={subCategory}
-                      variant={selectedSubCategory === subCategory ? "default" : "secondary"}
-                      className="w-full justify-start text-left text-sm"
-                      onClick={() => handleSubCategorySelect(subCategory)}
-                    >
-                      {subCategory}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {selectedSubCategory && (
-              <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border">
-                <h3 className="text-lg font-semibold text-primary mb-4">Select Task</h3>
-                <div className="space-y-2">
-                  {getTasks().map((task) => (
-                    <Button
-                      key={task}
-                      variant={selectedTask === task ? "default" : "secondary"}
-                      className="w-full justify-start text-left text-sm"
-                      onClick={() => handleTaskSelect(task as string)}
-                    >
-                      {task}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Task Form */}
