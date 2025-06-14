@@ -1,4 +1,3 @@
-
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { Task } from './Index';
@@ -58,11 +57,11 @@ export const TasksViewPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, o
         root.style.setProperty('--primary', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
         root.style.setProperty('--ring', `${primaryHsl.h} ${primaryHsl.s}% ${primaryHsl.l}%`);
         if (isDark) {
-          root.style.setProperty('--background', `${primaryHsl.h} ${primaryHsl.s * 0.15}% 8%`);
-          root.style.setProperty('--card', `${primaryHsl.h} ${primaryHsl.s * 0.25}% 12%`);
+          root.style.setProperty('--background', `${primaryHsl.h} ${primaryHsl.s * 0.3}% 12%`);
+          root.style.setProperty('--card', `${primaryHsl.h} ${primaryHsl.s * 0.4}% 15%`);
         } else {
-          root.style.setProperty('--background', `${primaryHsl.h} 20% 99%`);
-          root.style.setProperty('--card', `${primaryHsl.h} 40% 97%`);
+          root.style.setProperty('--background', `${primaryHsl.h} 50% 96%`);
+          root.style.setProperty('--card', `${primaryHsl.h} 60% 94%`);
         }
       }
     };
