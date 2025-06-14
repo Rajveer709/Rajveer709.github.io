@@ -9,8 +9,6 @@ import { LandingPage } from '../components/LandingPage';
 import { BottomNavBar } from '../components/BottomNavBar';
 import { themes, defaultTheme } from '../config/themes';
 import { hexToHsl } from '../lib/colorUtils';
-import { AllTasksPage } from './AllTasksPage';
-import { IframePreview } from './IframePreview';
 import { TasksViewPage } from './TasksViewPage';
 
 export interface Task {
@@ -165,7 +163,6 @@ const Index = () => {
                 <Routes>
                   <Route path="/" element={<DashboardPage tasks={tasks} onToggleTask={toggleTask} onDeleteTask={deleteTask} onEditTask={editTask} />} />
                   <Route path="/add-task" element={<AddTaskPage onAddTask={addTask} onBack={() => navigate(-1)} currentTheme={currentTheme} />} />
-                  <IframePreview path="/add-task" />
                   <Route path="/calendar" element={<CalendarPage tasks={tasks} onBack={() => navigate(-1)} currentTheme={currentTheme} />} />
                   <Route path="/tasks/:filter" element={
                     <TasksViewPage 
