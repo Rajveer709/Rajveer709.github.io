@@ -1,4 +1,3 @@
-
 import { ArrowLeft, Moon, Sun, User, Palette, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -70,7 +69,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
                   className={`p-3 rounded-lg border-2 transition-all ${
                     currentTheme === theme.value 
                       ? 'border-primary shadow-md' 
-                      : 'border-border hover:border-gray-300 dark:hover:border-gray-600'
+                      : 'border-border hover:border-accent'
                   }`}
                 >
                   <div

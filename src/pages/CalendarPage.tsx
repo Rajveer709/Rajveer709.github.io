@@ -36,11 +36,11 @@ export const CalendarPage = ({ tasks, onBack, currentTheme }: CalendarPageProps)
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'urgent': return 'text-red-600 bg-red-50 border-red-200';
-      case 'high': return 'text-orange-600 bg-orange-50 border-orange-200';
-      case 'medium': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-      case 'low': return 'text-green-600 bg-green-50 border-green-200';
-      default: return 'text-gray-600 bg-gray-50 border-gray-200';
+      case 'urgent': return 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/50 border-red-200 dark:border-red-800/50';
+      case 'high': return 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/50 border-orange-200 dark:border-orange-800/50';
+      case 'medium': return 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-950/50 border-yellow-200 dark:border-yellow-800/50';
+      case 'low': return 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/50 border-green-200 dark:border-green-800/50';
+      default: return 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-950/50 border-gray-200 dark:border-gray-800/50';
     }
   };
 
@@ -80,7 +80,7 @@ export const CalendarPage = ({ tasks, onBack, currentTheme }: CalendarPageProps)
             </h2>
             
             {tasksForSelectedDate.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted-foreground">
                 <Clock className="w-12 h-12 mx-auto mb-3 opacity-50" />
                 <p>No tasks scheduled for this date</p>
               </div>
@@ -91,25 +91,25 @@ export const CalendarPage = ({ tasks, onBack, currentTheme }: CalendarPageProps)
                     key={task.id}
                     className={`p-4 rounded-lg border transition-all duration-200 ${
                       task.completed 
-                        ? 'bg-green-50 border-green-200' 
+                        ? 'bg-green-50 dark:bg-green-950/50 border-green-200 dark:border-green-800/50' 
                         : 'bg-card border-border hover:shadow-md'
                     }`}
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          {task.completed && <CheckCircle className="w-4 h-4 text-green-600" />}
+                          {task.completed && <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />}
                           <h3 className={`font-medium ${
-                            task.completed ? 'text-green-800 line-through' : 'text-gray-800'
+                            task.completed ? 'text-green-800 dark:text-green-300 line-through' : 'text-foreground'
                           }`}>
                             {task.title}
                           </h3>
                         </div>
                         {task.description && (
-                          <p className="text-sm text-gray-600 mb-2">{task.description}</p>
+                          <p className="text-sm text-muted-foreground mb-2">{task.description}</p>
                         )}
                         <div className="flex items-center gap-2">
-                          <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded-full">
+                          <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 dark:bg-blue-950/50 dark:text-blue-400 rounded-full">
                             {task.category}
                           </span>
                           <span className={`text-xs px-2 py-1 rounded-full border ${getPriorityColor(task.priority)}`}>

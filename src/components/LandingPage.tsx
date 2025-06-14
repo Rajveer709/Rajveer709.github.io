@@ -1,3 +1,4 @@
+
 import { CheckSquare, Calendar, Bell, Target, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -62,19 +63,19 @@ export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
         {/* Hero Section */}
         <div className="text-center mb-12 md:mb-16">
           <div className="flex items-center justify-center mb-6">
-            <div className="bg-white/20 backdrop-blur-sm p-3 md:p-4 rounded-2xl md:rounded-3xl shadow-lg mr-3 md:mr-4">
-              <CheckSquare className="w-8 h-8 md:w-12 md:h-12 text-white" />
+            <div className="bg-background/20 backdrop-blur-sm p-3 md:p-4 rounded-2xl md:rounded-3xl shadow-lg mr-3 md:mr-4 border">
+              <CheckSquare className="w-8 h-8 md:w-12 md:h-12 text-primary" />
             </div>
-            <h1 className="text-3xl md:text-5xl font-bold text-white">
+            <h1 className="text-3xl md:text-5xl font-bold text-foreground">
               Life Admin
             </h1>
           </div>
           
-          <p className="text-xl md:text-2xl font-medium text-white/90 mb-4">
+          <p className="text-xl md:text-2xl font-medium text-foreground/90 mb-4">
             Simplify Life. One Task at a Time.
           </p>
           
-          <p className="text-base md:text-xl text-white/80 max-w-3xl mx-auto mb-8 px-4">
+          <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 px-4">
             The focused task manager for all your important life admin - from bills and appointments 
             to renewals and deadlines. Never let important tasks slip through the cracks again.
           </p>
@@ -83,7 +84,7 @@ export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             <Button 
               onClick={onGetStarted}
               size="lg"
-              className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200 border border-white/30"
+              className="bg-foreground/10 hover:bg-foreground/20 text-foreground px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200 border border-border"
             >
               Get Started
               <ArrowRight className="w-5 h-5 ml-2" />
@@ -91,7 +92,7 @@ export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
             <Button 
               variant="outline"
               size="lg"
-              className="border-white/30 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 px-8 py-3 text-lg"
+              className="border-border bg-transparent backdrop-blur-sm text-foreground hover:bg-foreground/10 px-8 py-3 text-lg"
             >
               Explore Features
             </Button>
@@ -101,14 +102,14 @@ export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
         {/* Features Grid - Mobile Responsive */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 md:mb-16">
           {features.map((feature, index) => (
-            <div key={index} className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-white/20 hover:-translate-y-1">
+            <div key={index} className="bg-background/20 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-border hover:-translate-y-1">
               <div className="mb-4">
                 {feature.icon}
               </div>
-              <h3 className="text-lg md:text-xl font-semibold text-white mb-3">
+              <h3 className="text-lg md:text-xl font-semibold text-foreground mb-3">
                 {feature.title}
               </h3>
-              <p className="text-white/80 text-sm md:text-base">
+              <p className="text-muted-foreground text-sm md:text-base">
                 {feature.description}
               </p>
             </div>
@@ -116,16 +117,16 @@ export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
         </div>
 
         {/* Task Categories Preview - Mobile Responsive */}
-        <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-white/20">
-          <h2 className="text-2xl md:text-3xl font-bold text-center text-white mb-6 md:mb-8">
+        <div className="bg-background/20 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-border">
+          <h2 className="text-2xl md:text-3xl font-bold text-center text-foreground mb-6 md:mb-8">
             Organize Every Aspect of Your Life
           </h2>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {categoryLists.map((category) => (
               <div key={category.title} className="space-y-2">
-                <h3 className="font-semibold text-white text-base md:text-lg">{category.title}</h3>
-                <ul className="text-xs md:text-sm text-white/80 space-y-1">
+                <h3 className="font-semibold text-foreground text-base md:text-lg">{category.title}</h3>
+                <ul className="text-xs md:text-sm text-muted-foreground space-y-1">
                   {category.items.map(item => <li key={item}>• {item}</li>)}
                 </ul>
               </div>
@@ -135,16 +136,16 @@ export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
 
         {/* CTA Section - Mobile Responsive */}
         <div className="text-center mt-12 md:mt-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
             Ready to Take Control?
           </h2>
-          <p className="text-lg md:text-xl text-white/80 mb-8 max-w-2xl mx-auto px-4">
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto px-4">
             Join thousands who have simplified their life admin with our focused task management system.
           </p>
           <Button 
             onClick={onGetStarted}
             size="lg"
-            className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-8 md:px-12 py-3 md:py-4 text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-200 border border-white/30"
+            className="bg-foreground/10 hover:bg-foreground/20 text-foreground px-8 md:px-12 py-3 md:py-4 text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-200 border border-border"
           >
             Start Organizing Today
             <ArrowRight className="w-5 h-5 md:w-6 md:h-6 ml-2" />
