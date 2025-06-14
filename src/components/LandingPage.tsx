@@ -3,10 +3,9 @@ import { Button } from '@/components/ui/button';
 
 interface LandingPageProps {
   onGetStarted: () => void;
-  currentTheme: string;
 }
 
-export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps & { currentTheme: string }) => {
+export const LandingPage = ({ onGetStarted }: LandingPageProps) => {
   const features = [
     {
       icon: <CheckSquare className="w-8 h-8 text-blue-600" />,

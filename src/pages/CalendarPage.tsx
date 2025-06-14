@@ -64,12 +64,14 @@ export const CalendarPage = ({ tasks, onBack, currentTheme }: CalendarPageProps)
         <div className="grid lg:grid-cols-2 gap-6">
           <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border">
             <h2 className="text-lg font-semibold mb-4 text-primary">Select Date</h2>
-            <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={(date) => date && setSelectedDate(date)}
-              className="rounded-lg border shadow-sm pointer-events-auto bg-card"
-            />
+            <div className="flex justify-center">
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={(date) => date && setSelectedDate(date)}
+                className="rounded-lg border shadow-sm pointer-events-auto bg-card"
+              />
+            </div>
           </div>
 
           <div className="bg-card/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 border">
