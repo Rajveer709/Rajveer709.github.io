@@ -78,69 +78,61 @@ export const TaskCard = ({ task, onToggle, onDelete, onEdit, onHide }: TaskCardP
       ${task.completed ? 'opacity-60' : ''}
       ${isOverdue ? 'ring-2 ring-destructive/50' : ''}
     `}>
-      <CardContent className="p-4 sm:p-6">
-        {/* Portrait-optimized layout */}
-        <div className="space-y-4">
-          {/* Header with checkbox and title */}
-          <div className="flex items-start gap-3">
+      <CardContent className="p-6">
+        <div className="flex items-start justify-between">
+          <div className="flex items-start space-x-4 flex-1">
             <Checkbox
               checked={task.completed}
               onCheckedChange={onToggle}
-              className="mt-1 flex-shrink-0"
+              className="mt-1"
             />
             
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2">
-                <Icon className="w-4 h-4 text-gray-600 flex-shrink-0" />
-                <h3 className={`font-semibold text-gray-800 ${task.completed ? 'line-through' : ''} break-words`}>
+                <Icon className="w-4 h-4 text-gray-600" />
+                <h3 className={`font-semibold text-gray-800 ${task.completed ? 'line-through' : ''}`}>
                   {task.title}
                 </h3>
                 {isOverdue && !task.completed && (
-                  <AlertTriangle className="w-4 h-4 text-red-500 flex-shrink-0" />
+                  <AlertTriangle className="w-4 h-4 text-red-500" />
                 )}
               </div>
               
               {task.description && (
-                <p className={`text-gray-600 text-sm mb-3 break-words ${task.completed ? 'line-through' : ''}`}>
+                <p className={`text-gray-600 mb-3 ${task.completed ? 'line-through' : ''}`}>
                   {task.description}
                 </p>
               )}
-            </div>
-          </div>
-          
-          {/* Badges and date - Stacked for portrait */}
-          <div className="space-y-3">
-            <div className="flex flex-wrap gap-2">
-              <Badge 
-                variant="outline"
-                className={`${CATEGORY_COLORS[task.category] || 'bg-gray-100 text-gray-800'} text-xs`}
-              >
-                {task.category}
-              </Badge>
               
-              <Badge 
-                variant="outline"
-                className={`${PRIORITY_COLORS[task.priority]} text-xs`}
-              >
-                {task.priority} priority
-              </Badge>
-            </div>
-            
-            <div className={`flex items-center text-sm ${
-              isOverdue && !task.completed ? 'text-red-600 font-medium' : 'text-gray-500'
-            }`}>
-              <CalendarIcon className="w-4 h-4 mr-2 flex-shrink-0" />
-              <span className="break-words">
-                {format(new Date(task.dueDate), 'MMM d, yyyy')}
-                {!task.completed && (
-                  <span className="ml-2">{getDateText()}</span>
-                )}
-              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge 
+                  variant="outline"
+                  className={CATEGORY_COLORS[task.category] || 'bg-gray-100 text-gray-800'}
+                >
+                  {task.category}
+                </Badge>
+                
+                <Badge 
+                  variant="outline"
+                  className={PRIORITY_COLORS[task.priority]}
+                >
+                  {task.priority} priority
+                </Badge>
+                
+                <div className={`flex items-center text-sm ${
+                  isOverdue && !task.completed ? 'text-red-600 font-medium' : 'text-gray-500'
+                }`}>
+                  <CalendarIcon className="w-4 h-4 mr-1" />
+                  {format(new Date(task.dueDate), 'MMM d, yyyy')}
+                  {!task.completed && (
+                    <span className="ml-2">{getDateText()}</span>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
           
-          {/* Action buttons - Better spacing for portrait */}
-          <div className="flex justify-end gap-2 pt-2 border-t border-gray-100">
+          <div className="flex items-center space-x-2 ml-4">
             {task.completed && (
               <Button variant="ghost" size="sm" onClick={onHide} className="text-gray-500 hover:text-blue-600">
                 <EyeOff className="w-4 h-4" />
