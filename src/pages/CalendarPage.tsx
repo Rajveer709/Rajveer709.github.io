@@ -1,16 +1,26 @@
-import { Task } from './Index';
+
+import { Task, Profile } from './Index';
 import { Calendar } from '@/components/ui/calendar';
 import { CheckCircle, Clock } from 'lucide-react';
 import { format, isSameDay } from 'date-fns';
 import { useState } from 'react';
 import { PageHeader } from '../components/PageHeader';
+import { useOutletContext } from 'react-router-dom';
 
 interface CalendarPageProps {
   tasks: Task[];
   onBack: () => void;
 }
 
+interface OutletContextType {
+  profile: Profile | null;
+  onUpdateProfile: (updatedProfile: Partial<Profile>, avatarFile?: File) => Promise<void>;
+  showGreeting: boolean;
+}
+
+
 export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
+  const { profile, onUpdateProfile, showGreeting } = useOutletContext<OutletContextType>();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const tasksForSelectedDate = tasks.filter(task => 
@@ -28,8 +38,14 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
   };
 
   return (
-    <div className="space-y-6">
-      <PageHeader onBack={onBack} title="Task Calendar" />
+    <div>
+      <PageHeader
+        onBack={onBack}
+        title="Task Calendar"
+        profile={profile}
+        onUpdateProfile={onUpdateProfile}
+        showAvatar={!showGreeting}
+      />
 
       <div className="grid lg:grid-cols-2 gap-6 items-start">
         <div className="bg-background/60 backdrop-blur-lg rounded-2xl shadow-xl p-6 border border-primary/20">

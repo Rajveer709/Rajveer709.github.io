@@ -1,3 +1,4 @@
+
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Header } from './Header';
 import { BottomNavBar } from './BottomNavBar';
@@ -23,13 +24,15 @@ export const MainLayout = ({
   return (
     <>
       <div className="container mx-auto px-4 pt-6 max-w-sm pb-20">
-        <Header
-          profile={profile}
-          showGreeting={showGreeting}
-          onUpdateProfile={onUpdateProfile}
-        />
+        {showGreeting && (
+          <Header
+            profile={profile}
+            showGreeting={showGreeting}
+            onUpdateProfile={onUpdateProfile}
+          />
+        )}
         <main>
-          <Outlet />
+          <Outlet context={{ profile, onUpdateProfile, showGreeting }} />
         </main>
       </div>
       <BottomNavBar />
