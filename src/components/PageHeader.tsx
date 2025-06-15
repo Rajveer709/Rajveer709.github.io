@@ -11,12 +11,12 @@ interface PageHeaderProps {
 
 export const PageHeader = ({ title, onBack, className }: PageHeaderProps) => {
   return (
-    <div className={cn("flex items-center gap-4 mb-6", className)}>
+    <div className={cn("flex items-center gap-2 mb-4", className)}>
       <Button variant="ghost" size="icon" onClick={onBack} className="shrink-0">
         <ArrowLeft className="h-5 w-5" />
         <span className="sr-only">Back</span>
       </Button>
-      <h1 className="text-2xl md:text-3xl font-bold text-primary truncate">{title}</h1>
+      <h1 className="text-xl md:text-2xl font-bold text-primary truncate">{title}</h1>
     </div>
   );
 };
