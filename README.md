@@ -51,9 +51,6 @@ npm run dev
 
 ## 🎨 Editing Options
 
-### Via Lovable Platform
-Visit the [Lovable Project](https://lovable.dev/projects/ec18fd2a-3dec-46dd-9e4f-59c8fa9be4db) and start prompting for changes.
-
 ### Local Development
 Work locally with your preferred IDE. All changes pushed to the repository will be reflected in Lovable.
 
@@ -63,11 +60,7 @@ Work locally with your preferred IDE. All changes pushed to the repository will 
 
 ## 🚀 Deployment
 
-Deploy easily through Lovable:
-1. Open your [Lovable Project](https://lovable.dev/projects/ec18fd2a-3dec-46dd-9e4f-59c8fa9be4db)
-2. Click **Share → Publish**
 
-## 🌐 Custom Domain
 
 Connect your own domain in **Project > Settings > Domains**.
 
