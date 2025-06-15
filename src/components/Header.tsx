@@ -1,18 +1,14 @@
-import { SettingsDialog } from './SettingsDialog';
 
-interface Profile {
-  name: string | null;
-}
+import { Profile } from '../pages/Index';
+import { AvatarUploader } from './AvatarUploader';
 
 interface HeaderProps {
-  onThemeChange: (theme: string) => void;
-  currentTheme: string;
-  onCalendarClick: () => void;
   profile: Profile | null;
   showGreeting: boolean;
+  onUpdateProfile: (updatedProfile: Partial<Profile>, avatarFile?: File) => Promise<void>;
 }
 
-export const Header = ({ onThemeChange, currentTheme, onCalendarClick, profile, showGreeting }: HeaderProps) => {
+export const Header = ({ profile, showGreeting, onUpdateProfile }: HeaderProps) => {
   return (
     <header className={`flex items-center ${showGreeting ? 'justify-between' : 'justify-end'} mb-8`}>
       {showGreeting && (
@@ -23,8 +19,8 @@ export const Header = ({ onThemeChange, currentTheme, onCalendarClick, profile, 
           <p className="text-muted-foreground">Here's your life at a glance.</p>
         </div>
       )}
-      <div className="flex items-center gap-2 animate-fade-in">
-        {/* Desktop-only buttons removed for consistent portrait mode */}
+      <div className="flex items-center gap-4 animate-fade-in">
+        {profile && <AvatarUploader profile={profile} onUpdateProfile={onUpdateProfile} />}
       </div>
     </header>
   );

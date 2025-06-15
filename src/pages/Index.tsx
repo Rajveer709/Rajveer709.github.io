@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { toast } from "sonner";
@@ -37,6 +36,7 @@ export interface Profile {
   id: string;
   name: string | null;
   email: string | null;
+  avatar_url: string | null;
 }
 
 const XP_FOR_LEVEL = 100;
@@ -372,12 +372,48 @@ const Index = () => {
     });
   };
 
-  const handleUpdateProfile = async (updatedProfile: Partial<Profile>) => {
-    if (!user || !profile) return;
+  const handleUpdateProfile = async (updatedProfileData: Partial<Profile>, avatarFile?: File) => {
+    if (!user) return;
+
+    let avatar_url: string | undefined = undefined;
+
+    if (avatarFile) {
+      const fileExt = avatarFile.name.split('.').pop();
+      const fileName = `${user.id}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      toast.info("Uploading new avatar...");
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, avatarFile, {
+          cacheControl: '3600',
+          upsert: true,
+        });
+
+      if (uploadError) {
+        toast.error('Failed to upload avatar.');
+        console.error(uploadError);
+        return;
+      }
+
+      const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(filePath);
+      avatar_url = `${urlData.publicUrl}?t=${new Date().getTime()}`;
+    }
+
+    const updates = {
+      ...updatedProfileData,
+      ...(avatar_url && { avatar_url }),
+      updated_at: new Date(),
+    };
+    
+    if (Object.keys(updates).length <= 1 && !avatar_url) {
+        // Only updated_at is present, nothing to update
+        return;
+    }
 
     const { data, error } = await supabase
       .from('profiles')
-      .update(updatedProfile)
+      .update(updates)
       .eq('id', user.id)
       .select()
       .single();
@@ -386,7 +422,7 @@ const Index = () => {
       toast.error('Failed to update profile.');
       console.error(error);
     } else if (data) {
-      setProfile(data);
+      setProfile(data as Profile);
       toast.success('Profile updated successfully!');
     }
   };
@@ -417,6 +453,7 @@ const Index = () => {
                   currentTheme={currentTheme} 
                   profile={profile} 
                   showGreeting={showGreeting} 
+                  onUpdateProfile={handleUpdateProfile}
                 />
               }
             >
@@ -460,7 +497,7 @@ const Index = () => {
                     userLevel={userLevel}
                     user={user}
                     profile={profile}
-                    onUpdateProfile={handleUpdateProfile}
+                    onUpdateProfile={(p) => handleUpdateProfile(p)}
                     onSignOut={handleSignOut}
                     backgroundLightness={backgroundLightness}
                     onBackgroundLightnessChange={handleBackgroundLightnessChange}

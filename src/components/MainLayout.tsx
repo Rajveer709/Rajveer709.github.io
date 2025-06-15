@@ -2,12 +2,14 @@
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Header } from './Header';
 import { BottomNavBar } from './BottomNavBar';
+import { Profile } from '../pages/Index';
 
 interface MainLayoutProps {
   onThemeChange: (theme: string) => void;
   currentTheme: string;
-  profile: any; // Using any to avoid refactoring read-only files
+  profile: Profile | null;
   showGreeting: boolean;
+  onUpdateProfile: (updatedProfile: Partial<Profile>, avatarFile?: File) => Promise<void>;
 }
 
 export const MainLayout = ({
@@ -15,6 +17,7 @@ export const MainLayout = ({
   currentTheme,
   profile,
   showGreeting,
+  onUpdateProfile,
 }: MainLayoutProps) => {
   const navigate = useNavigate();
 
@@ -27,6 +30,7 @@ export const MainLayout = ({
           onCalendarClick={() => navigate('/calendar')}
           profile={profile}
           showGreeting={showGreeting}
+          onUpdateProfile={onUpdateProfile}
         />
         <main>
           <Outlet />
