@@ -496,8 +496,6 @@ const Index = () => {
                     onStartOver={handleStartOver}
                     userLevel={userLevel}
                     user={user}
-                    profile={profile}
-                    onUpdateProfile={(p) => handleUpdateProfile(p)}
                     onSignOut={handleSignOut}
                     backgroundLightness={backgroundLightness}
                     onBackgroundLightnessChange={handleBackgroundLightnessChange}
