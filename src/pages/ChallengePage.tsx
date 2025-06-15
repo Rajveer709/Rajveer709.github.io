@@ -1,12 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, Circle, ArrowLeft, Lock, ChevronDown } from "lucide-react";
+import { CheckCircle2, Circle, Lock, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Challenge as ChallengeType } from '../config/challenges';
 import { getRankForLevel, RANKS as ALL_RANKS } from '../config/ranks';
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import { Profile } from "./Index";
+import { PageHeader } from "../components/PageHeader";
 
 export interface Challenge extends ChallengeType {
   completed: boolean;
@@ -20,7 +23,14 @@ interface ChallengePageProps {
   onBack: () => void;
 }
 
+interface OutletContextType {
+  profile: Profile | null;
+  onUpdateProfile: (updatedProfile: Partial<Profile>, avatarFile?: File) => Promise<void>;
+  showGreeting: boolean;
+}
+
 export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, onBack }: ChallengePageProps) => {
+  const { profile, onUpdateProfile, showGreeting } = useOutletContext<OutletContextType>();
   const progressPercentage = xpToNextLevel > 0 ? Math.round((userXp / xpToNextLevel) * 100) : 0;
   const rank = getRankForLevel(userLevel);
 
@@ -49,12 +59,13 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
 
   return (
     <div>
-      <div className="flex items-center mb-6">
-        <Button variant="ghost" size="icon" onClick={onBack} className="mr-2 md:hidden">
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <h1 className="text-2xl md:text-3xl font-bold text-primary">Challenges</h1>
-      </div>
+      <PageHeader
+        title="Challenges"
+        onBack={onBack}
+        profile={profile}
+        onUpdateProfile={onUpdateProfile}
+        showAvatar={!showGreeting}
+      />
 
       <Card className="mb-6 bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">
         <CardHeader>

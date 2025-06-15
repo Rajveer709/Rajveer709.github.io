@@ -1,5 +1,4 @@
-
-import { ArrowLeft, Moon, Sun, User, Palette, Info, RotateCcw, Lock, LogOut, EyeOff, Eye } from 'lucide-react';
+import { Moon, Sun, User, Palette, Info, RotateCcw, Lock, LogOut, EyeOff, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
@@ -19,13 +18,15 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { User as SupabaseUser } from '@supabase/supabase-js';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { format } from 'date-fns';
 import { Task, Profile } from './Index';
 import { HackDialog } from '../components/HackDialog';
+import { useOutletContext } from 'react-router-dom';
+import { PageHeader } from '../components/PageHeader';
 
 interface SettingsPageProps {
   onBack: () => void;
@@ -36,8 +37,6 @@ interface SettingsPageProps {
   onStartOver: () => void;
   userLevel: number;
   user: SupabaseUser | null;
-  profile: Profile | null;
-  onUpdateProfile: (updatedProfile: Partial<Profile>) => void;
   onSignOut: () => void;
   backgroundLightness: number;
   onBackgroundLightnessChange: (value: number) => void;
@@ -48,31 +47,47 @@ interface SettingsPageProps {
   onUnlockAll: () => void;
 }
 
-export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver, userLevel, user, profile, onUpdateProfile, onSignOut, backgroundLightness, onBackgroundLightnessChange, cardLightness, onCardLightnessChange, tasks, onRestoreTask, onUnlockAll }: SettingsPageProps) => {
+interface OutletContextType {
+  profile: Profile | null;
+  onUpdateProfile: (updatedProfile: Partial<Profile>, avatarFile?: File) => Promise<void>;
+  showGreeting: boolean;
+}
+
+export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver, userLevel, user, onSignOut, backgroundLightness, onBackgroundLightnessChange, cardLightness, onCardLightnessChange, tasks, onRestoreTask, onUnlockAll }: SettingsPageProps) => {
+  const { profile, onUpdateProfile, showGreeting } = useOutletContext<OutletContextType>();
   const [name, setName] = useState(profile?.name || '');
   const [isEditing, setIsEditing] = useState(false);
   const hiddenTasks = tasks.filter(task => task.hidden);
   const rank = getRankForLevel(userLevel);
   
+  useEffect(() => {
+    if (!isEditing) {
+      setName(profile?.name || '');
+    }
+  }, [profile, isEditing]);
+
   const getInitials = (name: string | null | undefined) => {
     if (!name || name.trim() === '') return 'U';
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
 
   const handleSaveProfile = () => {
-    onUpdateProfile({ name });
+    if (onUpdateProfile) {
+      onUpdateProfile({ name });
+    }
     setIsEditing(false);
   }
 
   return (
     <TooltipProvider>
       <div className="animate-fade-in space-y-6 pb-8">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={onBack}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <h1 className="text-2xl font-semibold">Settings</h1>
-        </div>
+        <PageHeader
+          title="Settings"
+          onBack={onBack}
+          profile={profile}
+          onUpdateProfile={onUpdateProfile}
+          showAvatar={!showGreeting}
+        />
 
         <Card className="animate-scale-in bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg" style={{ animationDelay: '100ms' }}>
           <CardHeader>
