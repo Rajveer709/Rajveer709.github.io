@@ -29,32 +29,32 @@ interface TaskCardProps {
   onHide: () => void;
 }
 
-const categoryIcons: { [key: string]: any } = {
+const CATEGORY_ICONS = {
   'Financial': DollarSign,
   'Health & Wellness': Heart,
   'Household': Home,
   'Personal': User,
   'Legal & Admin': FileText
-};
+} as const;
 
-const categoryColors: { [key: string]: string } = {
+const CATEGORY_COLORS = {
   'Financial': 'bg-green-100 text-green-800 border-green-200',
   'Health & Wellness': 'bg-red-100 text-red-800 border-red-200',
   'Household': 'bg-yellow-100 text-yellow-800 border-yellow-200',
   'Personal': 'bg-purple-100 text-purple-800 border-purple-200',
   'Legal & Admin': 'bg-blue-100 text-blue-800 border-blue-200'
-};
+} as const;
 
-const priorityColors: { [key: string]: string } = {
+const PRIORITY_COLORS = {
   'low': 'bg-gray-100 text-gray-700 border-gray-200',
   'medium': 'bg-yellow-100 text-yellow-800 border-yellow-200',
   'high': 'bg-red-100 text-red-800 border-red-200'
-};
+} as const;
 
 export const TaskCard = ({ task, onToggle, onDelete, onEdit, onHide }: TaskCardProps) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   
-  const Icon = categoryIcons[task.category] || FileText;
+  const Icon = CATEGORY_ICONS[task.category] || FileText;
   const isOverdue = !task.completed && isAfter(new Date(), new Date(task.dueDate));
   const daysUntilDue = differenceInDays(new Date(task.dueDate), new Date());
   
@@ -63,10 +63,21 @@ export const TaskCard = ({ task, onToggle, onDelete, onEdit, onHide }: TaskCardP
     setIsEditOpen(false);
   };
 
+  const getDateText = () => {
+    if (task.completed) return format(new Date(task.dueDate), 'MMM d, yyyy');
+    
+    if (isOverdue) return `(${Math.abs(daysUntilDue)} days overdue)`;
+    if (daysUntilDue === 0) return '(Due today)';
+    return `(${daysUntilDue} days left)`;
+  };
+
   return (
-    <Card className={`bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${
-      task.completed ? 'opacity-60' : ''
-    } ${isOverdue ? 'ring-2 ring-destructive/50' : ''}`}>
+    <Card className={`
+      bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg 
+      hover:shadow-xl transition-all duration-300 hover:-translate-y-1
+      ${task.completed ? 'opacity-60' : ''}
+      ${isOverdue ? 'ring-2 ring-destructive/50' : ''}
+    `}>
       <CardContent className="p-6">
         <div className="flex items-start justify-between">
           <div className="flex items-start space-x-4 flex-1">
@@ -96,14 +107,14 @@ export const TaskCard = ({ task, onToggle, onDelete, onEdit, onHide }: TaskCardP
               <div className="flex flex-wrap items-center gap-2">
                 <Badge 
                   variant="outline"
-                  className={categoryColors[task.category] || 'bg-gray-100 text-gray-800'}
+                  className={CATEGORY_COLORS[task.category] || 'bg-gray-100 text-gray-800'}
                 >
                   {task.category}
                 </Badge>
                 
                 <Badge 
                   variant="outline"
-                  className={priorityColors[task.priority]}
+                  className={PRIORITY_COLORS[task.priority]}
                 >
                   {task.priority} priority
                 </Badge>
@@ -114,14 +125,7 @@ export const TaskCard = ({ task, onToggle, onDelete, onEdit, onHide }: TaskCardP
                   <CalendarIcon className="w-4 h-4 mr-1" />
                   {format(new Date(task.dueDate), 'MMM d, yyyy')}
                   {!task.completed && (
-                    <span className="ml-2">
-                      {isOverdue 
-                        ? `(${Math.abs(daysUntilDue)} days overdue)`
-                        : daysUntilDue === 0 
-                        ? '(Due today)'
-                        : `(${daysUntilDue} days left)`
-                      }
-                    </span>
+                    <span className="ml-2">{getDateText()}</span>
                   )}
                 </div>
               </div>

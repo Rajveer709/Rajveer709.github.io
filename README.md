@@ -1,73 +1,78 @@
-# Welcome to your Lovable project
 
-## Project info
+# Life Admin - Task Management App
 
-**URL**: https://lovable.dev/projects/ec18fd2a-3dec-46dd-9e4f-59c8fa9be4db
+A modern task management application built with React, TypeScript, and Tailwind CSS for organizing life administration tasks.
 
-## How can I edit this code?
+## 🚀 Project Info
 
-There are several ways of editing your application.
+**Live URL**: https://lovable.dev/projects/ec18fd2a-3dec-46dd-9e4f-59c8fa9be4db
 
-**Use Lovable**
+## 🛠️ Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/ec18fd2a-3dec-46dd-9e4f-59c8fa9be4db) and start prompting.
+- **Frontend**: React 18, TypeScript, Vite
+- **UI Components**: shadcn/ui, Radix UI
+- **Styling**: Tailwind CSS
+- **Backend**: Supabase (Authentication, Database)
+- **State Management**: TanStack Query
+- **Icons**: Lucide React
+- **Date Handling**: date-fns
+- **Charts**: Recharts
 
-Changes made via Lovable will be committed automatically to this repo.
+## 📱 Features
 
-**Use your preferred IDE**
+- Task creation and management with categories and priorities
+- Progress tracking and analytics
+- Dark/light mode support
+- Responsive design for all devices
+- User authentication
+- Real-time data synchronization
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🔧 Development
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Prerequisites
 
-Follow these steps:
+- Node.js & npm ([install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating))
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+### Getting Started
+
+```bash
+# Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
+# Navigate to project directory
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 🎨 Editing Options
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Via Lovable Platform
+Visit the [Lovable Project](https://lovable.dev/projects/ec18fd2a-3dec-46dd-9e4f-59c8fa9be4db) and start prompting for changes.
 
-**Use GitHub Codespaces**
+### Local Development
+Work locally with your preferred IDE. All changes pushed to the repository will be reflected in Lovable.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### GitHub Integration
+- **Direct File Editing**: Edit files directly in GitHub interface
+- **GitHub Codespaces**: Launch a complete development environment in the browser
 
-## What technologies are used for this project?
+## 🚀 Deployment
 
-This project is built with:
+Deploy easily through Lovable:
+1. Open your [Lovable Project](https://lovable.dev/projects/ec18fd2a-3dec-46dd-9e4f-59c8fa9be4db)
+2. Click **Share → Publish**
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 🌐 Custom Domain
 
-## How can I deploy this project?
+Connect your own domain in **Project > Settings > Domains**.
 
-Simply open [Lovable](https://lovable.dev/projects/ec18fd2a-3dec-46dd-9e4f-59c8fa9be4db) and click on Share -> Publish.
+Read more: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
 
-## Can I connect a custom domain to my Lovable project?
+## 📄 License
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is built with Lovable and follows modern web development practices.

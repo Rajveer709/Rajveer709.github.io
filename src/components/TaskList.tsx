@@ -11,8 +11,15 @@ interface TaskListProps {
   onHideTask: (taskId: string) => void;
 }
 
-export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onEditTask, onHideTask }: TaskListProps) => {
+export const TaskList = ({ 
+  tasks, 
+  onToggleTask, 
+  onDeleteTask, 
+  onEditTask, 
+  onHideTask 
+}: TaskListProps) => {
   const visibleTasks = tasks.filter(task => !task.hidden);
+  
   // Sort tasks: incomplete first (by due date), then completed
   const sortedTasks = [...visibleTasks].sort((a, b) => {
     if (a.completed !== b.completed) {
@@ -35,14 +42,18 @@ export const TaskList = ({ tasks, onToggleTask, onDeleteTask, onEditTask, onHide
   return (
     <div className="space-y-4">
       {sortedTasks.map((task, index) => (
-        <div key={task.id} className="animate-fade-in" style={{ animationDelay: `${Math.min(index * 100, 500)}ms`}}>
-            <TaskCard
-              task={task}
-              onToggle={() => onToggleTask(task.id)}
-              onDelete={() => onDeleteTask(task.id)}
-              onEdit={(updatedTask) => onEditTask(task.id, updatedTask)}
-              onHide={() => onHideTask(task.id)}
-            />
+        <div 
+          key={task.id} 
+          className="animate-fade-in" 
+          style={{ animationDelay: `${Math.min(index * 100, 500)}ms` }}
+        >
+          <TaskCard
+            task={task}
+            onToggle={() => onToggleTask(task.id)}
+            onDelete={() => onDeleteTask(task.id)}
+            onEdit={(updatedTask) => onEditTask(task.id, updatedTask)}
+            onHide={() => onHideTask(task.id)}
+          />
         </div>
       ))}
     </div>

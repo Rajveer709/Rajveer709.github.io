@@ -13,7 +13,13 @@ interface DashboardPageProps {
   onHideTask: (taskId: string) => void;
 }
 
-export const DashboardPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, onHideTask }: DashboardPageProps) => {
+export const DashboardPage = ({ 
+  tasks, 
+  onToggleTask, 
+  onDeleteTask, 
+  onEditTask, 
+  onHideTask 
+}: DashboardPageProps) => {
   const completedTasks = tasks.filter(task => task.completed).length;
   const totalTasks = tasks.length;
   const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
@@ -36,7 +42,9 @@ export const DashboardPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, o
       <div className="lg:col-span-1 space-y-6">
         <Card className="bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">
           <CardHeader className="pb-2 pt-4">
-            <CardTitle className="text-md font-medium text-foreground/80">Overall Progress</CardTitle>
+            <CardTitle className="text-md font-medium text-foreground/80">
+              Overall Progress
+            </CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
             <div className="flex items-center gap-4">
@@ -49,9 +57,13 @@ export const DashboardPage = ({ tasks, onToggleTask, onDeleteTask, onEditTask, o
                     : 'shadow-[0_0_10px_hsl(var(--primary))]'
                 }
               />
-              <span className="text-lg font-bold text-primary">{`${completionPercentage}%`}</span>
+              <span className="text-lg font-bold text-primary">
+                {completionPercentage}%
+              </span>
             </div>
-            <p className="text-sm text-muted-foreground mt-1">{completedTasks} of {totalTasks} tasks completed.</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {completedTasks} of {totalTasks} tasks completed.
+            </p>
           </CardContent>
         </Card>
         
