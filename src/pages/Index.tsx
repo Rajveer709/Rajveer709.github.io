@@ -116,7 +116,7 @@ const Index = () => {
     if (error) {
       console.error('Error fetching profile:', error);
     } else if (data) {
-      setProfile(data as Profile);
+      setProfile(data as unknown as Profile);
     }
   }, []);
 
@@ -422,7 +422,7 @@ const Index = () => {
       toast.error('Failed to update profile.');
       console.error(error);
     } else if (data) {
-      setProfile(data as Profile);
+      setProfile(data as unknown as Profile);
       toast.success('Profile updated successfully!');
     }
   };

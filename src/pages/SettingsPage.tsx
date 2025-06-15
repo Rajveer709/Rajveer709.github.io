@@ -1,3 +1,4 @@
+
 import { ArrowLeft, Moon, Sun, User, Palette, Info, RotateCcw, Lock, LogOut, EyeOff, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,14 +24,8 @@ import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { format } from 'date-fns';
-import { Task } from './Index';
+import { Task, Profile } from './Index';
 import { HackDialog } from '../components/HackDialog';
-
-interface Profile {
-  id: string;
-  name: string | null;
-  email: string | null;
-}
 
 interface SettingsPageProps {
   onBack: () => void;
@@ -59,6 +54,11 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
   const hiddenTasks = tasks.filter(task => task.hidden);
   const rank = getRankForLevel(userLevel);
   
+  const getInitials = (name: string | null | undefined) => {
+    if (!name || name.trim() === '') return 'U';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase();
+  };
+
   const handleSaveProfile = () => {
     onUpdateProfile({ name });
     setIsEditing(false);
@@ -88,8 +88,8 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
             <div className="flex items-center gap-4">
               <div className="relative">
                 <Avatar className="w-12 h-12 border">
-                  <AvatarImage src={`https://api.dicebear.com/8.x/bottts/svg?seed=${user?.email}`} alt={profile?.name || 'User'} />
-                  <AvatarFallback className="text-xl">{profile?.name?.charAt(0) || 'U'}</AvatarFallback>
+                  <AvatarImage src={profile?.avatar_url || ''} alt={profile?.name || 'User'} />
+                  <AvatarFallback className="text-xl">{getInitials(profile?.name)}</AvatarFallback>
                 </Avatar>
                 <div className="absolute -bottom-1 -right-1 bg-card p-1 rounded-full shadow-md border">
                   <rank.Icon className="w-4 h-4 text-primary" />

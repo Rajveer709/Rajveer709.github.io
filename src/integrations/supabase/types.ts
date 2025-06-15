@@ -12,6 +12,7 @@ export type Database = {
       profiles: {
         Row: {
           ai_coach_tone: string | null
+          avatar_url: string | null
           calorie_goal: number | null
           created_at: string | null
           email: string | null
@@ -24,6 +25,7 @@ export type Database = {
         }
         Insert: {
           ai_coach_tone?: string | null
+          avatar_url?: string | null
           calorie_goal?: number | null
           created_at?: string | null
           email?: string | null
@@ -36,6 +38,7 @@ export type Database = {
         }
         Update: {
           ai_coach_tone?: string | null
+          avatar_url?: string | null
           calorie_goal?: number | null
           created_at?: string | null
           email?: string | null
