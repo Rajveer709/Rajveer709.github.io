@@ -20,7 +20,7 @@ export const MainLayout = ({
 
   return (
     <>
-      <div className="container mx-auto px-4 pt-4 md:pt-6 max-w-6xl pb-20 md:pb-8">
+      <div className="container mx-auto px-4 pt-6 max-w-sm pb-20">
         <Header
           onThemeChange={onThemeChange}
           currentTheme={currentTheme}

@@ -25,10 +25,10 @@ export const DashboardPage = ({
   const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-      <div className="lg:col-span-2">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <h2 className="text-xl md:text-2xl font-semibold text-primary">Your Tasks</h2>
+    <div className="flex flex-col gap-8">
+      <div>
+        <div className="flex justify-between items-center gap-4 mb-6">
+          <h2 className="text-2xl font-semibold text-primary">Your Tasks</h2>
         </div>
         <TaskList 
           tasks={tasks}
@@ -39,7 +39,7 @@ export const DashboardPage = ({
         />
       </div>
 
-      <div className="lg:col-span-1 space-y-6">
+      <div className="space-y-6">
         <Card className="bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">
           <CardHeader className="pb-2 pt-4">
             <CardTitle className="text-md font-medium text-foreground/80">
