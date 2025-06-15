@@ -116,7 +116,7 @@ const Index = () => {
     if (error) {
       console.error('Error fetching profile:', error);
     } else if (data) {
-      setProfile(data);
+      setProfile(data as Profile);
     }
   }, []);
 
@@ -403,7 +403,7 @@ const Index = () => {
     const updates = {
       ...updatedProfileData,
       ...(avatar_url && { avatar_url }),
-      updated_at: new Date(),
+      updated_at: new Date().toISOString(),
     };
     
     if (Object.keys(updates).length <= 1 && !avatar_url) {

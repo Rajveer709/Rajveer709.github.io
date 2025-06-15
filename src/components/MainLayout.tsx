@@ -1,4 +1,3 @@
-
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Header } from './Header';
 import { BottomNavBar } from './BottomNavBar';
@@ -25,9 +24,6 @@ export const MainLayout = ({
     <>
       <div className="container mx-auto px-4 pt-6 max-w-sm pb-20">
         <Header
-          onThemeChange={onThemeChange}
-          currentTheme={currentTheme}
-          onCalendarClick={() => navigate('/calendar')}
           profile={profile}
           showGreeting={showGreeting}
           onUpdateProfile={onUpdateProfile}
