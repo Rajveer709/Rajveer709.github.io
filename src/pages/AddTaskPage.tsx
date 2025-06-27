@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Task } from './Index';
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CalendarIcon, ChevronRight } from 'lucide-react';
+import { CalendarIcon, ChevronRight, Sparkles } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { themes, defaultTheme } from '../config/themes';
@@ -154,6 +153,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   const [isQuickTasksOpen, setIsQuickTasksOpen] = useState(false);
 
   const selectedPriorityDetails = priorities.find(p => p.value === priority);
+  const theme = themes.find(t => t.value === currentTheme) || themes.find(t => t.value === defaultTheme);
 
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
@@ -237,40 +237,50 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   };
 
   return (
-    <div>
+    <div className="font-sans min-h-screen" style={getThemeBackgroundStyle(currentTheme, resolvedTheme)}>
       <div className="container mx-auto px-4 py-6 max-w-4xl">
-        <PageHeader title="Create Task" onBack={onBack} />
+        <div className="animate-fade-in opacity-0" style={{ animationDelay: '100ms' }}>
+          <PageHeader title="Create Task" onBack={onBack} />
+        </div>
 
-        <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border">
+        <div className="bg-card/90 backdrop-blur-sm rounded-2xl p-6 border border-border/30 shadow-xl hover:shadow-2xl transition-all duration-500 animate-scale-in opacity-0" style={{ animationDelay: '200ms' }}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Quick Tasks Section */}
-            <div>
+            <div className="animate-slide-in-from-left opacity-0" style={{ animationDelay: '300ms' }}>
               <Collapsible
                 open={isQuickTasksOpen}
                 onOpenChange={setIsQuickTasksOpen}
               >
-                <CollapsibleTrigger className="flex w-full items-center justify-between text-xl font-semibold text-primary mb-4">
-                  <span>Quick Tasks</span>
-                  <ChevronRight className={`h-6 w-6 transform transition-transform duration-300 ${isQuickTasksOpen ? 'rotate-90' : ''}`} />
+                <CollapsibleTrigger className="flex w-full items-center justify-between text-xl font-semibold text-primary mb-4 hover:text-primary/80 transition-colors duration-300 group">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-primary group-hover:animate-pulse" />
+                    <span>Quick Tasks</span>
+                  </div>
+                  <ChevronRight className={`h-6 w-6 transform transition-all duration-300 ${isQuickTasksOpen ? 'rotate-90' : ''} group-hover:scale-110`} />
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <Accordion type="single" collapsible className="w-full" value={selectedCategory} onValueChange={handleCategorySelect}>
-                    {Object.keys(taskCategories).map((category) => (
-                      <AccordionItem value={category} key={category} className="border rounded-lg mb-2 overflow-hidden bg-card/95 shadow-sm last:mb-0">
-                        <AccordionTrigger className="hover:no-underline px-4 text-base">{category}</AccordionTrigger>
+                    {Object.keys(taskCategories).map((category, index) => (
+                      <AccordionItem 
+                        value={category} 
+                        key={category} 
+                        className="border rounded-lg mb-2 overflow-hidden bg-card/95 shadow-sm last:mb-0 hover:shadow-md transition-all duration-300 animate-fade-in opacity-0" 
+                        style={{ animationDelay: `${400 + index * 50}ms` }}
+                      >
+                        <AccordionTrigger className="hover:no-underline px-4 text-base hover:bg-muted/30 transition-all duration-300">{category}</AccordionTrigger>
                         <AccordionContent>
                           <div className="pl-4">
                             <Accordion type="single" collapsible className="w-full" value={selectedSubCategory} onValueChange={handleSubCategorySelect}>
                               {Object.keys(taskCategories[category as CategoryKey]).map((subCategory) => (
-                                <AccordionItem value={subCategory} key={subCategory} className="border border-muted rounded-md mb-1 last:mb-0">
-                                  <AccordionTrigger className="text-sm hover:no-underline px-4">{subCategory}</AccordionTrigger>
+                                <AccordionItem value={subCategory} key={subCategory} className="border border-muted rounded-md mb-1 last:mb-0 hover:shadow-sm transition-all duration-300">
+                                  <AccordionTrigger className="text-sm hover:no-underline px-4 hover:bg-muted/20 transition-all duration-300">{subCategory}</AccordionTrigger>
                                   <AccordionContent>
                                     <div className="pl-4 space-y-2">
                                       {(taskCategories[category as CategoryKey][subCategory as SubCategoryKey<CategoryKey>] as readonly string[]).map((task) => (
                                         <Button
                                           key={task}
                                           variant={selectedTask === task ? "default" : "secondary"}
-                                          className="w-full justify-start text-left text-sm font-normal h-auto py-2"
+                                          className="w-full justify-start text-left text-sm font-normal h-auto py-2 transition-all duration-300 hover:scale-105 hover:shadow-md"
                                           onClick={() => handleTaskSelect(task)}
                                         >
                                           {task}
@@ -291,33 +301,43 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
             </div>
 
             {/* Task Form */}
-            <div>
-              <h2 className="text-xl font-semibold text-primary mb-6">Task Details</h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
+            <div className="animate-slide-in-from-left opacity-0" style={{ animationDelay: '400ms' }}>
+              <div className="flex items-center gap-2 mb-6">
+                <div className="p-2 rounded-full" style={{ backgroundColor: `${theme?.colors.primary}20` }}>
+                  <Sparkles className="h-5 w-5" style={{ color: theme?.colors.primary }} />
+                </div>
+                <h2 className="text-xl font-semibold text-foreground">Task Details</h2>
+              </div>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Task Title</label>
                   <Input
-                    placeholder="Task title"
+                    placeholder="Enter your task..."
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
+                    className="transition-all duration-300 focus:scale-105 border-border/50 focus:border-primary/50 shadow-sm hover:shadow-md"
                   />
                 </div>
 
-                <div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Description</label>
                   <Textarea
-                    placeholder="Description (optional)"
+                    placeholder="Add details about your task..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     rows={3}
+                    className="transition-all duration-300 focus:scale-105 border-border/50 focus:border-primary/50 shadow-sm hover:shadow-md resize-none"
                   />
                 </div>
 
-                <div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Priority Level</label>
                   <Select value={priority} onValueChange={(value: 'low' | 'medium' | 'high' | 'urgent') => setPriority(value)}>
-                    <SelectTrigger>
+                    <SelectTrigger className="transition-all duration-300 hover:scale-105 border-border/50 focus:border-primary/50 shadow-sm hover:shadow-md">
                       {selectedPriorityDetails && (
                         <div className="flex items-center gap-2">
-                          <span className={cn("h-2.5 w-2.5 rounded-full", selectedPriorityDetails.color)} />
+                          <span className={cn("h-2.5 w-2.5 rounded-full animate-pulse", selectedPriorityDetails.color)} />
                           <span>{selectedPriorityDetails.label}</span>
                           {selectedPriorityDetails.emoji && <span>{selectedPriorityDetails.emoji}</span>}
                         </div>
@@ -325,7 +345,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                     </SelectTrigger>
                     <SelectContent>
                       {priorities.map((p) => (
-                        <SelectItem key={p.value} value={p.value}>
+                        <SelectItem key={p.value} value={p.value} className="hover:bg-muted/50 transition-colors duration-300">
                           <div className="flex items-center gap-2">
                             <span className={cn("h-2.5 w-2.5 rounded-full", p.color)} />
                             <span>{p.label}</span>
@@ -337,25 +357,27 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                   </Select>
                 </div>
 
-                <div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Due Date</label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal"
+                          "w-full justify-start text-left font-normal transition-all duration-300 hover:scale-105 border-border/50 focus:border-primary/50 shadow-sm hover:shadow-md"
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {format(dueDate, "PPP")}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent className="w-auto p-0 shadow-xl border-border/30" align="start">
                       <Calendar
                         mode="single"
                         selected={dueDate}
                         onSelect={(date) => date && setDueDate(date)}
                         initialFocus
+                        className="rounded-lg"
                       />
                     </PopoverContent>
                   </Popover>
@@ -363,10 +385,12 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
 
                 <Button 
                   type="submit" 
-                  className="w-full"
+                  className="w-full py-3 text-base font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group"
                   disabled={!title || !selectedCategory}
+                  style={{ backgroundColor: theme?.colors.primary }}
                 >
-                  Add Task
+                  <Sparkles className="w-4 h-4 mr-2 group-hover:animate-pulse" />
+                  Create Task
                 </Button>
               </form>
             </div>
@@ -375,21 +399,22 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
 
         {/* Streaming App Dialog */}
         <Dialog open={showStreamingDialog} onOpenChange={setShowStreamingDialog}>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-md border-border/30 shadow-xl">
             <DialogHeader>
-              <DialogTitle>Enter App Name</DialogTitle>
+              <DialogTitle className="text-foreground">Enter App Name</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <Input
                 placeholder="Enter the app name"
                 value={streamingApp}
                 onChange={(e) => setStreamingApp(e.target.value)}
+                className="transition-all duration-300 focus:scale-105"
               />
               <div className="flex gap-2">
-                <Button onClick={handleStreamingSubmit} className="flex-1">
+                <Button onClick={handleStreamingSubmit} className="flex-1 transition-all duration-300 hover:scale-105">
                   Add Task
                 </Button>
-                <Button variant="outline" onClick={() => setShowStreamingDialog(false)}>
+                <Button variant="outline" onClick={() => setShowStreamingDialog(false)} className="transition-all duration-300 hover:scale-105">
                   Cancel
                 </Button>
               </div>
@@ -399,21 +424,22 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
 
         {/* Medication Dialog */}
         <Dialog open={showMedicationDialog} onOpenChange={setShowMedicationDialog}>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-md border-border/30 shadow-xl">
             <DialogHeader>
-              <DialogTitle>Enter Medicine Name</DialogTitle>
+              <DialogTitle className="text-foreground">Enter Medicine Name</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <Input
                 placeholder="Enter the name of your medicine"
                 value={medicineName}
                 onChange={(e) => setMedicineName(e.target.value)}
+                className="transition-all duration-300 focus:scale-105"
               />
               <div className="flex gap-2">
-                <Button onClick={handleMedicationSubmit} className="flex-1">
+                <Button onClick={handleMedicationSubmit} className="flex-1 transition-all duration-300 hover:scale-105">
                   Add Task
                 </Button>
-                <Button variant="outline" onClick={() => setShowMedicationDialog(false)}>
+                <Button variant="outline" onClick={() => setShowMedicationDialog(false)} className="transition-all duration-300 hover:scale-105">
                   Cancel
                 </Button>
               </div>
@@ -423,28 +449,28 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
 
         {/* Vehicle Fluid Dialog */}
         <Dialog open={showVehicleDialog} onOpenChange={setShowVehicleDialog}>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-md border-border/30 shadow-xl">
             <DialogHeader>
-              <DialogTitle>Choose Top-up Type</DialogTitle>
+              <DialogTitle className="text-foreground">Choose Top-up Type</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <Select value={selectedFluid} onValueChange={setSelectedFluid}>
-                <SelectTrigger>
+                <SelectTrigger className="transition-all duration-300 hover:scale-105">
                   <SelectValue placeholder="Select fluid type" />
                 </SelectTrigger>
                 <SelectContent>
                   {vehicleFluidOptions.map((fluid) => (
-                    <SelectItem key={fluid} value={fluid}>
+                    <SelectItem key={fluid} value={fluid} className="hover:bg-muted/50 transition-colors duration-300">
                       {fluid}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
               <div className="flex gap-2">
-                <Button onClick={handleVehicleSubmit} className="flex-1" disabled={!selectedFluid}>
+                <Button onClick={handleVehicleSubmit} className="flex-1 transition-all duration-300 hover:scale-105" disabled={!selectedFluid}>
                   Add Task
                 </Button>
-                <Button variant="outline" onClick={() => setShowVehicleDialog(false)}>
+                <Button variant="outline" onClick={() => setShowVehicleDialog(false)} className="transition-all duration-300 hover:scale-105">
                   Cancel
                 </Button>
               </div>
@@ -454,13 +480,13 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
 
         {/* RickRoll Dialog */}
         <Dialog open={showRickRollDialog} onOpenChange={setShowRickRollDialog}>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-md border-border/30 shadow-xl">
             <DialogHeader>
-              <DialogTitle>A surprise for you!</DialogTitle>
+              <DialogTitle className="text-foreground">A surprise for you!</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 text-center">
-              <img src="/lovable-uploads/0b3245b2-4eeb-423d-8ab4-93b3c1d6efc8.png" alt="Rick Astley" className="rounded-lg" />
-              <p className="text-lg font-semibold">
+              <img src="/lovable-uploads/0b3245b2-4eeb-423d-8ab4-93b3c1d6efc8.png" alt="Rick Astley" className="rounded-lg shadow-lg animate-pulse" />
+              <p className="text-lg font-semibold text-foreground">
                 You have been RickRolled{profile?.name ? `, ${profile.name.split(' ')[0]}` : ''}!
               </p>
               <Button onClick={() => {
@@ -468,7 +494,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                 setSelectedCategory('');
                 setSelectedSubCategory('');
                 setSelectedTask('');
-              }}>
+              }} className="transition-all duration-300 hover:scale-105">
                 Close
               </Button>
             </div>

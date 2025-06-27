@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { CheckSquare, Calendar, Bell, Target, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -62,9 +63,9 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
   ];
 
   return (
-    <div className="min-h-screen bg-background/50 overflow-x-hidden">
+    <div className="min-h-screen font-sans overflow-x-hidden">
        <div 
-        className="absolute top-0 left-0 w-full h-full -z-10 opacity-10 dark:opacity-20"
+        className="absolute top-0 left-0 w-full h-full -z-10 opacity-5 dark:opacity-10"
         style={{
           backgroundImage: `radial-gradient(${theme?.colors.primary} 1px, transparent 1px), radial-gradient(${theme?.colors.secondary} 1px, transparent 1px)`,
           backgroundSize: '40px 40px',
@@ -74,43 +75,40 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
       <div className="container mx-auto px-4 py-12 md:py-16 max-w-6xl">
         {/* Hero Section */}
         <div className="text-center mb-16 md:mb-24">
-          <div className="flex items-center justify-center mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
-            <div className="bg-background/20 backdrop-blur-sm p-3 md:p-4 rounded-2xl md:rounded-3xl shadow-lg mr-3 md:mr-4 border">
+          <div className="flex items-center justify-center mb-6 animate-fade-in opacity-0" style={{ animationDelay: '100ms' }}>
+            <div className="bg-card/20 backdrop-blur-sm p-3 md:p-4 rounded-2xl md:rounded-3xl shadow-lg mr-3 md:mr-4 border border-border/20 hover:scale-105 transition-all duration-300">
               <CheckSquare className="w-8 h-8 md:w-12 md:h-12 text-primary" />
             </div>
-            <h1 
-              className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r"
-              style={{ backgroundImage: `linear-gradient(to right, ${theme?.colors.primary}, ${theme?.colors.secondary})` }}
-            >
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground">
               Life Admin
             </h1>
           </div>
           
-          <p className="text-xl md:text-2xl font-medium text-foreground/90 mb-4 animate-fade-in" style={{ animationDelay: '200ms' }}>
+          <p className="text-xl md:text-2xl font-medium text-foreground/90 mb-4 animate-fade-in opacity-0" style={{ animationDelay: '200ms' }}>
             Simplify Life. One Task at a Time.
           </p>
           
-          <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 px-4 animate-fade-in" style={{ animationDelay: '300ms' }}>
+          <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 px-4 animate-fade-in opacity-0" style={{ animationDelay: '300ms' }}>
             The focused task manager for all your important life admin - from bills and appointments 
             to renewals and deadlines. Never let important tasks slip through the cracks again.
           </p>
 
-          <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
+          <div className="animate-fade-in opacity-0" style={{ animationDelay: '400ms' }}>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button 
                 onClick={onGetStarted}
                 size="lg"
-                className="px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white w-full sm:w-auto"
+                className="px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-transparent text-primary-foreground w-full sm:w-auto"
                 style={{ backgroundColor: theme?.colors.primary }}
               >
                 Get Started for Free
-                <ArrowRight className="w-5 h-5 ml-2" />
+                <ArrowRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
               </Button>
               <Button 
                 onClick={onGetStarted}
                 size="lg"
                 variant="outline"
-                className="px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200 w-full sm:w-auto"
+                className="px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 w-full sm:w-auto border-primary/20 hover:border-primary/40"
               >
                 Add Task
               </Button>
@@ -120,20 +118,20 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
 
         {/* Features Grid */}
         <div className="mb-16 md:mb-24">
-           <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-10 md:mb-12 animate-fade-in" style={{ animationDelay: '500ms' }}>
+           <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-10 md:mb-12 animate-fade-in opacity-0" style={{ animationDelay: '500ms' }}>
             Everything You Need to Get Organized
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature, index) => {
               const color = index % 2 === 0 ? theme?.colors.primary : theme?.colors.secondary;
-              const bgColor = index % 2 === 0 ? `${theme?.colors.primary}20` : `${theme?.colors.secondary}20`;
+              const bgColor = index % 2 === 0 ? `${theme?.colors.primary}15` : `${theme?.colors.secondary}15`;
               return (
-                <div key={index} className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-border/50 hover:-translate-y-1 flex items-start gap-4 animate-fade-in" style={{ animationDelay: `${600 + index * 100}ms`}}>
-                  <div className="p-3 rounded-full" style={{backgroundColor: bgColor}}>
+                <div key={index} className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-500 border border-border/30 hover:-translate-y-2 hover:scale-105 flex items-start gap-4 animate-fade-in opacity-0 group" style={{ animationDelay: `${600 + index * 100}ms`}}>
+                  <div className="p-3 rounded-full transition-all duration-300 group-hover:scale-110" style={{backgroundColor: bgColor}}>
                     {React.cloneElement(feature.icon, { style: { color: color } })}
                   </div>
                   <div>
-                    <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
+                    <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2 transition-colors duration-300">
                       {feature.title}
                     </h3>
                     <p className="text-muted-foreground text-sm md:text-base">
@@ -147,20 +145,20 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
         </div>
 
         {/* Task Categories Preview */}
-        <div className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-border/50 mb-16 md:mb-24 animate-fade-in" style={{ animationDelay: '1000ms' }}>
+        <div className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-border/30 mb-16 md:mb-24 animate-fade-in opacity-0 hover:shadow-xl transition-all duration-500" style={{ animationDelay: '1000ms' }}>
           <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-8 md:mb-10">
             Organize Every Aspect of Your Life
           </h2>
           
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-6 md:gap-8">
-            {categoryLists.map((category) => (
-              <div key={category.title} className="space-y-3">
-                <h3 className="font-semibold text-foreground text-base md:text-lg flex items-center gap-2">
+            {categoryLists.map((category, index) => (
+              <div key={category.title} className="space-y-3 animate-slide-in-from-left opacity-0" style={{ animationDelay: `${1200 + index * 100}ms` }}>
+                <h3 className="font-semibold text-foreground text-base md:text-lg flex items-center gap-2 hover:text-primary transition-colors duration-300">
                   <span className="text-2xl">{category.title.split(' ')[0]}</span>
                   {category.title.split(' ').slice(1).join(' ')}
                 </h3>
                 <ul className="text-xs md:text-sm text-muted-foreground space-y-1.5 pl-2">
-                  {category.items.map(item => <li key={item} className="flex items-start gap-2"><CheckSquare className="w-3 h-3 mt-0.5 flex-shrink-0 text-primary" /><span>{item}</span></li>)}
+                  {category.items.map(item => <li key={item} className="flex items-start gap-2 hover:text-foreground transition-colors duration-300"><CheckSquare className="w-3 h-3 mt-0.5 flex-shrink-0 text-primary" /><span>{item}</span></li>)}
                 </ul>
               </div>
             ))}
@@ -168,7 +166,7 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
         </div>
 
         {/* CTA Section */}
-        <div className="text-center animate-fade-in" style={{ animationDelay: '1200ms' }}>
+        <div className="text-center animate-fade-in opacity-0" style={{ animationDelay: '1400ms' }}>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Ready to Take Control?
           </h2>
@@ -178,11 +176,11 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
           <Button 
             onClick={onGetStarted}
             size="lg"
-            className="px-8 md:px-12 py-3 md:py-4 text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white"
+            className="px-8 md:px-12 py-3 md:py-4 text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-transparent text-primary-foreground group"
              style={{ backgroundColor: theme?.colors.primary }}
           >
             Start Organizing Today
-            <ArrowRight className="w-5 h-5 md:w-6 md:h-6 ml-2" />
+            <ArrowRight className="w-5 h-5 md:w-6 md:h-6 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
           </Button>
         </div>
       </div>
