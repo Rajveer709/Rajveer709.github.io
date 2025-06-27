@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { toast } from 'sonner';
 import { CheckSquare } from 'lucide-react';
+import { themes, defaultTheme } from '@/config/themes';
 
 const signUpSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -34,6 +35,7 @@ const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export const AuthPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const theme = themes.find(t => t.value === 'purple') || themes.find(t => t.value === defaultTheme);
 
   const signUpForm = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -93,17 +95,21 @@ export const AuthPage = () => {
         toast.error(error.message);
         setLoading(false);
     }
-    // On success, Supabase handles the redirect, so no need to set loading to false.
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 font-sans">
+    <div className="min-h-screen flex items-center justify-center p-4 font-sans bg-gradient-to-br from-background via-background to-muted/20">
       <div className="w-full max-w-md mx-auto animate-fade-in opacity-0" style={{ animationDelay: '100ms' }}>
         <div className="flex items-center justify-center mb-8 animate-scale-in opacity-0" style={{ animationDelay: '200ms' }}>
-          <div className="bg-card/20 backdrop-blur-sm p-3 md:p-4 rounded-2xl md:rounded-3xl shadow-lg mr-3 md:mr-4 border border-border/20 hover:scale-105 transition-all duration-300">
-            <CheckSquare className="w-8 h-8 md:w-12 md:h-12 text-primary" />
+          <div className="bg-card/30 backdrop-blur-sm p-3 md:p-4 rounded-2xl shadow-xl mr-3 md:mr-4 border border-border/20">
+            <CheckSquare className="w-8 h-8 md:w-12 md:h-12" style={{ color: theme?.colors.primary }} />
           </div>
-          <h1 className="text-3xl md:text-5xl font-bold text-foreground">
+          <h1 
+            className="text-3xl md:text-4xl font-bold bg-gradient-to-r bg-clip-text text-transparent"
+            style={{
+              backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
+            }}
+          >
             Life Admin
           </h1>
         </div>
@@ -115,10 +121,17 @@ export const AuthPage = () => {
               <TabsTrigger value="signup" className="transition-all duration-300 hover:scale-105">Sign Up</TabsTrigger>
             </TabsList>
             <TabsContent value="signin">
-              <Card className="border-border/30 shadow-xl hover:shadow-2xl transition-all duration-500 backdrop-blur-sm">
+              <Card className="border-border/30 shadow-xl hover:shadow-2xl transition-all duration-500 backdrop-blur-sm bg-card/50">
                 <CardHeader className="text-center pb-4">
-                  <CardTitle className="text-2xl font-bold text-foreground">Welcome Back</CardTitle>
-                  <p className="text-muted-foreground">Sign in to your account</p>
+                  <CardTitle 
+                    className="text-2xl md:text-3xl font-bold mb-2 bg-gradient-to-r bg-clip-text text-transparent"
+                    style={{
+                      backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
+                    }}
+                  >
+                    Welcome Back
+                  </CardTitle>
+                  <p className="text-muted-foreground text-base">Sign in to your account</p>
                 </CardHeader>
                 <CardContent>
                   <Form {...signInForm}>
@@ -190,10 +203,17 @@ export const AuthPage = () => {
               </Card>
             </TabsContent>
             <TabsContent value="signup">
-              <Card className="border-border/30 shadow-xl hover:shadow-2xl transition-all duration-500 backdrop-blur-sm">
+              <Card className="border-border/30 shadow-xl hover:shadow-2xl transition-all duration-500 backdrop-blur-sm bg-card/50">
                 <CardHeader className="text-center pb-4">
-                  <CardTitle className="text-2xl font-bold text-foreground">Create Account</CardTitle>
-                  <p className="text-muted-foreground">Get started with Life Admin</p>
+                  <CardTitle 
+                    className="text-2xl md:text-3xl font-bold mb-2 bg-gradient-to-r bg-clip-text text-transparent"
+                    style={{
+                      backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
+                    }}
+                  >
+                    Create Account
+                  </CardTitle>
+                  <p className="text-muted-foreground text-base">Get started with Life Admin</p>
                 </CardHeader>
                 <CardContent>
                   <Form {...signUpForm}>
