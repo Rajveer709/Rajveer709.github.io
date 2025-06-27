@@ -29,6 +29,12 @@ export const AvatarUploader = ({ profile, onUpdateProfile }: AvatarUploaderProps
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setAvatarFile(file);
+      
+      // Clean up previous preview URL if it was created by createObjectURL
+      if (previewUrl && previewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      
       setPreviewUrl(URL.createObjectURL(file));
     }
   };
@@ -47,7 +53,25 @@ export const AvatarUploader = ({ profile, onUpdateProfile }: AvatarUploaderProps
       return;
     }
     
-    await onUpdateProfile(updatedProfile, avatarFile);
+    try {
+      await onUpdateProfile(updatedProfile, avatarFile);
+      setIsOpen(false);
+      setAvatarFile(undefined);
+    } catch (error) {
+      toast.error("Failed to update profile");
+    }
+  };
+
+  const handleCancel = () => {
+    // Reset to original values and clean up preview URL
+    setName(profile?.name || '');
+    setAvatarFile(undefined);
+    
+    if (previewUrl && previewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    
+    setPreviewUrl(profile?.avatar_url || null);
     setIsOpen(false);
   };
   
@@ -56,7 +80,7 @@ export const AvatarUploader = ({ profile, onUpdateProfile }: AvatarUploaderProps
       <DialogTrigger asChild>
         <button className="relative group">
           <Avatar className="h-10 w-10 border-2 border-primary/50 group-hover:border-primary transition-all">
-            <AvatarImage src={previewUrl || profile?.avatar_url || ''} alt={profile?.name || ''} />
+            <AvatarImage src={profile?.avatar_url || ''} alt={profile?.name || ''} />
             <AvatarFallback className="bg-primary/20 text-primary font-bold">
                 {getInitials(profile?.name)}
             </AvatarFallback>
@@ -76,7 +100,7 @@ export const AvatarUploader = ({ profile, onUpdateProfile }: AvatarUploaderProps
               <Avatar className="h-24 w-24">
                 <AvatarImage src={previewUrl || profile?.avatar_url || ''} alt={profile?.name || ''} />
                 <AvatarFallback className="bg-primary/20 text-primary font-bold text-3xl">
-                  {getInitials(profile?.name)}
+                  {getInitials(name || profile?.name)}
                 </AvatarFallback>
               </Avatar>
               <Label htmlFor="avatar-upload" className="absolute bottom-0 right-0 bg-primary text-primary-foreground p-2 rounded-full cursor-pointer hover:bg-primary/90">
@@ -95,11 +119,9 @@ export const AvatarUploader = ({ profile, onUpdateProfile }: AvatarUploaderProps
           </div>
         </div>
         <DialogFooter>
-          <DialogClose asChild>
-            <Button type="button" variant="secondary">
-              Cancel
-            </Button>
-          </DialogClose>
+          <Button type="button" variant="secondary" onClick={handleCancel}>
+            Cancel
+          </Button>
           <Button type="button" onClick={handleSave}>Save</Button>
         </DialogFooter>
       </DialogContent>

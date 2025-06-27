@@ -2,6 +2,8 @@
 import { Task } from '../pages/Index';
 import { TaskCard } from './TaskCard';
 import { Card, CardContent } from '@/components/ui/card';
+import { useOutletContext } from 'react-router-dom';
+import { themes, defaultTheme } from '../config/themes';
 
 interface TaskListProps {
   tasks: Task[];
@@ -11,6 +13,10 @@ interface TaskListProps {
   onHideTask: (taskId: string) => void;
 }
 
+interface OutletContextType {
+  currentTheme?: string;
+}
+
 export const TaskList = ({ 
   tasks, 
   onToggleTask, 
@@ -18,6 +24,9 @@ export const TaskList = ({
   onEditTask, 
   onHideTask 
 }: TaskListProps) => {
+  const { currentTheme = 'purple' } = useOutletContext<OutletContextType>();
+  const theme = themes.find(t => t.value === currentTheme) || themes.find(t => t.value === defaultTheme);
+  
   const visibleTasks = tasks.filter(task => !task.hidden);
   
   // Sort tasks: incomplete first (by due date), then completed
@@ -32,7 +41,14 @@ export const TaskList = ({
     return (
       <Card className="bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg text-center animate-fade-in">
         <CardContent className="p-12">
-          <h3 className="text-xl font-semibold mb-2">No tasks yet</h3>
+          <h3 
+            className="text-xl font-semibold mb-2 bg-gradient-to-r bg-clip-text text-transparent"
+            style={{
+              backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
+            }}
+          >
+            No tasks yet
+          </h3>
           <p className="text-muted-foreground">Get started by adding your first life admin task!</p>
         </CardContent>
       </Card>
