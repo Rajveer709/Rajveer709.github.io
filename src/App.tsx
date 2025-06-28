@@ -23,15 +23,20 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // Set up auth state listener first
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log('Auth state changed:', _event, session);
       setSession(session);
       setLoading(false);
     });
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    // Then get current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session:', session);
       setSession(session);
+      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
@@ -40,6 +45,8 @@ function App() {
   if (loading) {
     return <div className="flex items-center justify-center h-screen">Loading...</div>;
   }
+
+  console.log('Current session:', session);
 
   return (
     <QueryClientProvider client={queryClient}>
