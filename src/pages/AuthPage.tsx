@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -62,7 +61,7 @@ export const AuthPage = () => {
       toast.error(error.message);
     } else {
       toast.success('Check your email for the confirmation link!');
-      navigate('/');
+      navigate('/app');
     }
     setLoading(false);
   };
@@ -78,7 +77,7 @@ export const AuthPage = () => {
       toast.error(error.message);
     } else {
       toast.success('Signed in successfully!');
-      navigate('/');
+      navigate('/app');
     }
     setLoading(false);
   };
@@ -88,7 +87,7 @@ export const AuthPage = () => {
     const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: window.location.origin,
+            redirectTo: `${window.location.origin}/app`,
         },
     });
     if (error) {
