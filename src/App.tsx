@@ -37,10 +37,6 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  const handleGetStarted = () => {
-    // This will be handled by the routing
-  };
-
   if (loading) {
     return <div className="flex items-center justify-center h-screen">Loading...</div>;
   }
@@ -52,8 +48,14 @@ function App() {
           <Route 
             path="/" 
             element={
+              session ? <Navigate to="/app" replace /> : <Navigate to="/landing" replace />
+            } 
+          />
+          <Route 
+            path="/landing" 
+            element={
               <PublicRoute session={session}>
-                <LandingPage onGetStarted={handleGetStarted} currentTheme="purple" />
+                <LandingPage onGetStarted={() => window.location.href = '/auth'} currentTheme="purple" />
               </PublicRoute>
             } 
           />
