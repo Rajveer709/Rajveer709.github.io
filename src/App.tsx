@@ -55,7 +55,7 @@ function App() {
             path="/landing" 
             element={
               <PublicRoute session={session}>
-                <LandingPage onGetStarted={() => window.location.href = '/auth'} currentTheme="purple" />
+                <LandingPage onGetStarted={() => {}} currentTheme="purple" />
               </PublicRoute>
             } 
           />
@@ -75,7 +75,7 @@ function App() {
               </ProtectedRoute>
             } 
           />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to={session ? "/app" : "/landing"} replace />} />
         </Routes>
       </Router>
       <Toaster />

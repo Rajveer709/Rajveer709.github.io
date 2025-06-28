@@ -1,8 +1,8 @@
-
 import * as React from 'react';
 import { CheckSquare, Calendar, Bell, Target, ArrowRight, Users, Shield, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { themes, defaultTheme } from '@/config/themes';
+import { useNavigate } from 'react-router-dom';
 
 interface LandingPageProps {
   onGetStarted: () => void;
@@ -11,6 +11,15 @@ interface LandingPageProps {
 
 export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) => {
   const theme = themes.find(t => t.value === currentTheme) || themes.find(t => t.value === defaultTheme);
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    navigate('/auth');
+  };
+
+  const handleAddTasks = () => {
+    navigate('/auth');
+  };
 
   const features = [
     {
@@ -107,7 +116,7 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
 
           <div className="flex flex-col gap-3 justify-center animate-fade-in opacity-0 px-4" style={{ animationDelay: '400ms' }}>
             <Button 
-              onClick={onGetStarted}
+              onClick={handleGetStarted}
               size="lg"
               className="w-full sm:w-auto px-8 py-4 text-base font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 text-white"
               style={{ backgroundColor: theme?.colors.primary }}
@@ -116,7 +125,7 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
             <Button 
-              onClick={() => window.location.href = '/auth'}
+              onClick={handleAddTasks}
               size="lg"
               variant="outline"
               className="w-full sm:w-auto px-8 py-4 text-base font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2"
@@ -214,7 +223,7 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
             Join thousands of users who have transformed their productivity and achieved their goals.
           </p>
           <Button 
-            onClick={onGetStarted}
+            onClick={handleGetStarted}
             size="lg"
             className="w-full sm:w-auto px-12 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 text-white"
             style={{ backgroundColor: theme?.colors.primary }}
