@@ -19,8 +19,7 @@ export const RANKS: Rank[] = [
   { level: 9, name: 'Grandmaster', Icon: Trophy },
   { level: 10, name: 'Champion', Icon: Crown },
   { level: 11, name: 'Legend', Icon: Crown },
-  { level: 12, name: 'Mythic', Icon: Gem },
-  { level: 16, name: 'Immortal', Icon: Gem },
+  { level: 12, name: 'Elite', Icon: Gem },
   { level: 100, name: 'Avi', Icon: Ghost },
 ];
 
