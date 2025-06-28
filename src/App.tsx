@@ -37,6 +37,10 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
+  const handleGetStarted = () => {
+    // This will be handled by the routing
+  };
+
   if (loading) {
     return <div className="flex items-center justify-center h-screen">Loading...</div>;
   }
@@ -49,7 +53,7 @@ function App() {
             path="/" 
             element={
               <PublicRoute session={session}>
-                <LandingPage />
+                <LandingPage onGetStarted={handleGetStarted} currentTheme="purple" />
               </PublicRoute>
             } 
           />

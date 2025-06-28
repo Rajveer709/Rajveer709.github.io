@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Palette, Moon, Sun, User, Settings, Sparkles } from "lucide-react";
+import { Palette, Moon, Sun, User, Settings } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useOutletContext } from "react-router-dom";
 import { Profile } from "./Index";
@@ -46,7 +46,7 @@ export const SettingsPage = ({ onBack }: SettingsPageProps) => {
       <PageHeader
         title={
           <span 
-            className="bg-gradient-to-r bg-clip-text text-transparent font-bold flex items-center gap-2 text-center w-full justify-center"
+            className="bg-gradient-to-r bg-clip-text text-transparent font-bold flex items-center gap-2 text-center w-full justify-center text-2xl md:text-3xl"
             style={{
               backgroundImage: `linear-gradient(135deg, ${selectedTheme.colors.primary}, ${selectedTheme.colors.secondary})`
             }}
