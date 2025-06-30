@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -48,72 +49,51 @@ export const AuthPage = () => {
 
   const handleSignUp = async (values: z.infer<typeof signUpSchema>) => {
     setLoading(true);
-    try {
-      const { email, password, name } = values;
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { name },
-          emailRedirectTo: `${window.location.origin}/app`,
-        },
-      });
-      
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success('Check your email for the confirmation link!');
-        // Don't navigate immediately, let the auth state change handle it
-      }
-    } catch (error) {
-      console.error('Sign up error:', error);
-      toast.error('An unexpected error occurred');
-    } finally {
-      setLoading(false);
+    const { email, password, name } = values;
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { name },
+        emailRedirectTo: window.location.origin,
+      },
+    });
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success('Check your email for the confirmation link!');
+      navigate('/');
     }
+    setLoading(false);
   };
 
   const handleSignIn = async (values: z.infer<typeof signInSchema>) => {
     setLoading(true);
-    try {
-      const { email, password } = values;
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success('Signed in successfully!');
-        // Don't navigate immediately, let the auth state change handle it
-      }
-    } catch (error) {
-      console.error('Sign in error:', error);
-      toast.error('An unexpected error occurred');
-    } finally {
-      setLoading(false);
+    const { email, password } = values;
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success('Signed in successfully!');
+      navigate('/');
     }
+    setLoading(false);
   };
 
   const handleSignInWithGoogle = async () => {
     setLoading(true);
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/app`,
+            redirectTo: window.location.origin,
         },
-      });
-      if (error) {
+    });
+    if (error) {
         toast.error(error.message);
         setLoading(false);
-      }
-      // Don't set loading to false here for OAuth as it will redirect
-    } catch (error) {
-      console.error('Google sign in error:', error);
-      toast.error('An unexpected error occurred');
-      setLoading(false);
     }
   };
 

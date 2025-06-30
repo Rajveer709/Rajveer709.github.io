@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Task } from './Index';
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,6 @@ import { CalendarIcon, ChevronRight, Sparkles } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { themes, defaultTheme } from '../config/themes';
-import { toast } from 'sonner';
 import {
   Accordion,
   AccordionContent,
@@ -233,16 +231,6 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
       priority,
       dueDate,
       completed: false
-    });
-
-    // Show success toast
-    toast.success('Task added successfully!', {
-      duration: 1000,
-      style: {
-        background: theme?.colors.primary,
-        color: 'white',
-        border: 'none'
-      }
     });
 
     onBack();

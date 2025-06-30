@@ -1,197 +1,315 @@
+import { Moon, Sun, User, Palette, Info, RotateCcw, Lock, LogOut, EyeOff, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Switch } from '@/components/ui/switch';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { themes } from '../config/themes';
+import { getRankForLevel } from '../config/ranks';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
+import { User as SupabaseUser } from '@supabase/supabase-js';
+import { useState, useEffect } from 'react';
+import { Input } from '@/components/ui/input';
+import { Slider } from '@/components/ui/slider';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { format } from 'date-fns';
+import { Task, Profile } from './Index';
+import { HackDialog } from '../components/HackDialog';
+import { useOutletContext } from 'react-router-dom';
+import { PageHeader } from '../components/PageHeader';
 
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Palette, Moon, Sun, User, Settings } from "lucide-react";
-import { useTheme } from "next-themes";
-import { useOutletContext } from "react-router-dom";
-import { Profile } from "./Index";
-import { themes } from "../config/themes";
-import { PageHeader } from "../components/PageHeader";
-import { AvatarUploader } from "../components/AvatarUploader";
+interface SettingsPageProps {
+  onBack: () => void;
+  currentTheme: string;
+  onThemeChange: (theme: string) => void;
+  isDarkMode: boolean;
+  onToggleDarkMode: () => void;
+  onStartOver: () => void;
+  userLevel: number;
+  user: SupabaseUser | null;
+  onSignOut: () => void;
+  backgroundLightness: number;
+  onBackgroundLightnessChange: (value: number) => void;
+  cardLightness: number;
+  onCardLightnessChange: (value: number) => void;
+  tasks: Task[];
+  onRestoreTask: (taskId: string) => void;
+  onUnlockAll: () => void;
+}
 
 interface OutletContextType {
   profile: Profile | null;
   onUpdateProfile: (updatedProfile: Partial<Profile>, avatarFile?: File) => Promise<void>;
   showGreeting: boolean;
-  currentTheme?: string;
-  onThemeChange: (theme: string) => void;
 }
 
-interface SettingsPageProps {
-  onBack: () => void;
-}
-
-export const SettingsPage = ({ onBack }: SettingsPageProps) => {
-  const { theme, setTheme } = useTheme();
-  const { profile, onUpdateProfile, showGreeting, currentTheme = 'purple', onThemeChange } = useOutletContext<OutletContextType>();
-  const [editProfileOpen, setEditProfileOpen] = useState(false);
-  const [newName, setNewName] = useState(profile?.name || '');
-  const selectedTheme = themes.find(t => t.value === currentTheme) || themes[0];
-
-  const handleNameUpdate = async () => {
-    if (newName.trim() && profile) {
-      await onUpdateProfile({ name: newName.trim() });
-      setEditProfileOpen(false);
+export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, onToggleDarkMode, onStartOver, userLevel, user, onSignOut, backgroundLightness, onBackgroundLightnessChange, cardLightness, onCardLightnessChange, tasks, onRestoreTask, onUnlockAll }: SettingsPageProps) => {
+  const { profile, onUpdateProfile, showGreeting } = useOutletContext<OutletContextType>();
+  const [name, setName] = useState(profile?.name || '');
+  const [isEditing, setIsEditing] = useState(false);
+  const hiddenTasks = tasks.filter(task => task.hidden);
+  const rank = getRankForLevel(userLevel);
+  
+  useEffect(() => {
+    if (!isEditing) {
+      setName(profile?.name || '');
     }
+  }, [profile, isEditing]);
+
+  const getInitials = (name: string | null | undefined) => {
+    if (!name || name.trim() === '') return 'U';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
 
-  return (
-    <div className="pb-6">
-      <PageHeader
-        title={
-          <span 
-            className="bg-gradient-to-r bg-clip-text text-transparent font-bold flex items-center gap-2 text-center w-full justify-center text-2xl md:text-3xl"
-            style={{
-              backgroundImage: `linear-gradient(135deg, ${selectedTheme.colors.primary}, ${selectedTheme.colors.secondary})`
-            }}
-          >
-            <Settings className="w-6 h-6 md:w-7 md:h-7" style={{ color: selectedTheme.colors.primary }} />
-            Settings
-          </span>
-        }
-        onBack={onBack}
-        profile={profile}
-        onUpdateProfile={onUpdateProfile}
-        showAvatar={!showGreeting}
-      />
+  const handleSaveProfile = () => {
+    if (onUpdateProfile) {
+      onUpdateProfile({ name });
+    }
+    setIsEditing(false);
+  }
 
-      <div className="space-y-6">
-        {/* Profile Section */}
-        <Card 
-          className="backdrop-blur-sm border-0 shadow-lg"
-          style={{ 
-            background: `linear-gradient(135deg, ${selectedTheme.colors.primary}10, ${selectedTheme.colors.secondary}05)`
-          }}
-        >
-          <CardHeader className="text-center">
-            <CardTitle 
-              className="text-xl font-bold bg-gradient-to-r bg-clip-text text-transparent flex items-center justify-center gap-2"
-              style={{
-                backgroundImage: `linear-gradient(135deg, ${selectedTheme.colors.primary}, ${selectedTheme.colors.secondary})`
-              }}
-            >
-              <User className="w-5 h-5" style={{ color: selectedTheme.colors.primary }} />
-              Profile
+  return (
+    <TooltipProvider>
+      <div className="animate-fade-in space-y-6 pb-8">
+        <PageHeader
+          title="Settings"
+          onBack={onBack}
+          profile={profile}
+          onUpdateProfile={onUpdateProfile}
+          showAvatar={!showGreeting}
+        />
+
+        <Card className="animate-scale-in bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg" style={{ animationDelay: '100ms' }}>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <User className="w-5 h-5" />
+              <span>Account</span>
             </CardTitle>
+            <CardDescription>
+              Manage your account settings and profile.
+            </CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col items-center space-y-4">
-            {profile && <AvatarUploader profile={profile} onUpdateProfile={onUpdateProfile} />}
-            
-            <Dialog open={editProfileOpen} onOpenChange={setEditProfileOpen}>
-              <DialogTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  className="transition-all duration-300 hover:scale-105"
-                  style={{ 
-                    borderColor: selectedTheme.colors.primary,
-                    color: selectedTheme.colors.primary
-                  }}
-                >
-                  Edit Name
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle 
-                    className="bg-gradient-to-r bg-clip-text text-transparent font-bold"
-                    style={{
-                      backgroundImage: `linear-gradient(135deg, ${selectedTheme.colors.primary}, ${selectedTheme.colors.secondary})`
-                    }}
-                  >
-                    Update Your Name
-                  </DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <Input
-                    placeholder="Enter your name"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                    className="transition-all duration-300 focus:scale-105"
-                  />
-                  <div className="flex gap-2">
-                    <Button 
-                      onClick={handleNameUpdate} 
-                      className="flex-1 transition-all duration-300 hover:scale-105"
-                      style={{ backgroundColor: selectedTheme.colors.primary }}
-                    >
-                      Update
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      onClick={() => setEditProfileOpen(false)}
-                      className="transition-all duration-300 hover:scale-105"
-                    >
-                      Cancel
-                    </Button>
-                  </div>
+          <CardContent className="space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <Avatar className="w-12 h-12 border">
+                  <AvatarImage src={profile?.avatar_url || ''} alt={profile?.name || 'User'} />
+                  <AvatarFallback className="text-xl">{getInitials(profile?.name)}</AvatarFallback>
+                </Avatar>
+                <div className="absolute -bottom-1 -right-1 bg-card p-1 rounded-full shadow-md border">
+                  <rank.Icon className="w-4 h-4 text-primary" />
                 </div>
-              </DialogContent>
-            </Dialog>
+              </div>
+              <div className="flex-grow space-y-1">
+                {isEditing ? (
+                  <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your Name" />
+                ) : (
+                  <p className="font-semibold">{profile?.name || 'No name set'}</p>
+                )}
+                <p className="text-sm text-muted-foreground">{user?.email}</p>
+              </div>
+            </div>
+            <div className="flex justify-end gap-2">
+              {isEditing ? (
+                <>
+                  <Button onClick={() => { setIsEditing(false); setName(profile?.name || ''); }} variant="ghost" size="sm">Cancel</Button>
+                  <Button onClick={handleSaveProfile} size="sm">Save Changes</Button>
+                </>
+              ) : (
+                <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>Edit Profile</Button>
+              )}
+            </div>
           </CardContent>
+          <CardFooter className="border-t px-6 py-4 flex justify-end">
+            <Button variant="ghost" onClick={onSignOut}>
+              <LogOut className="w-4 h-4 mr-2" />
+              Sign Out
+            </Button>
+          </CardFooter>
         </Card>
 
-        {/* Theme Settings */}
-        <Card className="backdrop-blur-sm border-0 shadow-lg bg-card/80">
-          <CardHeader className="text-center">
-            <CardTitle 
-              className="text-xl font-bold bg-gradient-to-r bg-clip-text text-transparent flex items-center justify-center gap-2"
-              style={{
-                backgroundImage: `linear-gradient(135deg, ${selectedTheme.colors.primary}, ${selectedTheme.colors.secondary})`
-              }}
-            >
-              <Palette className="w-5 h-5" style={{ color: selectedTheme.colors.primary }} />
-              Appearance
+        <Card className="animate-scale-in bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg" style={{ animationDelay: '200ms' }}>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Palette className="w-5 h-5" />
+              <span>Appearance</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex items-center justify-between">
-              <Label htmlFor="dark-mode" className="text-base font-medium">Dark Mode</Label>
-              <div className="flex items-center space-x-2">
-                <Sun className="h-4 w-4" />
-                <Switch
-                  id="dark-mode"
-                  checked={theme === 'dark'}
-                  onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
-                />
-                <Moon className="h-4 w-4" />
-              </div>
+              <label htmlFor="dark-mode-switch" className="flex items-center gap-2 cursor-pointer">
+                {isDarkMode ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+                <span>Dark Mode</span>
+              </label>
+              <Switch id="dark-mode-switch" checked={isDarkMode} onCheckedChange={onToggleDarkMode} />
             </div>
 
-            <div className="space-y-3">
-              <Label className="text-base font-medium">Color Theme</Label>
-              <Select value={currentTheme} onValueChange={onThemeChange}>
-                <SelectTrigger 
-                  className="transition-all duration-300 hover:scale-105"
-                  style={{ borderColor: selectedTheme.colors.primary }}
-                >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {themes.map((themeOption) => (
-                    <SelectItem key={themeOption.value} value={themeOption.value}>
-                      <div className="flex items-center gap-3">
-                        <div 
-                          className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
-                          style={{ 
-                            background: `linear-gradient(135deg, ${themeOption.colors.primary}, ${themeOption.colors.secondary})`
-                          }}
-                        />
-                        <span>{themeOption.name}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div>
+              <label htmlFor="bg-lightness-slider" className="text-sm font-medium">Page Background Lightness</label>
+              <Slider
+                id="bg-lightness-slider"
+                min={isDarkMode ? 5 : 80}
+                max={isDarkMode ? 25 : 100}
+                step={1}
+                value={[backgroundLightness]}
+                onValueChange={(value) => onBackgroundLightnessChange(value[0])}
+                className="mt-3"
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="card-lightness-slider" className="text-sm font-medium">Card Background Lightness</label>
+              <Slider
+                id="card-lightness-slider"
+                min={isDarkMode ? 8 : 80}
+                max={isDarkMode ? 30 : 100}
+                step={1}
+                value={[cardLightness]}
+                onValueChange={(value) => onCardLightnessChange(value[0])}
+                className="mt-3"
+              />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-medium mb-1">Color Theme</h3>
+              <p className="text-xs text-muted-foreground mb-3">Unlocks with Challenges.</p>
+              <div className="grid grid-cols-3 gap-3">
+                {themes.map((theme) => {
+                  const isUnlocked = userLevel >= theme.levelToUnlock;
+                  return (
+                    isUnlocked ? (
+                      <button
+                        key={theme.value}
+                        onClick={() => onThemeChange(theme.value)}
+                        className={`p-3 rounded-lg border-2 transition-all ${
+                          currentTheme === theme.value 
+                            ? 'border-primary shadow-md' 
+                            : 'border-border hover:border-accent'
+                        }`}
+                      >
+                        <div
+                          className="w-full h-8 rounded mb-2"
+                          style={{ background: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.secondary})` }}
+                        ></div>
+                        <span className="text-sm font-medium">{theme.name}</span>
+                      </button>
+                    ) : (
+                      <Tooltip key={theme.value}>
+                        <TooltipTrigger asChild>
+                          <div
+                            className="p-3 rounded-lg border-2 border-dashed border-border relative overflow-hidden"
+                          >
+                            <div
+                              className="w-full h-8 rounded mb-2 bg-muted"
+                            ></div>
+                            <span className="text-sm font-medium text-muted-foreground">{theme.name}</span>
+                            <div className="absolute inset-0 bg-background/60 backdrop-blur-sm flex items-center justify-center">
+                              <Lock className="w-5 h-5 text-muted-foreground" />
+                            </div>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Unlock at level {theme.levelToUnlock}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )
+                  )
+                })}
+              </div>
             </div>
           </CardContent>
         </Card>
+
+        {hiddenTasks.length > 0 && (
+          <Card className="animate-scale-in bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg" style={{ animationDelay: '300ms' }}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <EyeOff className="w-5 h-5" />
+                <span>Hidden Tasks</span>
+              </CardTitle>
+              <CardDescription>
+                Restore tasks that you've hidden from your main list.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible className="w-full">
+                {hiddenTasks.map((task) => (
+                  <AccordionItem value={task.id} key={task.id}>
+                    <AccordionTrigger className="hover:no-underline">
+                      <span className="truncate">{task.title}</span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm text-muted-foreground">
+                          Due: {format(new Date(task.dueDate), 'P')}
+                        </p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onRestoreTask(task.id)}
+                        >
+                          <Eye className="w-4 h-4 mr-2" />
+                          Restore Task
+                        </Button>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </CardContent>
+          </Card>
+        )}
+
+        <Card className="animate-scale-in bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg" style={{ animationDelay: '300ms' }}>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Info className="w-5 h-5" />
+              <span>About</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <span className="text-sm">App Version</span>
+              <span className="text-sm text-muted-foreground">1.0.0</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive" className="w-full animate-scale-in" style={{ animationDelay: '400ms' }}>
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Start Over
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete all your tasks, challenges, and settings, and return you to the landing page.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={onStartOver}>Continue</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <div className="pt-2 text-center">
+          <HackDialog onUnlock={onUnlockAll} />
+        </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 };
