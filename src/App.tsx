@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from 'next-themes';
 import { supabase } from './integrations/supabase/client';
@@ -14,6 +14,16 @@ import { PublicRoute } from './components/PublicRoute';
 import { Toaster } from '@/components/ui/sonner';
 
 const queryClient = new QueryClient();
+
+function LandingPageWrapper() {
+  const navigate = useNavigate();
+  
+  const handleGetStarted = () => {
+    navigate('/auth');
+  };
+
+  return <LandingPage onGetStarted={handleGetStarted} currentTheme="purple" />;
+}
 
 function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -48,9 +58,15 @@ function App() {
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
         <Router>
           <Routes>
-            <Route path="/landing" element={<PublicRoute session={session}><LandingPage /></PublicRoute>} />
-            <Route path="/auth" element={<PublicRoute session={session}><AuthPage /></PublicRoute>} />
-            <Route path="/app/*" element={<ProtectedRoute session={session}><Index /></ProtectedRoute>} />
+            <Route path="/landing" element={<PublicRoute session={session} />}>
+              <Route index element={<LandingPageWrapper />} />
+            </Route>
+            <Route path="/auth" element={<PublicRoute session={session} />}>
+              <Route index element={<AuthPage />} />
+            </Route>
+            <Route path="/app/*" element={<ProtectedRoute session={session} />}>
+              <Route path="*" element={<Index />} />
+            </Route>
             <Route path="/" element={session ? <Navigate to="/app" replace /> : <Navigate to="/landing" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
