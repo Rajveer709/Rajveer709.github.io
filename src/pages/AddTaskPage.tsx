@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CalendarIcon, ChevronRight, Sparkles, Plus, Target } from 'lucide-react';
+import { CalendarIcon, ChevronRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { themes, defaultTheme } from '../config/themes';
@@ -23,8 +23,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { useTheme } from 'next-themes';
 import { PageHeader } from '@/components/PageHeader';
-import { toast } from 'sonner';
 
 interface AddTaskPageProps {
   onAddTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
@@ -117,7 +117,26 @@ const priorities = [
   { value: 'urgent', label: 'Urgent Priority', color: 'bg-red-500', emoji: '🚨' }
 ];
 
+const getThemeBackgroundStyle = (currentTheme: string, resolvedTheme: string | undefined) => {
+    const theme = themes.find(t => t.value === currentTheme) || themes.find(t => t.value === defaultTheme);
+    if (!theme) return {};
+    
+    const primaryColor = theme.colors.primary;
+    const r = parseInt(primaryColor.slice(1, 3), 16);
+    const g = parseInt(primaryColor.slice(3, 5), 16);
+    const b = parseInt(primaryColor.slice(5, 7), 16);
+    
+    const isDark = resolvedTheme === 'dark';
+    const startColorOpacity = isDark ? 0.2 : 0.1;
+    const endColor = isDark ? 'hsl(222.2, 84%, 4.9%)' : 'white';
+
+    return {
+        background: `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, ${startColorOpacity}), ${endColor})`
+    };
+};
+
 export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTaskPageProps) => {
+  const { resolvedTheme } = useTheme();
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedSubCategory, setSelectedSubCategory] = useState<string>('');
   const [selectedTask, setSelectedTask] = useState<string>('');
@@ -135,7 +154,6 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   const [isQuickTasksOpen, setIsQuickTasksOpen] = useState(false);
 
   const selectedPriorityDetails = priorities.find(p => p.value === priority);
-  const theme = themes.find(t => t.value === currentTheme) || themes.find(t => t.value === defaultTheme);
 
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
@@ -215,103 +233,45 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
       completed: false
     });
 
-    // Show success toast
-    toast.success('Task added successfully!', {
-      duration: 1000,
-    });
-
     onBack();
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-6 max-w-6xl">
-        <div className="mb-6">
-          <PageHeader 
-            title="Create Task" 
-            onBack={onBack}
-            titleClassName="bg-gradient-to-r bg-clip-text text-transparent"
-            titleStyle={{
-              backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
-            }}
-          />
-        </div>
+    <div>
+      <div className="container mx-auto px-4 py-6 max-w-4xl">
+        <PageHeader title="Create Task" onBack={onBack} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Quick Tasks Section */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div 
-                className="p-3 rounded-xl shadow-lg"
-                style={{ 
-                  backgroundColor: `${theme?.colors.primary}15`,
-                  border: `1px solid ${theme?.colors.primary}30`
-                }}
+        <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Quick Tasks Section */}
+            <div>
+              <Collapsible
+                open={isQuickTasksOpen}
+                onOpenChange={setIsQuickTasksOpen}
               >
-                <Target className="h-6 w-6" style={{ color: theme?.colors.primary }} />
-              </div>
-              <div>
-                <h2 
-                  className="text-xl font-semibold bg-gradient-to-r bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
-                  }}
-                >
-                  Quick Task Templates
-                </h2>
-                <p className="text-sm text-muted-foreground">Choose from pre-made tasks or create your own</p>
-              </div>
-            </div>
-
-            <Collapsible
-              open={isQuickTasksOpen}
-              onOpenChange={setIsQuickTasksOpen}
-            >
-              <CollapsibleTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-between h-14 border-2 hover:shadow-lg transition-all duration-300"
-                  style={{ 
-                    borderColor: `${theme?.colors.primary}30`,
-                    backgroundColor: `${theme?.colors.primary}05`
-                  }}
-                >
-                  <div className="flex items-center gap-3">
-                    <Sparkles className="h-5 w-5" style={{ color: theme?.colors.primary }} />
-                    <span className="font-medium">Browse Task Categories</span>
-                  </div>
-                  <ChevronRight className={`h-5 w-5 transform transition-all duration-300 ${isQuickTasksOpen ? 'rotate-90' : ''}`} />
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-4">
-                <div className="bg-card rounded-xl border shadow-sm max-h-96 overflow-y-auto">
+                <CollapsibleTrigger className="flex w-full items-center justify-between text-xl font-semibold text-primary mb-4">
+                  <span>Quick Tasks</span>
+                  <ChevronRight className={`h-6 w-6 transform transition-transform duration-300 ${isQuickTasksOpen ? 'rotate-90' : ''}`} />
+                </CollapsibleTrigger>
+                <CollapsibleContent>
                   <Accordion type="single" collapsible className="w-full" value={selectedCategory} onValueChange={handleCategorySelect}>
                     {Object.keys(taskCategories).map((category) => (
-                      <AccordionItem 
-                        value={category} 
-                        key={category} 
-                        className="border-b last:border-b-0"
-                      >
-                        <AccordionTrigger className="hover:no-underline px-6 py-4 text-left font-medium hover:bg-muted/50 transition-colors">
-                          {category}
-                        </AccordionTrigger>
-                        <AccordionContent className="pb-0">
-                          <div className="px-6">
+                      <AccordionItem value={category} key={category} className="border rounded-lg mb-2 overflow-hidden bg-card/95 shadow-sm last:mb-0">
+                        <AccordionTrigger className="hover:no-underline px-4 text-base">{category}</AccordionTrigger>
+                        <AccordionContent>
+                          <div className="pl-4">
                             <Accordion type="single" collapsible className="w-full" value={selectedSubCategory} onValueChange={handleSubCategorySelect}>
                               {Object.keys(taskCategories[category as CategoryKey]).map((subCategory) => (
-                                <AccordionItem value={subCategory} key={subCategory} className="border border-muted/50 rounded-lg mb-2 last:mb-4">
-                                  <AccordionTrigger className="text-sm hover:no-underline px-4 py-3 hover:bg-muted/30 transition-colors rounded-t-lg">
-                                    {subCategory}
-                                  </AccordionTrigger>
-                                  <AccordionContent className="pb-0">
-                                    <div className="p-4 space-y-2 bg-muted/20 rounded-b-lg">
+                                <AccordionItem value={subCategory} key={subCategory} className="border border-muted rounded-md mb-1 last:mb-0">
+                                  <AccordionTrigger className="text-sm hover:no-underline px-4">{subCategory}</AccordionTrigger>
+                                  <AccordionContent>
+                                    <div className="pl-4 space-y-2">
                                       {(taskCategories[category as CategoryKey][subCategory as SubCategoryKey<CategoryKey>] as readonly string[]).map((task) => (
                                         <Button
                                           key={task}
-                                          variant={selectedTask === task ? "default" : "ghost"}
-                                          className="w-full justify-start text-left text-sm font-normal h-auto py-3 px-4 hover:bg-background transition-all duration-200"
+                                          variant={selectedTask === task ? "default" : "secondary"}
+                                          className="w-full justify-start text-left text-sm font-normal h-auto py-2"
                                           onClick={() => handleTaskSelect(task)}
-                                          style={selectedTask === task ? { backgroundColor: theme?.colors.primary } : {}}
                                         >
                                           {task}
                                         </Button>
@@ -326,125 +286,87 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                       </AccordionItem>
                     ))}
                   </Accordion>
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
-          </div>
-
-          {/* Task Form */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-3 mb-6">
-              <div 
-                className="p-3 rounded-xl shadow-lg"
-                style={{ 
-                  backgroundColor: `${theme?.colors.primary}15`,
-                  border: `1px solid ${theme?.colors.primary}30`
-                }}
-              >
-                <Plus className="h-6 w-6" style={{ color: theme?.colors.primary }} />
-              </div>
-              <div>
-                <h2 
-                  className="text-xl font-semibold bg-gradient-to-r bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
-                  }}
-                >
-                  Task Details
-                </h2>
-                <p className="text-sm text-muted-foreground">Fill in your task information</p>
-              </div>
+                </CollapsibleContent>
+              </Collapsible>
             </div>
 
-            <div className="bg-card rounded-xl border shadow-sm p-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Task Title</label>
+            {/* Task Form */}
+            <div>
+              <h2 className="text-xl font-semibold text-primary mb-6">Task Details</h2>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
                   <Input
-                    placeholder="Enter your task..."
+                    placeholder="Task title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
-                    className="h-12 transition-all duration-300 focus:shadow-md border-border/50"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Description</label>
+                <div>
                   <Textarea
-                    placeholder="Add details about your task..."
+                    placeholder="Description (optional)"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     rows={3}
-                    className="transition-all duration-300 focus:shadow-md border-border/50 resize-none"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Priority Level</label>
-                    <Select value={priority} onValueChange={(value: 'low' | 'medium' | 'high' | 'urgent') => setPriority(value)}>
-                      <SelectTrigger className="h-12 transition-all duration-300 hover:shadow-md border-border/50">
-                        {selectedPriorityDetails && (
+                <div>
+                  <Select value={priority} onValueChange={(value: 'low' | 'medium' | 'high' | 'urgent') => setPriority(value)}>
+                    <SelectTrigger>
+                      {selectedPriorityDetails && (
+                        <div className="flex items-center gap-2">
+                          <span className={cn("h-2.5 w-2.5 rounded-full", selectedPriorityDetails.color)} />
+                          <span>{selectedPriorityDetails.label}</span>
+                          {selectedPriorityDetails.emoji && <span>{selectedPriorityDetails.emoji}</span>}
+                        </div>
+                      )}
+                    </SelectTrigger>
+                    <SelectContent>
+                      {priorities.map((p) => (
+                        <SelectItem key={p.value} value={p.value}>
                           <div className="flex items-center gap-2">
-                            <span className={cn("h-3 w-3 rounded-full", selectedPriorityDetails.color)} />
-                            <span>{selectedPriorityDetails.label}</span>
-                            {selectedPriorityDetails.emoji && <span>{selectedPriorityDetails.emoji}</span>}
+                            <span className={cn("h-2.5 w-2.5 rounded-full", p.color)} />
+                            <span>{p.label}</span>
+                            {p.emoji && <span className="ml-auto">{p.emoji}</span>}
                           </div>
-                        )}
-                      </SelectTrigger>
-                      <SelectContent>
-                        {priorities.map((p) => (
-                          <SelectItem key={p.value} value={p.value} className="hover:bg-muted/50 transition-colors">
-                            <div className="flex items-center gap-2">
-                              <span className={cn("h-3 w-3 rounded-full", p.color)} />
-                              <span>{p.label}</span>
-                              {p.emoji && <span className="ml-auto">{p.emoji}</span>}
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Due Date</label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full h-12 justify-start text-left font-normal transition-all duration-300 hover:shadow-md border-border/50"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {format(dueDate, "PPP")}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 shadow-xl" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={dueDate}
-                          onSelect={(date) => date && setDueDate(date)}
-                          initialFocus
-                          className="rounded-lg"
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
+                <div>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {format(dueDate, "PPP")}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={dueDate}
+                        onSelect={(date) => date && setDueDate(date)}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 <Button 
                   type="submit" 
-                  className="w-full h-14 text-base font-medium shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] bg-gradient-to-r text-white"
+                  className="w-full"
                   disabled={!title || !selectedCategory}
-                  style={{ 
-                    background: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`,
-                    border: 'none'
-                  }}
                 >
-                  <Sparkles className="w-5 h-5 mr-2" />
-                  Create Task
+                  Add Task
                 </Button>
               </form>
             </div>
@@ -475,6 +397,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
           </DialogContent>
         </Dialog>
 
+        {/* Medication Dialog */}
         <Dialog open={showMedicationDialog} onOpenChange={setShowMedicationDialog}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -498,6 +421,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
           </DialogContent>
         </Dialog>
 
+        {/* Vehicle Fluid Dialog */}
         <Dialog open={showVehicleDialog} onOpenChange={setShowVehicleDialog}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -528,13 +452,14 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
           </DialogContent>
         </Dialog>
 
+        {/* RickRoll Dialog */}
         <Dialog open={showRickRollDialog} onOpenChange={setShowRickRollDialog}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>A surprise for you!</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 text-center">
-              <img src="/lovable-uploads/0b3245b2-4eeb-423d-8ab4-93b3c1d6efc8.png" alt="Rick Astley" className="rounded-lg shadow-lg animate-pulse" />
+              <img src="/lovable-uploads/0b3245b2-4eeb-423d-8ab4-93b3c1d6efc8.png" alt="Rick Astley" className="rounded-lg" />
               <p className="text-lg font-semibold">
                 You have been RickRolled{profile?.name ? `, ${profile.name.split(' ')[0]}` : ''}!
               </p>

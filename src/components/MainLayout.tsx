@@ -23,7 +23,7 @@ export const MainLayout = ({
 
   return (
     <>
-      <div className="container mx-auto px-3 md:px-4 pt-4 md:pt-6 max-w-sm md:max-w-2xl pb-20 md:pb-24">
+      <div className="container mx-auto px-4 pt-6 max-w-sm pb-20">
         {showGreeting && (
           <Header
             profile={profile}
@@ -32,7 +32,7 @@ export const MainLayout = ({
           />
         )}
         <main>
-          <Outlet context={{ profile, onUpdateProfile, showGreeting, currentTheme }} />
+          <Outlet context={{ profile, onUpdateProfile, showGreeting }} />
         </main>
       </div>
       <BottomNavBar />

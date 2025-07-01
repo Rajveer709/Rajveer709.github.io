@@ -1,7 +1,6 @@
-
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, Circle, Lock, ChevronDown, Trophy, Star, Zap, Crown, Sparkles } from "lucide-react";
+import { CheckCircle2, Circle, Lock, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Challenge as ChallengeType } from '../config/challenges';
 import { getRankForLevel, RANKS as ALL_RANKS } from '../config/ranks';
@@ -11,7 +10,6 @@ import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { Profile } from "./Index";
 import { PageHeader } from "../components/PageHeader";
-import { themes, defaultTheme } from '../config/themes';
 
 export interface Challenge extends ChallengeType {
   completed: boolean;
@@ -23,19 +21,16 @@ interface ChallengePageProps {
   xpToNextLevel: number;
   challenges: Challenge[];
   onBack: () => void;
-  currentTheme?: string;
 }
 
 interface OutletContextType {
   profile: Profile | null;
   onUpdateProfile: (updatedProfile: Partial<Profile>, avatarFile?: File) => Promise<void>;
   showGreeting: boolean;
-  currentTheme?: string;
 }
 
-export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, onBack, currentTheme = 'purple' }: ChallengePageProps) => {
+export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, onBack }: ChallengePageProps) => {
   const { profile, onUpdateProfile, showGreeting } = useOutletContext<OutletContextType>();
-  const theme = themes.find(t => t.value === currentTheme) || themes.find(t => t.value === defaultTheme);
   const progressPercentage = xpToNextLevel > 0 ? Math.round((userXp / xpToNextLevel) * 100) : 0;
   const rank = getRankForLevel(userLevel);
 
@@ -62,183 +57,61 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
     return acc;
   }, {});
 
-  const completedChallengesInLevel = (levelChallenges: Challenge[]) => 
-    levelChallenges.filter(c => c.completed).length;
-
   return (
-    <div className="pb-6">
+    <div>
       <PageHeader
-        title={
-          <span 
-            className="bg-gradient-to-r bg-clip-text text-transparent font-bold flex items-center gap-2"
-            style={{
-              backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
-            }}
-          >
-            <Trophy className="w-6 h-6 md:w-7 md:h-7" style={{ color: theme?.colors.primary }} />
-            Challenges
-          </span>
-        }
+        title="Challenges"
         onBack={onBack}
         profile={profile}
         onUpdateProfile={onUpdateProfile}
         showAvatar={!showGreeting}
       />
 
-      {/* Rank Card with Enhanced Graphics */}
-      <Card className="mb-4 md:mb-6 bg-gradient-to-br from-card/90 to-card/70 dark:from-card/40 dark:to-card/20 backdrop-blur-sm border-0 shadow-xl relative overflow-hidden animate-fade-in">
-        <div 
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: `radial-gradient(${theme?.colors.primary} 1px, transparent 1px)`,
-            backgroundSize: '20px 20px'
-          }}
-        />
-        <CardHeader className="relative">
+      <Card className="mb-6 bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">
+        <CardHeader>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 md:gap-4">
-              <div 
-                className="p-2 md:p-3 rounded-full shadow-lg animate-pulse-glow"
-                style={{ backgroundColor: `${theme?.colors.primary}20` }}
-              >
-                <rank.Icon className="w-6 h-6 md:w-8 md:h-8" style={{ color: theme?.colors.primary }} />
-              </div>
-              <div>
-                <CardDescription className="text-xs md:text-sm flex items-center gap-2">
-                  <Star className="w-3 h-3 md:w-4 md:h-4" style={{ color: theme?.colors.secondary }} />
-                  Rank: Level {userLevel}
-                </CardDescription>
-                <CardTitle 
-                  className="text-lg md:text-2xl flex items-center gap-2 bg-gradient-to-r bg-clip-text text-transparent font-bold"
-                  style={{
-                    backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
-                  }}
-                >
-                  {rank.name}
-                  <Crown className="w-4 h-4 md:w-5 md:h-5" style={{ color: theme?.colors.secondary }} />
-                </CardTitle>
-              </div>
+            <div>
+              <CardDescription>Rank: Level {userLevel}</CardDescription>
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <rank.Icon className="w-7 h-7 text-primary" />
+                {rank.name}
+              </CardTitle>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="relative">
-          <div className="flex items-center gap-3 md:gap-4 mb-2">
-            <Progress 
-              value={progressPercentage} 
-              className="h-2 md:h-3 flex-1"
-              style={{ backgroundColor: `${theme?.colors.primary}20` }}
-              indicatorStyle={{ backgroundColor: theme?.colors.primary }}
-            />
-            <div className="flex items-center gap-1">
-              <Zap className="w-3 h-3 md:w-4 md:h-4" style={{ color: theme?.colors.secondary }} />
-              <span 
-                className="text-sm md:text-base font-bold"
-                style={{ color: theme?.colors.primary }}
-              >
-                {userXp} / {xpToNextLevel} XP
-              </span>
-            </div>
+        <CardContent>
+          <div className="flex items-center gap-4 mb-2">
+            <Progress value={progressPercentage} className="h-3" />
+            <span className="text-sm font-bold text-primary">{userXp} / {xpToNextLevel} XP</span>
           </div>
-          <p className="text-xs md:text-sm text-muted-foreground flex items-center gap-1">
-            <Sparkles className="w-3 h-3" style={{ color: theme?.colors.secondary }} />
+          <p className="text-xs text-muted-foreground">
             {xpToNextLevel > userXp ? `${xpToNextLevel - userXp} XP to level up` : 'Max level reached for now!'}
           </p>
         </CardContent>
       </Card>
 
-      {/* Challenge Log Card */}
-      <Card className="bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">
+      <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle 
-              className="flex items-center gap-2 bg-gradient-to-r bg-clip-text text-transparent font-bold text-lg md:text-xl"
-              style={{
-                backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
-              }}
-            >
-              <Trophy className="w-5 h-5 md:w-6 md:h-6" style={{ color: theme?.colors.primary }} />
-              Challenge Log
-            </CardTitle>
+            <CardTitle>Challenge Log</CardTitle>
             <Dialog>
               <DialogTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="text-xs md:text-sm border-2 hover:scale-105 transition-all duration-300"
-                  style={{ 
-                    borderColor: theme?.colors.primary,
-                    color: theme?.colors.primary
-                  }}
-                >
-                  <Crown className="w-3 h-3 md:w-4 md:h-4 mr-1" />
-                  View Ranks
-                </Button>
+                <Button variant="outline" size="sm">View Ranks</Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] max-h-[80vh]">
+              <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle 
-                    className="flex items-center gap-2 bg-gradient-to-r bg-clip-text text-transparent font-bold"
-                    style={{
-                      backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
-                    }}
-                  >
-                    <Crown className="w-5 h-5" style={{ color: theme?.colors.primary }} />
-                    Ranks & Achievements
-                  </DialogTitle>
+                  <DialogTitle>Ranks</DialogTitle>
                   <DialogDescription>
-                    Level up to achieve new ranks and unlock exclusive rewards.
+                    Level up to achieve new ranks and unlock rewards.
                   </DialogDescription>
                 </DialogHeader>
-                <div className="space-y-3 max-h-[50vh] overflow-y-auto p-1 -mr-2 pr-2">
-                  {ALL_RANKS.map((r, index) => (
-                    <div 
-                      key={r.level} 
-                      className={`flex items-center gap-4 p-3 rounded-lg transition-all duration-300 hover:scale-105 ${
-                        userLevel >= r.level 
-                          ? 'shadow-lg border' 
-                          : 'bg-muted/50'
-                      }`}
-                      style={userLevel >= r.level ? {
-                        background: `linear-gradient(135deg, ${theme?.colors.primary}15, ${theme?.colors.secondary}15)`,
-                        borderColor: `${theme?.colors.primary}30`
-                      } : {}}
-                    >
-                      <div 
-                        className="p-2 rounded-full"
-                        style={{ 
-                          backgroundColor: userLevel >= r.level 
-                            ? `${theme?.colors.primary}30` 
-                            : 'transparent' 
-                        }}
-                      >
-                        <r.Icon 
-                          className="w-6 h-6 md:w-8 md:h-8 flex-shrink-0" 
-                          style={{ 
-                            color: userLevel >= r.level 
-                              ? theme?.colors.primary 
-                              : '#9ca3af' 
-                          }} 
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <p 
-                            className="font-bold text-sm md:text-base"
-                            style={{ 
-                              color: userLevel >= r.level 
-                                ? theme?.colors.primary 
-                                : undefined 
-                            }}
-                          >
-                            {r.name}
-                          </p>
-                          {userLevel >= r.level && (
-                            <CheckCircle2 className="w-4 h-4" style={{ color: theme?.colors.secondary }} />
-                          )}
-                        </div>
-                        <p className="text-xs md:text-sm text-muted-foreground">
-                          Level {r.level} {userLevel >= r.level ? '✓ Unlocked' : '🔒 Locked'}
-                        </p>
+                <div className="space-y-2 max-h-[60vh] overflow-y-auto p-1 -mr-2 pr-2">
+                  {ALL_RANKS.map((r) => (
+                    <div key={r.level} className="flex items-center gap-4 p-2 rounded-lg">
+                      <r.Icon className="w-8 h-8 text-primary flex-shrink-0" />
+                      <div>
+                        <p className="font-bold text-md">{r.name}</p>
+                        <p className="text-sm text-muted-foreground">Unlocks at Level {r.level}</p>
                       </div>
                     </div>
                   ))}
@@ -246,146 +119,49 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
               </DialogContent>
             </Dialog>
           </div>
-          <CardDescription className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4" style={{ color: theme?.colors.secondary }} />
-            Complete challenges to earn XP and level up!
-          </CardDescription>
+          <CardDescription>Complete challenges to earn XP and level up!</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3 md:space-y-4">
+          <div className="space-y-2">
             {Object.entries(challengesByLevel)
               .sort(([a], [b]) => Number(a) - Number(b))
               .map(([level, levelChallenges]) => {
                 const levelRank = getRankForLevel(Number(level));
-                const completed = completedChallengesInLevel(levelChallenges);
-                const total = levelChallenges.length;
-                const completionPercentage = Math.round((completed / total) * 100);
-                
                 return (
-                <Collapsible 
-                  key={level} 
-                  defaultOpen={userLevel >= Number(level) || userLevel + 1 === Number(level)} 
-                  className="space-y-2 animate-fade-in"
-                >
-                  <CollapsibleTrigger 
-                    className="flex justify-between items-center w-full p-3 md:p-4 rounded-lg transition-all duration-300 font-bold text-left group hover:scale-[1.02] relative overflow-hidden border"
-                    style={{
-                      backgroundColor: `${theme?.colors.primary}10`,
-                      borderColor: `${theme?.colors.primary}30`
-                    }}
-                  >
-                    <div className="flex items-center gap-3 flex-1">
-                      <div 
-                        className="p-2 rounded-full"
-                        style={{ backgroundColor: `${theme?.colors.primary}20` }}
-                      >
-                        <levelRank.Icon className="w-4 h-4 md:w-5 md:h-5" style={{ color: theme?.colors.primary }} />
-                      </div>
-                      <div className="flex-1 text-left">
-                        <span 
-                          className="text-sm md:text-base bg-gradient-to-r bg-clip-text text-transparent font-bold"
-                          style={{
-                            backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
-                          }}
-                        >
-                          Level {level} Challenges
-                        </span>
-                        <div className="flex items-center gap-2 mt-1">
-                          <div 
-                            className="h-1.5 bg-gray-200 rounded-full flex-1"
-                            style={{ maxWidth: '100px' }}
-                          >
-                            <div 
-                              className="h-1.5 rounded-full transition-all duration-500"
-                              style={{ 
-                                width: `${completionPercentage}%`,
-                                backgroundColor: theme?.colors.secondary
-                              }}
-                            />
-                          </div>
-                          <span className="text-xs text-muted-foreground">
-                            {completed}/{total}
-                          </span>
-                        </div>
-                      </div>
+                <Collapsible key={level} defaultOpen={userLevel >= Number(level) || userLevel + 1 === Number(level)} className="space-y-2">
+                  <CollapsibleTrigger className="flex justify-between items-center w-full p-3 rounded-lg bg-secondary/80 hover:bg-secondary transition-colors font-bold text-left group">
+                    <div className="flex items-center gap-3">
+                      <levelRank.Icon className="w-5 h-5 text-primary" />
+                      <span>Level {level} Challenges</span>
                     </div>
-                    <ChevronDown className="h-5 w-5 transition-transform duration-200 group-data-[state=open]:rotate-180" style={{ color: theme?.colors.primary }} />
+                    <ChevronDown className="h-5 w-5 transition-transform duration-200 group-data-[state=open]:rotate-180" />
                   </CollapsibleTrigger>
                   <CollapsibleContent>
-                    <div className="space-y-2 pl-2 md:pl-4 border-l-2 ml-1" style={{ borderColor: `${theme?.colors.primary}30` }}>
+                    <div className="space-y-2 pl-4 border-l-2 border-primary/20 ml-1">
                       {levelChallenges.map(challenge => {
                         const challengeLevel = getChallengeLevel(challenge.id);
                         const isLocked = userLevel < challengeLevel;
 
                         return (
-                        <div 
-                          key={challenge.id} 
-                          className={`flex items-center justify-between p-3 md:p-4 rounded-lg transition-all duration-300 hover:scale-[1.01] border ${
-                            challenge.completed 
-                              ? 'shadow-lg' 
-                              : isLocked 
-                                ? 'bg-muted/50' 
-                                : 'bg-secondary hover:shadow-md'
-                          }`}
-                          style={challenge.completed ? {
-                            backgroundColor: `${theme?.colors.primary}15`,
-                            borderColor: `${theme?.colors.secondary}50`
-                          } : {}}
-                        >
-                          <div className="flex items-center flex-1 min-w-0">
-                            <div className="mr-3 md:mr-4 flex-shrink-0">
-                              {challenge.completed ? (
-                                <div 
-                                  className="p-1 rounded-full"
-                                  style={{ backgroundColor: `${theme?.colors.secondary}20` }}
-                                >
-                                  <CheckCircle2 className="w-5 h-5 md:w-6 md:h-6" style={{ color: theme?.colors.secondary }} />
-                                </div>
-                              ) : isLocked ? (
-                                <Lock className="w-5 h-5 md:w-6 md:h-6 text-muted-foreground" />
-                              ) : (
-                                <Circle className="w-5 h-5 md:w-6 md:h-6 text-muted-foreground" />
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p 
-                                className={`font-medium text-sm md:text-base leading-tight ${
-                                  challenge.completed 
-                                    ? 'font-bold' 
-                                    : isLocked 
-                                      ? 'text-muted-foreground' 
-                                      : 'text-foreground'
-                                }`}
-                                style={challenge.completed ? { color: theme?.colors.primary } : {}}
-                              >
-                                {challenge.text}
+                        <div key={challenge.id} className={`flex items-center justify-between p-3 rounded-lg transition-all ${challenge.completed ? 'bg-primary/10' : isLocked ? 'bg-muted/50' : 'bg-secondary'}`}>
+                          <div className="flex items-center">
+                            {challenge.completed ? (
+                              <CheckCircle2 className="w-6 h-6 text-primary mr-4 flex-shrink-0" />
+                            ) : isLocked ? (
+                              <Lock className="w-6 h-6 text-muted-foreground mr-4 flex-shrink-0" />
+                            ) : (
+                              <Circle className="w-6 h-6 text-muted-foreground mr-4 flex-shrink-0" />
+                            )}
+                            <div>
+                              <p className={`font-medium ${challenge.completed ? 'text-primary' : isLocked ? 'text-muted-foreground' : 'text-foreground'}`}>{challenge.text}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {challenge.xp} XP
+                                {isLocked && ` | Unlocks at Level ${challengeLevel}`}
                               </p>
-                              <div className="flex items-center gap-2 mt-1">
-                                <div className="flex items-center gap-1">
-                                  <Zap className="w-3 h-3" style={{ color: theme?.colors.secondary }} />
-                                  <span className="text-xs md:text-sm text-muted-foreground font-medium">
-                                    {challenge.xp} XP
-                                  </span>
-                                </div>
-                                {isLocked && (
-                                  <span className="text-xs text-muted-foreground">
-                                    | Unlocks at Level {challengeLevel}
-                                  </span>
-                                )}
-                              </div>
                             </div>
                           </div>
                           {challenge.completed && (
-                            <div 
-                              className="text-xs font-bold px-2 py-1 rounded-full ml-2 flex items-center gap-1 animate-pulse"
-                              style={{ 
-                                backgroundColor: `${theme?.colors.secondary}20`,
-                                color: theme?.colors.secondary
-                              }}
-                            >
-                              <Star className="w-3 h-3" />
-                              DONE
-                            </div>
+                            <span className="text-xs font-bold text-primary bg-primary/20 px-2 py-1 rounded-full">DONE</span>
                           )}
                         </div>
                       )})}

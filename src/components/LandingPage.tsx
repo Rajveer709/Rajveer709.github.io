@@ -1,6 +1,5 @@
-
 import * as React from 'react';
-import { CheckSquare, Calendar, Bell, Target, ArrowRight, Users, Shield, Clock, Plus } from 'lucide-react';
+import { CheckSquare, Calendar, Bell, Target, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { themes, defaultTheme } from '@/config/themes';
 
@@ -14,223 +13,176 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
 
   const features = [
     {
-      icon: <CheckSquare className="w-6 h-6" />,
-      title: "Smart Organization",
-      description: "Keep your life organized with intelligent task categorization and priority management."
+      icon: <CheckSquare className="w-8 h-8" />,
+      title: "Organize Life Admin Tasks",
+      description: "Keep track of bills, appointments, renewals, and all those important tasks."
     },
     {
-      icon: <Calendar className="w-6 h-6" />,
-      title: "Easy Scheduling",
-      description: "Never miss important dates with smart calendar integration and reminders."
+      icon: <Calendar className="w-8 h-8" />,
+      title: "Smart Scheduling",
+      description: "Set due dates and priorities to stay on top of deadlines with our intuitive calendar."
     },
     {
-      icon: <Bell className="w-6 h-6" />,
-      title: "Timely Reminders",
-      description: "Stay on top of everything with intelligent notifications and alerts."
+      icon: <Bell className="w-8 h-8" />,
+      title: "Never Miss Again",
+      description: "Get organized with categorized tasks and visual progress tracking."
     },
     {
-      icon: <Target className="w-6 h-6" />,
-      title: "Goal Achievement",
-      description: "Track your progress and achieve your goals with focused productivity tools."
+      icon: <Target className="w-8 h-8" />,
+      title: "Stay Focused",
+      description: "Streamlined interface designed specifically for life admin tasks - no distractions."
     }
   ];
   
-  const benefits = [
-    {
-      icon: <Users className="w-5 h-5" />,
-      title: "Easy to Use",
-      description: "Simple and intuitive interface designed for everyone"
-    },
-    {
-      icon: <Shield className="w-5 h-5" />,
-      title: "Secure & Private",
-      description: "Your data is protected with industry-standard security"
-    },
-    {
-      icon: <Clock className="w-5 h-5" />,
-      title: "Save Time",
-      description: "Streamline your daily tasks and boost productivity"
-    }
-  ];
-
   const categoryLists = [
     {
-      title: "Personal Life",
-      items: ["Daily routines", "Health tracking", "Family activities", "Personal goals"]
+      title: "💰 Financial",
+      items: ["Utility bills & rent payments", "Insurance premiums", "Tax deadlines", "Subscription renewals"]
     },
     {
-      title: "Work & Career",
-      items: ["Project management", "Meeting schedules", "Skill development", "Professional goals"]
+      title: "🏥 Health",
+      items: ["Doctor appointments", "Medication schedules", "Dental check-ups", "Fitness tracking"]
     },
     {
-      title: "Home & Living",
-      items: ["Household chores", "Maintenance tasks", "Shopping lists", "Bill reminders"]
+      title: "🏠 Household",
+      items: ["Home maintenance", "Vehicle servicing", "Appliance warranties", "Grocery planning"]
     },
     {
-      title: "Health & Wellness",
-      items: ["Exercise routines", "Medical appointments", "Wellness goals", "Habit tracking"]
+      title: "📋 Legal & Admin",
+      items: ["Document renewals", "Form submissions", "Voting registration", "Estate planning"]
     },
     {
-      title: "Learning & Growth",
-      items: ["Study schedules", "Course progress", "Reading lists", "Skill building"]
+      title: "🎯 Personal",
+      items: ["Important birthdays", "Travel planning", "Learning goals", "Social events"]
     },
     {
-      title: "Social & Fun",
-      items: ["Event planning", "Friend activities", "Hobbies", "Entertainment"]
+      title: "📱 Digital",
+      items: ["Password updates", "Backup schedules", "Device upgrades", "Email management"]
     }
   ];
 
   return (
-    <div className="min-h-screen font-sans bg-gradient-to-b from-background via-background to-muted/20 px-4 py-6">
-      <div className="container mx-auto max-w-md">
+    <div className="min-h-screen bg-background/50 overflow-x-hidden">
+       <div 
+        className="absolute top-0 left-0 w-full h-full -z-10 opacity-10 dark:opacity-20"
+        style={{
+          backgroundImage: `radial-gradient(${theme?.colors.primary} 1px, transparent 1px), radial-gradient(${theme?.colors.secondary} 1px, transparent 1px)`,
+          backgroundSize: '40px 40px',
+          backgroundPosition: '0 0, 20px 20px',
+        }}
+      />
+      <div className="container mx-auto px-4 py-12 md:py-16 max-w-6xl">
         {/* Hero Section */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-6 animate-fade-in opacity-0" style={{ animationDelay: '100ms' }}>
-            <div className="bg-card/30 backdrop-blur-sm p-3 rounded-2xl shadow-xl mr-3 border border-border/20">
-              <CheckSquare className="w-10 h-10" style={{ color: theme?.colors.primary }} />
+        <div className="text-center mb-16 md:mb-24">
+          <div className="flex items-center justify-center mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
+            <div className="bg-background/20 backdrop-blur-sm p-3 md:p-4 rounded-2xl md:rounded-3xl shadow-lg mr-3 md:mr-4 border">
+              <CheckSquare className="w-8 h-8 md:w-12 md:h-12 text-primary" />
             </div>
             <h1 
-              className="text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent"
-              style={{
-                backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
-              }}
+              className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r"
+              style={{ backgroundImage: `linear-gradient(to right, ${theme?.colors.primary}, ${theme?.colors.secondary})` }}
             >
               Life Admin
             </h1>
           </div>
           
-          <h2 
-            className="text-xl font-semibold mb-4 bg-gradient-to-r bg-clip-text text-transparent animate-fade-in opacity-0" 
-            style={{ 
-              animationDelay: '200ms',
-              backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
-            }}
-          >
-            Your Life, Organized
-          </h2>
+          <p className="text-xl md:text-2xl font-medium text-foreground/90 mb-4 animate-fade-in" style={{ animationDelay: '200ms' }}>
+            Simplify Life. One Task at a Time.
+          </p>
           
-          <p className="text-base text-muted-foreground mb-8 leading-relaxed animate-fade-in opacity-0" style={{ animationDelay: '300ms' }}>
-            Take control of your daily life with our simple and powerful task management app. 
-            Perfect for anyone looking to stay organized and productive.
+          <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 px-4 animate-fade-in" style={{ animationDelay: '300ms' }}>
+            The focused task manager for all your important life admin - from bills and appointments 
+            to renewals and deadlines. Never let important tasks slip through the cracks again.
           </p>
 
-          <div className="flex flex-col gap-3 animate-fade-in opacity-0" style={{ animationDelay: '400ms' }}>
-            <Button 
-              onClick={onGetStarted}
-              size="lg"
-              className="w-full py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 text-white"
-              style={{ backgroundColor: theme?.colors.primary }}
-            >
-              Get Started for Free
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-            <Button 
-              onClick={onGetStarted}
-              size="lg"
-              variant="outline"
-              className="w-full py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 border-2"
-              style={{ borderColor: theme?.colors.primary, color: theme?.colors.primary }}
-            >
-              Add Tasks
-              <Plus className="w-5 h-5 ml-2" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Benefits Section */}
-        <div className="mb-12">
-          <div className="space-y-6">
-            {benefits.map((benefit, index) => (
-              <div key={index} className="flex items-start gap-4 p-4 bg-card/30 backdrop-blur-sm rounded-xl border border-border/20 animate-fade-in opacity-0" style={{ animationDelay: `${500 + index * 100}ms` }}>
-                <div className="p-2 rounded-full bg-card/50 backdrop-blur-sm border border-border/30 flex-shrink-0">
-                  {React.cloneElement(benefit.icon, { style: { color: theme?.colors.primary } })}
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold mb-1">{benefit.title}</h3>
-                  <p className="text-muted-foreground text-sm">{benefit.description}</p>
-                </div>
-              </div>
-            ))}
+          <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button 
+                onClick={onGetStarted}
+                size="lg"
+                className="px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white w-full sm:w-auto"
+                style={{ backgroundColor: theme?.colors.primary }}
+              >
+                Get Started for Free
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              <Button 
+                onClick={onGetStarted}
+                size="lg"
+                variant="outline"
+                className="px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200 w-full sm:w-auto"
+              >
+                Add Task
+              </Button>
+            </div>
           </div>
         </div>
 
         {/* Features Grid */}
-        <div className="mb-12">
-          <h2 
-            className="text-2xl font-bold text-center mb-8 animate-fade-in opacity-0 bg-gradient-to-r bg-clip-text text-transparent" 
-            style={{ 
-              animationDelay: '600ms',
-              backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
-            }}
-          >
-            Everything You Need
+        <div className="mb-16 md:mb-24">
+           <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-10 md:mb-12 animate-fade-in" style={{ animationDelay: '500ms' }}>
+            Everything You Need to Get Organized
           </h2>
-          <div className="space-y-6">
-            {features.map((feature, index) => (
-              <div key={index} className="bg-card/50 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-border/20 hover:shadow-2xl transition-all duration-500 animate-fade-in opacity-0" style={{ animationDelay: `${700 + index * 100}ms`}}>
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-xl bg-card/50 backdrop-blur-sm border border-border/30 flex-shrink-0">
-                    {React.cloneElement(feature.icon, { style: { color: theme?.colors.primary } })}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {features.map((feature, index) => {
+              const color = index % 2 === 0 ? theme?.colors.primary : theme?.colors.secondary;
+              const bgColor = index % 2 === 0 ? `${theme?.colors.primary}20` : `${theme?.colors.secondary}20`;
+              return (
+                <div key={index} className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-border/50 hover:-translate-y-1 flex items-start gap-4 animate-fade-in" style={{ animationDelay: `${600 + index * 100}ms`}}>
+                  <div className="p-3 rounded-full" style={{backgroundColor: bgColor}}>
+                    {React.cloneElement(feature.icon, { style: { color: color } })}
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                    <h3 className="text-lg md:text-xl font-semibold text-foreground mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm md:text-base">
+                      {feature.description}
+                    </p>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
-        {/* Categories Section */}
-        <div className="bg-card/30 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-border/20 mb-12 animate-fade-in opacity-0" style={{ animationDelay: '1000ms' }}>
-          <h2 
-            className="text-2xl font-bold text-center mb-8 bg-gradient-to-r bg-clip-text text-transparent"
-            style={{
-              backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
-            }}
-          >
-            Manage Every Part of Life
+        {/* Task Categories Preview */}
+        <div className="bg-card/80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-lg border border-border/50 mb-16 md:mb-24 animate-fade-in" style={{ animationDelay: '1000ms' }}>
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-foreground mb-8 md:mb-10">
+            Organize Every Aspect of Your Life
           </h2>
           
-          <div className="space-y-6">
-            {categoryLists.map((category, index) => (
-              <div key={category.title} className="animate-fade-in opacity-0" style={{ animationDelay: `${1100 + index * 100}ms` }}>
-                <h3 className="text-lg font-semibold mb-3 text-foreground">{category.title}</h3>
-                <div className="grid grid-cols-1 gap-2">
-                  {category.items.map(item => (
-                    <div key={item} className="flex items-start gap-3 text-muted-foreground hover:text-foreground transition-colors p-2 rounded-lg hover:bg-card/20">
-                      <CheckSquare className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: theme?.colors.primary }} />
-                      <span className="text-sm">{item}</span>
-                    </div>
-                  ))}
-                </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-6 md:gap-8">
+            {categoryLists.map((category) => (
+              <div key={category.title} className="space-y-3">
+                <h3 className="font-semibold text-foreground text-base md:text-lg flex items-center gap-2">
+                  <span className="text-2xl">{category.title.split(' ')[0]}</span>
+                  {category.title.split(' ').slice(1).join(' ')}
+                </h3>
+                <ul className="text-xs md:text-sm text-muted-foreground space-y-1.5 pl-2">
+                  {category.items.map(item => <li key={item} className="flex items-start gap-2"><CheckSquare className="w-3 h-3 mt-0.5 flex-shrink-0 text-primary" /><span>{item}</span></li>)}
+                </ul>
               </div>
             ))}
           </div>
         </div>
 
         {/* CTA Section */}
-        <div className="text-center animate-fade-in opacity-0 pb-6" style={{ animationDelay: '1400ms' }}>
-          <h2 
-            className="text-2xl font-bold mb-4 bg-gradient-to-r bg-clip-text text-transparent"
-            style={{
-              backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}, ${theme?.colors.secondary})`
-            }}
-          >
-            Ready to Get Organized?
+        <div className="text-center animate-fade-in" style={{ animationDelay: '1200ms' }}>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            Ready to Take Control?
           </h2>
-          <p className="text-base text-muted-foreground mb-6 leading-relaxed">
-            Join thousands of people who have simplified their lives and boosted their productivity.
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto px-4">
+            Stop juggling tasks in your head. Start organizing your life admin today and reclaim your peace of mind.
           </p>
           <Button 
             onClick={onGetStarted}
             size="lg"
-            className="w-full py-4 text-xl font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 text-white"
-            style={{ backgroundColor: theme?.colors.primary }}
+            className="px-8 md:px-12 py-3 md:py-4 text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white"
+             style={{ backgroundColor: theme?.colors.primary }}
           >
-            Get Started for Free
-            <ArrowRight className="w-6 h-6 ml-2" />
+            Start Organizing Today
+            <ArrowRight className="w-5 h-5 md:w-6 md:h-6 ml-2" />
           </Button>
         </div>
       </div>
