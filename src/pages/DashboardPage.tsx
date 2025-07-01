@@ -75,10 +75,16 @@ export const DashboardPage = ({
               <Progress 
                 value={completionPercentage} 
                 className="h-2 md:h-3 flex-1"
-                indicatorClassName={
+                indicatorStyle={
                   completionPercentage === 100 
-                    ? 'animate-pulse-glow' 
-                    : 'shadow-[0_0_10px_hsl(var(--primary))]'
+                    ? { 
+                        backgroundColor: theme?.colors.primary,
+                        animation: 'pulse 2s infinite'
+                      } 
+                    : { 
+                        backgroundColor: theme?.colors.primary,
+                        boxShadow: `0 0 10px ${theme?.colors.primary}`
+                      }
                 }
               />
               <span 

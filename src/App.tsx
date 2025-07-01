@@ -6,11 +6,11 @@ import { ThemeProvider } from 'next-themes';
 import { supabase } from './integrations/supabase/client';
 import { Session } from '@supabase/supabase-js';
 import Index from './pages/Index';
-import AuthPage from './pages/AuthPage';
-import LandingPage from './components/LandingPage';
+import { AuthPage } from './pages/AuthPage';
+import { LandingPage } from './components/LandingPage';
 import NotFound from './pages/NotFound';
-import ProtectedRoute from './components/ProtectedRoute';
-import PublicRoute from './components/PublicRoute';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { PublicRoute } from './components/PublicRoute';
 import { Toaster } from '@/components/ui/sonner';
 
 const queryClient = new QueryClient();
