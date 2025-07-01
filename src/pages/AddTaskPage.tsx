@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/collapsible";
 import { useTheme } from 'next-themes';
 import { PageHeader } from '@/components/PageHeader';
+import { toast } from 'sonner';
 
 interface AddTaskPageProps {
   onAddTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
@@ -231,6 +232,11 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
       priority,
       dueDate,
       completed: false
+    });
+
+    // Show success toast
+    toast.success('Task added successfully!', {
+      duration: 1000,
     });
 
     onBack();

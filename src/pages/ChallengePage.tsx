@@ -126,9 +126,8 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
             <Progress 
               value={progressPercentage} 
               className="h-2 md:h-3 flex-1"
-              style={{ 
-                backgroundColor: `${theme?.colors.primary}20`
-              }}
+              style={{ backgroundColor: `${theme?.colors.primary}20` }}
+              indicatorStyle={{ backgroundColor: theme?.colors.primary }}
             />
             <div className="flex items-center gap-1">
               <Zap className="w-3 h-3 md:w-4 md:h-4" style={{ color: theme?.colors.secondary }} />
@@ -196,11 +195,12 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
                       key={r.level} 
                       className={`flex items-center gap-4 p-3 rounded-lg transition-all duration-300 hover:scale-105 ${
                         userLevel >= r.level 
-                          ? 'bg-gradient-to-r shadow-lg' 
+                          ? 'shadow-lg border' 
                           : 'bg-muted/50'
                       }`}
                       style={userLevel >= r.level ? {
-                        backgroundImage: `linear-gradient(135deg, ${theme?.colors.primary}20, ${theme?.colors.secondary}20)`
+                        background: `linear-gradient(135deg, ${theme?.colors.primary}15, ${theme?.colors.secondary}15)`,
+                        borderColor: `${theme?.colors.primary}30`
                       } : {}}
                     >
                       <div 
@@ -268,10 +268,10 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
                   className="space-y-2 animate-fade-in"
                 >
                   <CollapsibleTrigger 
-                    className="flex justify-between items-center w-full p-3 md:p-4 rounded-lg transition-all duration-300 font-bold text-left group hover:scale-[1.02] relative overflow-hidden"
+                    className="flex justify-between items-center w-full p-3 md:p-4 rounded-lg transition-all duration-300 font-bold text-left group hover:scale-[1.02] relative overflow-hidden border"
                     style={{
-                      backgroundColor: `${theme?.colors.primary}15`,
-                      borderLeft: `4px solid ${theme?.colors.primary}`
+                      backgroundColor: `${theme?.colors.primary}10`,
+                      borderColor: `${theme?.colors.primary}30`
                     }}
                   >
                     <div className="flex items-center gap-3 flex-1">
@@ -320,16 +320,16 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
                         return (
                         <div 
                           key={challenge.id} 
-                          className={`flex items-center justify-between p-3 md:p-4 rounded-lg transition-all duration-300 hover:scale-[1.01] ${
+                          className={`flex items-center justify-between p-3 md:p-4 rounded-lg transition-all duration-300 hover:scale-[1.01] border ${
                             challenge.completed 
-                              ? 'shadow-lg border-l-4' 
+                              ? 'shadow-lg' 
                               : isLocked 
                                 ? 'bg-muted/50' 
                                 : 'bg-secondary hover:shadow-md'
                           }`}
                           style={challenge.completed ? {
-                            backgroundColor: `${theme?.colors.primary}10`,
-                            borderLeftColor: theme?.colors.secondary
+                            backgroundColor: `${theme?.colors.primary}15`,
+                            borderColor: `${theme?.colors.secondary}50`
                           } : {}}
                         >
                           <div className="flex items-center flex-1 min-w-0">
