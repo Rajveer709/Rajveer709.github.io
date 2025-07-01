@@ -1,12 +1,13 @@
+
 import { NavLink } from 'react-router-dom';
 import { Home, PlusSquare, Calendar, Settings, Trophy } from 'lucide-react';
 
 export const BottomNavBar = () => {
   const navItems = [
-    { to: '/', icon: Home, label: 'Home' },
-    { to: '/calendar', icon: Calendar, label: 'Calendar' },
-    { to: '/add-task', icon: PlusSquare, label: 'Add Task' },
-    { to: '/challenges', icon: Trophy, label: 'Challenges' },
+    { to: '/app', icon: Home, label: 'Home' },
+    { to: '/app/calendar', icon: Calendar, label: 'Calendar' },
+    { to: '/app/add-task', icon: PlusSquare, label: 'Add Task' },
+    { to: '/app/challenges', icon: Trophy, label: 'Challenges' },
   ];
 
   const linkClasses = "flex flex-col items-center justify-center gap-1 transition-all duration-200 ease-in-out text-foreground/60 hover:text-primary";
@@ -19,7 +20,7 @@ export const BottomNavBar = () => {
           <NavLink
             key={item.label}
             to={item.to}
-            end={item.to === '/'}
+            end={item.to === '/app'}
             className={({ isActive }) => `${linkClasses} ${isActive ? activeLinkClasses : ''}`}
           >
             <item.icon className="w-5 h-5" />
@@ -27,7 +28,7 @@ export const BottomNavBar = () => {
           </NavLink>
         ))}
         <NavLink
-          to="/settings"
+          to="/app/settings"
           className={({ isActive }) => `${linkClasses} ${isActive ? activeLinkClasses : ''}`}
         >
           <Settings className="w-5 h-5" />

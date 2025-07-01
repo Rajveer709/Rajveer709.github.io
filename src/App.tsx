@@ -64,7 +64,7 @@ function App() {
             <Route path="/auth" element={<PublicRoute session={session} />}>
               <Route index element={<AuthPage />} />
             </Route>
-            <Route path="/app/*" element={<ProtectedRoute session={session} />}>
+            <Route path="/app" element={<ProtectedRoute session={session} />}>
               <Route path="*" element={<Index />} />
             </Route>
             <Route path="/" element={session ? <Navigate to="/app" replace /> : <Navigate to="/landing" replace />} />
