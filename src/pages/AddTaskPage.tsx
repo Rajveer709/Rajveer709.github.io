@@ -107,7 +107,6 @@ const taskCategories = {
 
 type TaskCategoriesType = typeof taskCategories;
 type CategoryKey = keyof TaskCategoriesType;
-type SubCategoryKey<T extends CategoryKey> = keyof Omit<TaskCategoriesType[T], 'icon'>;
 
 const vehicleFluidOptions = [
   'Engine Oil',
@@ -150,6 +149,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   const [medicineName, setMedicineName] = useState('');
   const [selectedFluid, setSelectedFluid] = useState('');
   const [isQuickTasksOpen, setIsQuickTasksOpen] = useState(true);
+  const [expandedSubCategory, setExpandedSubCategory] = useState<string>('');
 
   const selectedPriorityDetails = priorities.find(p => p.value === priority);
 
@@ -158,12 +158,15 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
     setSelectedSubCategory('');
     setSelectedTask('');
     setTitle('');
+    setExpandedSubCategory('');
   };
 
   const handleSubCategorySelect = (subCategory: string) => {
     setSelectedSubCategory(subCategory);
     setSelectedTask('');
     setTitle('');
+    // Toggle subcategory expansion
+    setExpandedSubCategory(expandedSubCategory === subCategory ? '' : subCategory);
   };
 
   const handleTaskSelect = (task: string) => {
@@ -258,90 +261,106 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-4 max-w-6xl">
-        <PageHeader title="Add Task" onBack={onBack} className="mb-4" />
+      <div className="container mx-auto px-4 py-4 max-w-4xl">
+        <PageHeader title="Add Task" onBack={onBack} className="mb-6" />
 
-        {/* Mobile-optimized single column layout */}
         <div className="space-y-6">
-          {/* Quick Tasks Section - Collapsible with animation */}
-          <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="pb-3">
-              <Collapsible
-                open={isQuickTasksOpen}
-                onOpenChange={setIsQuickTasksOpen}
-              >
-                <CollapsibleTrigger className="flex w-full items-center justify-between hover:bg-muted/30 rounded-lg p-3 transition-all duration-300 group">
-                  <CardTitle className="text-lg font-semibold text-primary flex items-center gap-2">
-                    <div className={cn(
-                      "p-2 rounded-full bg-primary/20 transition-all duration-500 group-hover:scale-110",
-                      isQuickTasksOpen && "bg-primary/30"
-                    )}>
-                      <Plus className={cn(
-                        "h-4 w-4 transition-all duration-500",
-                        isQuickTasksOpen && "rotate-45"
-                      )} />
-                    </div>
-                    Quick Tasks
-                  </CardTitle>
-                  <ChevronRight className={cn(
-                    "h-5 w-5 transform transition-all duration-500 ease-out",
-                    isQuickTasksOpen ? 'rotate-90 text-primary' : 'text-muted-foreground'
-                  )} />
-                </CollapsibleTrigger>
-                
-                <CollapsibleContent className="data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up overflow-hidden">
-                  <div className="pt-2 animate-fade-in">
-                    <Accordion type="single" collapsible className="w-full space-y-2" value={selectedCategory} onValueChange={handleCategorySelect}>
-                      {Object.keys(taskCategories).map((category) => {
-                        const CategoryIcon = taskCategories[category as CategoryKey].icon;
-                        return (
-                          <AccordionItem 
-                            value={category} 
-                            key={category} 
-                            className="border border-border/40 rounded-xl mb-2 overflow-hidden bg-card/50 shadow-sm hover:shadow-md transition-all duration-300 hover:border-border/80 last:mb-0"
-                          >
-                            <AccordionTrigger className="hover:no-underline px-4 py-3 text-sm hover:bg-muted/20 transition-all duration-300 group">
-                              <div className="flex items-center gap-3">
-                                <div className="p-1.5 rounded-lg bg-primary/15 group-hover:bg-primary/25 transition-colors duration-300">
-                                  <CategoryIcon className="h-4 w-4 text-primary" />
-                                </div>
-                                <span className="font-medium">{category}</span>
-                              </div>
-                            </AccordionTrigger>
-                            <AccordionContent className="animate-accordion-down">
-                              <div className="px-4 pb-3 pt-1">
-                                <div className="grid gap-2">
-                                  {Object.keys(taskCategories[category as CategoryKey]).filter(key => key !== 'icon').map((subCategory) => (
-                                    <Button
-                                      key={subCategory}
-                                      variant={selectedSubCategory === subCategory ? "default" : "ghost"}
-                                      className="w-full justify-between text-left text-sm font-normal h-auto py-2.5 px-3 hover:bg-muted/40 transition-all duration-300 hover:scale-[1.01] group"
-                                      onClick={() => handleSubCategoryClick(category, subCategory)}
-                                    >
-                                      <span>{subCategory}</span>
-                                      <ChevronRight className="h-3.5 w-3.5 opacity-50 group-hover:opacity-100 transition-opacity" />
-                                    </Button>
-                                  ))}
-                                </div>
-                              </div>
-                            </AccordionContent>
-                          </AccordionItem>
-                        );
-                      })}
-                    </Accordion>
+          {/* Quick Tasks Section - Slimmer and more refined */}
+          <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm hover:shadow-md transition-all duration-300">
+            <Collapsible
+              open={isQuickTasksOpen}
+              onOpenChange={setIsQuickTasksOpen}
+            >
+              <CollapsibleTrigger className="flex w-full items-center justify-between hover:bg-muted/20 rounded-lg p-4 transition-all duration-300 group">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-full bg-primary/15 group-hover:bg-primary/25 transition-colors duration-300">
+                    <Plus className="h-4 w-4 text-primary" />
                   </div>
-                </CollapsibleContent>
-              </Collapsible>
-            </CardHeader>
+                  <CardTitle className="text-lg font-semibold text-primary">Quick Tasks</CardTitle>
+                </div>
+                <ChevronRight className={cn(
+                  "h-5 w-5 transform transition-all duration-300 ease-out",
+                  isQuickTasksOpen ? 'rotate-90 text-primary' : 'text-muted-foreground'
+                )} />
+              </CollapsibleTrigger>
+              
+              <CollapsibleContent className="data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up overflow-hidden">
+                <div className="px-4 pb-4 animate-fade-in">
+                  <Accordion type="single" collapsible className="w-full space-y-2" value={selectedCategory} onValueChange={handleCategorySelect}>
+                    {Object.keys(taskCategories).map((category) => {
+                      const CategoryIcon = taskCategories[category as CategoryKey].icon;
+                      return (
+                        <AccordionItem 
+                          value={category} 
+                          key={category} 
+                          className="border border-border/40 rounded-lg mb-2 overflow-hidden bg-card/30 shadow-sm hover:shadow-md transition-all duration-300 hover:border-border/80 last:mb-0"
+                        >
+                          <AccordionTrigger className="hover:no-underline px-4 py-3 text-sm hover:bg-muted/10 transition-all duration-300 group">
+                            <div className="flex items-center gap-3">
+                              <div className="p-1.5 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
+                                <CategoryIcon className="h-4 w-4 text-primary" />
+                              </div>
+                              <span className="font-medium">{category}</span>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent className="animate-accordion-down">
+                            <div className="px-4 pb-3 pt-1">
+                              <div className="space-y-2">
+                                {Object.keys(taskCategories[category as CategoryKey]).filter(key => key !== 'icon').map((subCategory) => {
+                                  const subCategoryTasks = taskCategories[category as CategoryKey][subCategory as keyof Omit<TaskCategoriesType[CategoryKey], 'icon'>] as string[];
+                                  return (
+                                    <div key={subCategory} className="space-y-1">
+                                      <Button
+                                        variant={selectedSubCategory === subCategory ? "default" : "ghost"}
+                                        className="w-full justify-between text-left text-sm font-normal h-auto py-2.5 px-3 hover:bg-muted/30 transition-all duration-300 hover:scale-[1.01] group"
+                                        onClick={() => handleSubCategorySelect(subCategory)}
+                                      >
+                                        <span>{subCategory}</span>
+                                        <ChevronRight className={cn(
+                                          "h-3.5 w-3.5 transition-all duration-200",
+                                          expandedSubCategory === subCategory ? 'rotate-90' : '',
+                                          "opacity-50 group-hover:opacity-100"
+                                        )} />
+                                      </Button>
+                                      
+                                      {/* Show subcategory tasks when expanded */}
+                                      {expandedSubCategory === subCategory && subCategoryTasks && (
+                                        <div className="ml-4 space-y-1 animate-fade-in">
+                                          {subCategoryTasks.map((task) => (
+                                            <Button
+                                              key={task}
+                                              variant={selectedTask === task ? "default" : "ghost"}
+                                              size="sm"
+                                              className="w-full justify-start text-left text-xs py-2 px-3 hover:bg-muted/40 transition-all duration-200"
+                                              onClick={() => handleTaskSelect(task)}
+                                            >
+                                              {task}
+                                            </Button>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      );
+                    })}
+                  </Accordion>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           </Card>
 
-          {/* Task Form - Optimized for mobile */}
-          <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-lg">
+          {/* Task Form - Compact mobile layout */}
+          <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm">
             <CardHeader className="pb-4">
               <CardTitle className="text-lg font-semibold text-primary">Task Details</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">Task Title</label>
                   <Input
@@ -349,7 +368,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
-                    className="border-input bg-background h-11"
+                    className="border-input bg-background h-10"
                   />
                 </div>
 
@@ -364,12 +383,12 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                   />
                 </div>
 
-                {/* Compact grid for mobile */}
-                <div className="space-y-4">
+                {/* Compact grid layout for mobile */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Priority</label>
                     <Select value={priority} onValueChange={(value: 'low' | 'medium' | 'high' | 'urgent') => setPriority(value)}>
-                      <SelectTrigger className="border-input bg-background h-11">
+                      <SelectTrigger className="border-input bg-background h-10">
                         <SelectValue>
                           {selectedPriorityDetails && (
                             <div className="flex items-center gap-2">
@@ -397,7 +416,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Repeat</label>
                     <Select value={repeatFrequency} onValueChange={setRepeatFrequency}>
-                      <SelectTrigger className="border-input bg-background h-11">
+                      <SelectTrigger className="border-input bg-background h-10">
                         <SelectValue>
                           <div className="flex items-center gap-2">
                             <Repeat className="h-4 w-4" />
@@ -426,7 +445,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal border-input bg-background h-11"
+                          "w-full justify-start text-left font-normal border-input bg-background h-10"
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -446,7 +465,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
 
                 <Button 
                   type="submit" 
-                  className="w-full h-12 text-base font-medium bg-primary hover:bg-primary/90 transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                  className="w-full h-11 text-base font-medium bg-primary hover:bg-primary/90 transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl"
                   disabled={!title || !selectedCategory}
                 >
                   Add Task
