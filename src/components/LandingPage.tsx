@@ -78,16 +78,17 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
             <div className="bg-background/20 backdrop-blur-sm p-3 md:p-4 rounded-2xl md:rounded-3xl shadow-lg mr-3 md:mr-4 border">
               <CheckSquare className="w-8 h-8 md:w-12 md:h-12 text-primary" />
             </div>
-            <h1 
-              className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r"
-              style={{ backgroundImage: `linear-gradient(to right, ${theme?.colors.primary}, ${theme?.colors.secondary})` }}
-            >
+            <h1 className="text-4xl md:text-6xl font-bold text-primary">
               Life Admin
             </h1>
           </div>
           
-          <p className="text-xl md:text-2xl font-medium text-foreground/90 mb-4 animate-fade-in" style={{ animationDelay: '200ms' }}>
+          <p className="text-xl md:text-2xl font-medium text-foreground/90 mb-2 animate-fade-in" style={{ animationDelay: '200ms' }}>
             Simplify Life. One Task at a Time.
+          </p>
+          
+          <p className="text-lg md:text-xl text-muted-foreground mb-4 animate-fade-in" style={{ animationDelay: '250ms' }}>
+            Your personal assistant for life admin tasks
           </p>
           
           <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8 px-4 animate-fade-in" style={{ animationDelay: '300ms' }}>

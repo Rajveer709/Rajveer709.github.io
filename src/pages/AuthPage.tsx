@@ -102,7 +102,7 @@ export const AuthPage = () => {
             <div className="bg-background/20 backdrop-blur-sm p-3 md:p-4 rounded-2xl md:rounded-3xl shadow-lg mr-3 md:mr-4 border">
               <CheckSquare className="w-8 h-8 md:w-12 md:h-12 text-primary" />
             </div>
-            <h1 className="text-3xl md:text-5xl font-bold text-foreground">
+            <h1 className="text-3xl md:text-5xl font-bold text-primary">
               Life Admin
             </h1>
           </div>

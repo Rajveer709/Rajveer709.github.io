@@ -260,7 +260,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <div className="container mx-auto px-4 py-4 max-w-4xl">
         <PageHeader title="Add Task" onBack={onBack} className="mb-6" />
 
@@ -271,9 +271,9 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
               open={isQuickTasksOpen}
               onOpenChange={setIsQuickTasksOpen}
             >
-              <CollapsibleTrigger className="flex w-full items-center justify-between hover:bg-muted/20 rounded-lg p-4 transition-all duration-300 group">
+              <CollapsibleTrigger className="flex w-full items-center justify-between hover:bg-muted/20 rounded-lg p-3 transition-all duration-300 group">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-full bg-primary/15 group-hover:bg-primary/25 transition-colors duration-300">
+                  <div className="p-1.5 rounded-full bg-primary/15">
                     <Plus className="h-4 w-4 text-primary" />
                   </div>
                   <CardTitle className="text-lg font-semibold text-primary">Quick Tasks</CardTitle>
@@ -285,7 +285,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
               </CollapsibleTrigger>
               
               <CollapsibleContent className="data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up overflow-hidden">
-                <div className="px-4 pb-4 animate-fade-in">
+                <div className="px-3 pb-3 animate-fade-in">
                   <Accordion type="single" collapsible className="w-full space-y-2" value={selectedCategory} onValueChange={handleCategorySelect}>
                     {Object.keys(taskCategories).map((category) => {
                       const CategoryIcon = taskCategories[category as CategoryKey].icon;
@@ -295,7 +295,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                           key={category} 
                           className="border border-border/40 rounded-lg mb-2 overflow-hidden bg-card/30 shadow-sm hover:shadow-md transition-all duration-300 hover:border-border/80 last:mb-0"
                         >
-                          <AccordionTrigger className="hover:no-underline px-4 py-3 text-sm hover:bg-muted/10 transition-all duration-300 group">
+                          <AccordionTrigger className="hover:no-underline px-3 py-2.5 text-sm hover:bg-muted/10 transition-all duration-300 group">
                             <div className="flex items-center gap-3">
                               <div className="p-1.5 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
                                 <CategoryIcon className="h-4 w-4 text-primary" />
@@ -304,7 +304,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                             </div>
                           </AccordionTrigger>
                           <AccordionContent className="animate-accordion-down">
-                            <div className="px-4 pb-3 pt-1">
+                            <div className="px-3 pb-2.5 pt-1">
                               <div className="space-y-2">
                                 {Object.keys(taskCategories[category as CategoryKey]).filter(key => key !== 'icon').map((subCategory) => {
                                   const subCategoryTasks = taskCategories[category as CategoryKey][subCategory as keyof Omit<TaskCategoriesType[CategoryKey], 'icon'>] as string[];
@@ -312,7 +312,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                                     <div key={subCategory} className="space-y-1">
                                       <Button
                                         variant={selectedSubCategory === subCategory ? "default" : "ghost"}
-                                        className="w-full justify-between text-left text-sm font-normal h-auto py-2.5 px-3 hover:bg-muted/30 transition-all duration-300 hover:scale-[1.01] group"
+                                        className="w-full justify-between text-left text-sm font-normal h-auto py-2 px-2.5 hover:bg-muted/30 transition-all duration-300 hover:scale-[1.01] group"
                                         onClick={() => handleSubCategorySelect(subCategory)}
                                       >
                                         <span>{subCategory}</span>
@@ -325,13 +325,13 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                                       
                                       {/* Show subcategory tasks when expanded */}
                                       {expandedSubCategory === subCategory && subCategoryTasks && (
-                                        <div className="ml-4 space-y-1 animate-fade-in">
+                                        <div className="ml-3 space-y-1 animate-fade-in">
                                           {subCategoryTasks.map((task) => (
                                             <Button
                                               key={task}
                                               variant={selectedTask === task ? "default" : "ghost"}
                                               size="sm"
-                                              className="w-full justify-start text-left text-xs py-2 px-3 hover:bg-muted/40 transition-all duration-200"
+                                              className="w-full justify-start text-left text-xs py-1.5 px-2.5 hover:bg-muted/40 transition-all duration-200"
                                               onClick={() => handleTaskSelect(task)}
                                             >
                                               {task}
