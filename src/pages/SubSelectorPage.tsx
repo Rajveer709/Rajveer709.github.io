@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Task } from './Index';
 import { Button } from '@/components/ui/button';
@@ -8,28 +7,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CalendarIcon, ChevronRight, DollarSign, Heart, Home, Briefcase, Gavel, Monitor, Gift, Car, Repeat, Plus } from 'lucide-react';
+import { CalendarIcon, ArrowLeft, Repeat, DollarSign, Heart, Home, Briefcase, Gavel, Monitor, Gift, Car } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { PageHeader } from '@/components/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 
-interface AddTaskPageProps {
+interface SubSelectorPageProps {
+  category: string;
+  subCategory: string;
   onAddTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
   onBack: () => void;
-  onNavigateToSubSelector: (category: string, subCategory: string) => void;
   currentTheme: string;
   profile: { name: string | null } | null;
 }
@@ -134,9 +123,7 @@ const repeatOptions = [
   { value: 'monthly', label: 'Monthly' }
 ];
 
-export const AddTaskPage = ({ onAddTask, onBack, onNavigateToSubSelector, currentTheme, profile }: AddTaskPageProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string>('');
+export const SubSelectorPage = ({ category, subCategory, onAddTask, onBack, currentTheme, profile }: SubSelectorPageProps) => {
   const [selectedTask, setSelectedTask] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -150,22 +137,10 @@ export const AddTaskPage = ({ onAddTask, onBack, onNavigateToSubSelector, curren
   const [streamingApp, setStreamingApp] = useState('');
   const [medicineName, setMedicineName] = useState('');
   const [selectedFluid, setSelectedFluid] = useState('');
-  const [isQuickTasksOpen, setIsQuickTasksOpen] = useState(false);
 
   const selectedPriorityDetails = priorities.find(p => p.value === priority);
-
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
-    setSelectedSubCategory('');
-    setSelectedTask('');
-    setTitle('');
-  };
-
-  const handleSubCategorySelect = (subCategory: string) => {
-    setSelectedSubCategory(subCategory);
-    setSelectedTask('');
-    setTitle('');
-  };
+  const CategoryIcon = taskCategories[category as CategoryKey]?.icon || Gift;
+  const tasks = taskCategories[category as CategoryKey]?.[subCategory as SubCategoryKey<CategoryKey>] as readonly string[] || [];
 
   const handleTaskSelect = (task: string) => {
     setSelectedTask(task);
@@ -189,15 +164,7 @@ export const AddTaskPage = ({ onAddTask, onBack, onNavigateToSubSelector, curren
     }
     
     // Set title based on selection
-    setTitle(`${selectedSubCategory}: ${task}`);
-  };
-
-  const handleSubCategoryClick = (category: string, subCategory: string) => {
-    if (taskCategories[category as CategoryKey][subCategory as SubCategoryKey<CategoryKey>].length > 3) {
-      onNavigateToSubSelector(category, subCategory);
-    } else {
-      handleSubCategorySelect(subCategory);
-    }
+    setTitle(`${subCategory}: ${task}`);
   };
 
   const handleStreamingSubmit = () => {
@@ -227,14 +194,14 @@ export const AddTaskPage = ({ onAddTask, onBack, onNavigateToSubSelector, curren
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!title || !selectedCategory || !dueDate) {
+    if (!title || !category || !dueDate) {
       return;
     }
 
     onAddTask({
       title,
       description: repeatFrequency !== 'none' ? `${description}\n\nRepeats: ${repeatFrequency}` : description,
-      category: selectedCategory,
+      category,
       priority,
       dueDate,
       completed: false
@@ -254,70 +221,35 @@ export const AddTaskPage = ({ onAddTask, onBack, onNavigateToSubSelector, curren
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-6 max-w-6xl">
-        <PageHeader title="Add Task" onBack={onBack} className="mb-6" />
+      <div className="container mx-auto px-4 py-6 max-w-4xl">
+        <PageHeader 
+          title={`${category} - ${subCategory}`} 
+          onBack={onBack} 
+          className="mb-6" 
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Quick Tasks Section */}
+          {/* Task Selection */}
           <Card className="h-fit bg-card border-border shadow-lg">
-            <CardHeader className="pb-4">
-              <Collapsible
-                open={isQuickTasksOpen}
-                onOpenChange={setIsQuickTasksOpen}
-              >
-                <CollapsibleTrigger className="flex w-full items-center justify-between hover:bg-muted/50 rounded-lg p-2 transition-colors">
-                  <CardTitle className="text-xl font-semibold text-primary flex items-center gap-2">
-                    <Plus className="h-5 w-5" />
-                    Quick Tasks
-                  </CardTitle>
-                  <ChevronRight className={`h-5 w-5 transform transition-all duration-300 ${isQuickTasksOpen ? 'rotate-90' : ''}`} />
-                </CollapsibleTrigger>
-              </Collapsible>
+            <CardHeader>
+              <CardTitle className="text-xl font-semibold text-primary flex items-center gap-2">
+                <CategoryIcon className="h-5 w-5" />
+                Select Task
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <Collapsible
-                open={isQuickTasksOpen}
-                onOpenChange={setIsQuickTasksOpen}
-              >
-                <CollapsibleContent className="animate-accordion-down">
-                  <Accordion type="single" collapsible className="w-full" value={selectedCategory} onValueChange={handleCategorySelect}>
-                    {Object.keys(taskCategories).map((category) => {
-                      const CategoryIcon = taskCategories[category as CategoryKey].icon;
-                      return (
-                        <AccordionItem 
-                          value={category} 
-                          key={category} 
-                          className="border border-border rounded-lg mb-3 overflow-hidden bg-card shadow-sm last:mb-0 hover:shadow-md transition-shadow"
-                        >
-                          <AccordionTrigger className="hover:no-underline px-4 py-3 text-base hover:bg-muted/30 transition-colors">
-                            <div className="flex items-center gap-3">
-                              <CategoryIcon className="h-5 w-5 text-primary" />
-                              <span>{category}</span>
-                            </div>
-                          </AccordionTrigger>
-                          <AccordionContent className="animate-accordion-down">
-                            <div className="px-4 pb-2">
-                              <div className="space-y-2">
-                                {Object.keys(taskCategories[category as CategoryKey]).filter(key => key !== 'icon').map((subCategory) => (
-                                  <Button
-                                    key={subCategory}
-                                    variant={selectedSubCategory === subCategory ? "default" : "outline"}
-                                    className="w-full justify-between text-left text-sm font-normal h-auto py-3 px-3 hover:bg-muted/50 transition-all duration-200 hover:scale-[1.02]"
-                                    onClick={() => handleSubCategoryClick(category, subCategory)}
-                                  >
-                                    <span>{subCategory}</span>
-                                    <ChevronRight className="h-4 w-4" />
-                                  </Button>
-                                ))}
-                              </div>
-                            </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      );
-                    })}
-                  </Accordion>
-                </CollapsibleContent>
-              </Collapsible>
+              <div className="grid gap-3">
+                {tasks.map((task) => (
+                  <Button
+                    key={task}
+                    variant={selectedTask === task ? "default" : "outline"}
+                    className="w-full justify-start text-left text-sm font-normal h-auto py-3 px-4 hover:bg-muted/50 transition-all duration-200 hover:scale-[1.02] animate-fade-in"
+                    onClick={() => handleTaskSelect(task)}
+                  >
+                    {task}
+                  </Button>
+                ))}
+              </div>
             </CardContent>
           </Card>
 
@@ -432,7 +364,7 @@ export const AddTaskPage = ({ onAddTask, onBack, onNavigateToSubSelector, curren
                 <Button 
                   type="submit" 
                   className="w-full h-12 text-base font-medium bg-primary hover:bg-primary/90 transition-all duration-200 hover:scale-[1.02]"
-                  disabled={!title || !selectedCategory}
+                  disabled={!title || !category}
                 >
                   Add Task
                 </Button>
@@ -530,8 +462,6 @@ export const AddTaskPage = ({ onAddTask, onBack, onNavigateToSubSelector, curren
               </p>
               <Button onClick={() => {
                 setShowRickRollDialog(false);
-                setSelectedCategory('');
-                setSelectedSubCategory('');
                 setSelectedTask('');
               }}>
                 Close
