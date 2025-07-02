@@ -196,7 +196,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
 
   const handleSubCategoryClick = (category: string, subCategory: string) => {
     const categoryData = taskCategories[category as CategoryKey];
-    const subCategoryData = categoryData[subCategory as SubCategoryKey<CategoryKey>] as string[];
+    const subCategoryData = categoryData[subCategory as keyof Omit<TaskCategoriesType[CategoryKey], 'icon'>] as string[];
     
     if (subCategoryData && subCategoryData.length > 3) {
       // For sub-categories with many options, we could navigate to a sub-selector
