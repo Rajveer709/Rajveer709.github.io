@@ -8,10 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CalendarIcon, ChevronRight } from 'lucide-react';
+import { CalendarIcon, ChevronRight, DollarSign, Heart, Home, Briefcase, Gavel, Monitor, Gift, Car, Repeat, Plus } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { themes, defaultTheme } from '../config/themes';
 import {
   Accordion,
   AccordionContent,
@@ -23,8 +22,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { useTheme } from 'next-themes';
 import { PageHeader } from '@/components/PageHeader';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface AddTaskPageProps {
   onAddTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
@@ -35,6 +34,7 @@ interface AddTaskPageProps {
 
 const taskCategories = {
   'Financial Tasks': {
+    icon: DollarSign,
     'Utility bills': ['Electricity', 'Water', 'Gas'],
     'Insurance': ['Health', 'Auto', 'Home', 'Life Premiums'],
     'Credit Card': ['Payments', 'Installments'],
@@ -44,6 +44,7 @@ const taskCategories = {
     'Subscriptions': ['Streaming apps', 'Memberships']
   },
   'Health & Wellness': {
+    icon: Heart,
     'Medical check-ups': ['General practitioners', 'Specialists'],
     'Dentist visits': ['Check-Ups', 'Cleanings'],
     'Medications': ['Dosages', 'Refill Reminders'],
@@ -53,6 +54,7 @@ const taskCategories = {
     'Mental health': ['Therapy', 'Meditation', 'Self-care']
   },
   'Home Management': {
+    icon: Home,
     'Household chores': ['Cleaning', 'Repairs', 'Inspections'],
     'Appliance upkeep': ['Maintenance', 'Warranty reminders'],
     'Vehicle care': ['Servicing', 'Oil changes & Top-up', 'Registration', 'Tire change'],
@@ -60,6 +62,7 @@ const taskCategories = {
     'Waste schedule': ['Trash', 'Recycling']
   },
   'Work & Professional': {
+    icon: Briefcase,
     'Meetings & Deadlines': ['Meetings & Deadlines'],
     'Project Milestones': ['Project Milestones'],
     'Certifications & courses': ['Certifications & courses'],
@@ -67,6 +70,7 @@ const taskCategories = {
     'Work-Related Expenses': ['Documentation']
   },
   'Personal & Social': {
+    icon: Gift,
     'Celebrations': ['Birthdays', 'Anniversaries'],
     'Social Planning': ['Events', 'Meetups'],
     'Travel Logistics': ['Tickets', 'Accommodation', 'Itineraries'],
@@ -74,31 +78,35 @@ const taskCategories = {
     'Reading': ['Reading list']
   },
   'Legal Things': {
+    icon: Gavel,
     'Document Renewals': ['Passport', 'License', 'IDs'],
     'Form Submissions': ['Permits', 'Claims', 'Applications'],
     'Civic Tasks': ['Voter Registration', 'Election Reminders'],
     'Estate Management': ['Will Updates', 'Estate Planning']
   },
   'Digital Life': {
+    icon: Monitor,
     'Passwords': ['Regular Updates'],
     'Backups': ['Photos', 'Docs', 'Cloud Backups'],
     'Software/Device Updates': ['Software/Device Updates'],
     'Inbox upkeep': ['Key follow-ups', 'Zero-Inbox Efforts']
   },
   'Miscellaneous': {
+    icon: Car,
     'Charitable giving': ['Donation Reminders'],
     'Pet Care': ['Vet Visits', 'Grooming'],
     'Child-Related activities': ['School', 'Appointments'],
     'Deliveries': ['Parcel Tracking', 'Home Deliveries']
   },
   'Hidden Hacking Features': {
+    icon: Gift,
     'Secret Stuff': ['Click for a surprise 🎉']
   }
 } as const;
 
 type TaskCategoriesType = typeof taskCategories;
 type CategoryKey = keyof TaskCategoriesType;
-type SubCategoryKey<T extends CategoryKey> = keyof TaskCategoriesType[T];
+type SubCategoryKey<T extends CategoryKey> = keyof Omit<TaskCategoriesType[T], 'icon'>;
 
 const vehicleFluidOptions = [
   'Engine Oil',
@@ -117,26 +125,14 @@ const priorities = [
   { value: 'urgent', label: 'Urgent Priority', color: 'bg-red-500', emoji: '🚨' }
 ];
 
-const getThemeBackgroundStyle = (currentTheme: string, resolvedTheme: string | undefined) => {
-    const theme = themes.find(t => t.value === currentTheme) || themes.find(t => t.value === defaultTheme);
-    if (!theme) return {};
-    
-    const primaryColor = theme.colors.primary;
-    const r = parseInt(primaryColor.slice(1, 3), 16);
-    const g = parseInt(primaryColor.slice(3, 5), 16);
-    const b = parseInt(primaryColor.slice(5, 7), 16);
-    
-    const isDark = resolvedTheme === 'dark';
-    const startColorOpacity = isDark ? 0.2 : 0.1;
-    const endColor = isDark ? 'hsl(222.2, 84%, 4.9%)' : 'white';
-
-    return {
-        background: `linear-gradient(to bottom, rgba(${r}, ${g}, ${b}, ${startColorOpacity}), ${endColor})`
-    };
-};
+const repeatOptions = [
+  { value: 'none', label: 'No Repeat' },
+  { value: 'daily', label: 'Daily' },
+  { value: 'weekly', label: 'Weekly' },
+  { value: 'monthly', label: 'Monthly' }
+];
 
 export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTaskPageProps) => {
-  const { resolvedTheme } = useTheme();
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedSubCategory, setSelectedSubCategory] = useState<string>('');
   const [selectedTask, setSelectedTask] = useState<string>('');
@@ -144,6 +140,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   const [description, setDescription] = useState<string>('');
   const [priority, setPriority] = useState<'low' | 'medium' | 'high' | 'urgent'>('medium');
   const [dueDate, setDueDate] = useState<Date>(new Date());
+  const [repeatFrequency, setRepeatFrequency] = useState<string>('none');
   const [showStreamingDialog, setShowStreamingDialog] = useState(false);
   const [showMedicationDialog, setShowMedicationDialog] = useState(false);
   const [showVehicleDialog, setShowVehicleDialog] = useState(false);
@@ -226,7 +223,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
 
     onAddTask({
       title,
-      description,
+      description: repeatFrequency !== 'none' ? `${description}\n\nRepeats: ${repeatFrequency}` : description,
       category: selectedCategory,
       priority,
       dueDate,
@@ -237,113 +234,179 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   };
 
   return (
-    <div>
-      <div className="container mx-auto px-4 py-6 max-w-4xl">
-        <PageHeader title="Create Task" onBack={onBack} />
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-6 max-w-6xl">
+        <PageHeader title="Create Task" onBack={onBack} className="mb-6" />
 
-        <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Quick Tasks Section */}
-            <div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Quick Tasks Section */}
+          <Card className="h-fit">
+            <CardHeader className="pb-4">
               <Collapsible
                 open={isQuickTasksOpen}
                 onOpenChange={setIsQuickTasksOpen}
               >
-                <CollapsibleTrigger className="flex w-full items-center justify-between text-xl font-semibold text-primary mb-4">
-                  <span>Quick Tasks</span>
-                  <ChevronRight className={`h-6 w-6 transform transition-transform duration-300 ${isQuickTasksOpen ? 'rotate-90' : ''}`} />
+                <CollapsibleTrigger className="flex w-full items-center justify-between">
+                  <CardTitle className="text-xl font-semibold text-primary flex items-center gap-2">
+                    <Plus className="h-5 w-5" />
+                    Quick Tasks
+                  </CardTitle>
+                  <ChevronRight className={`h-5 w-5 transform transition-transform duration-300 ${isQuickTasksOpen ? 'rotate-90' : ''}`} />
                 </CollapsibleTrigger>
+              </Collapsible>
+            </CardHeader>
+            <CardContent>
+              <Collapsible
+                open={isQuickTasksOpen}
+                onOpenChange={setIsQuickTasksOpen}
+              >
                 <CollapsibleContent>
                   <Accordion type="single" collapsible className="w-full" value={selectedCategory} onValueChange={handleCategorySelect}>
-                    {Object.keys(taskCategories).map((category) => (
-                      <AccordionItem value={category} key={category} className="border rounded-lg mb-2 overflow-hidden bg-card/95 shadow-sm last:mb-0">
-                        <AccordionTrigger className="hover:no-underline px-4 text-base">{category}</AccordionTrigger>
-                        <AccordionContent>
-                          <div className="pl-4">
-                            <Accordion type="single" collapsible className="w-full" value={selectedSubCategory} onValueChange={handleSubCategorySelect}>
-                              {Object.keys(taskCategories[category as CategoryKey]).map((subCategory) => (
-                                <AccordionItem value={subCategory} key={subCategory} className="border border-muted rounded-md mb-1 last:mb-0">
-                                  <AccordionTrigger className="text-sm hover:no-underline px-4">{subCategory}</AccordionTrigger>
-                                  <AccordionContent>
-                                    <div className="pl-4 space-y-2">
-                                      {(taskCategories[category as CategoryKey][subCategory as SubCategoryKey<CategoryKey>] as readonly string[]).map((task) => (
-                                        <Button
-                                          key={task}
-                                          variant={selectedTask === task ? "default" : "secondary"}
-                                          className="w-full justify-start text-left text-sm font-normal h-auto py-2"
-                                          onClick={() => handleTaskSelect(task)}
-                                        >
-                                          {task}
-                                        </Button>
-                                      ))}
-                                    </div>
-                                  </AccordionContent>
-                                </AccordionItem>
-                              ))}
-                            </Accordion>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
+                    {Object.keys(taskCategories).map((category) => {
+                      const CategoryIcon = taskCategories[category as CategoryKey].icon;
+                      return (
+                        <AccordionItem 
+                          value={category} 
+                          key={category} 
+                          className="border rounded-lg mb-3 overflow-hidden bg-card shadow-sm last:mb-0"
+                        >
+                          <AccordionTrigger className="hover:no-underline px-4 py-3 text-base">
+                            <div className="flex items-center gap-3">
+                              <CategoryIcon className="h-5 w-5 text-primary" />
+                              <span>{category}</span>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <div className="px-4 pb-2">
+                              <Accordion type="single" collapsible className="w-full" value={selectedSubCategory} onValueChange={handleSubCategorySelect}>
+                                {Object.keys(taskCategories[category as CategoryKey]).filter(key => key !== 'icon').map((subCategory) => (
+                                  <AccordionItem 
+                                    value={subCategory} 
+                                    key={subCategory} 
+                                    className="border border-border/50 rounded-md mb-2 bg-muted/30 last:mb-0"
+                                  >
+                                    <AccordionTrigger className="text-sm hover:no-underline px-3 py-2">
+                                      {subCategory}
+                                    </AccordionTrigger>
+                                    <AccordionContent>
+                                      <div className="px-3 pb-2 space-y-2">
+                                        {(taskCategories[category as CategoryKey][subCategory as SubCategoryKey<CategoryKey>] as readonly string[]).map((task) => (
+                                          <Button
+                                            key={task}
+                                            variant={selectedTask === task ? "default" : "outline"}
+                                            className="w-full justify-start text-left text-sm font-normal h-auto py-2 px-3"
+                                            onClick={() => handleTaskSelect(task)}
+                                          >
+                                            {task}
+                                          </Button>
+                                        ))}
+                                      </div>
+                                    </AccordionContent>
+                                  </AccordionItem>
+                                ))}
+                              </Accordion>
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      );
+                    })}
                   </Accordion>
                 </CollapsibleContent>
               </Collapsible>
-            </div>
+            </CardContent>
+          </Card>
 
-            {/* Task Form */}
-            <div>
-              <h2 className="text-xl font-semibold text-primary mb-6">Task Details</h2>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
+          {/* Task Form */}
+          <Card className="h-fit">
+            <CardHeader>
+              <CardTitle className="text-xl font-semibold text-primary">Task Details</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Task Title</label>
                   <Input
-                    placeholder="Task title"
+                    placeholder="Enter task title..."
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
+                    className="border-input"
                   />
                 </div>
 
-                <div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Description (optional)</label>
                   <Textarea
-                    placeholder="Description (optional)"
+                    placeholder="Add task description..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     rows={3}
+                    className="border-input resize-none"
                   />
                 </div>
 
-                <div>
-                  <Select value={priority} onValueChange={(value: 'low' | 'medium' | 'high' | 'urgent') => setPriority(value)}>
-                    <SelectTrigger>
-                      {selectedPriorityDetails && (
-                        <div className="flex items-center gap-2">
-                          <span className={cn("h-2.5 w-2.5 rounded-full", selectedPriorityDetails.color)} />
-                          <span>{selectedPriorityDetails.label}</span>
-                          {selectedPriorityDetails.emoji && <span>{selectedPriorityDetails.emoji}</span>}
-                        </div>
-                      )}
-                    </SelectTrigger>
-                    <SelectContent>
-                      {priorities.map((p) => (
-                        <SelectItem key={p.value} value={p.value}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">Priority</label>
+                    <Select value={priority} onValueChange={(value: 'low' | 'medium' | 'high' | 'urgent') => setPriority(value)}>
+                      <SelectTrigger className="border-input">
+                        <SelectValue>
+                          {selectedPriorityDetails && (
+                            <div className="flex items-center gap-2">
+                              <span className={cn("h-2.5 w-2.5 rounded-full", selectedPriorityDetails.color)} />
+                              <span>{selectedPriorityDetails.label}</span>
+                              {selectedPriorityDetails.emoji && <span>{selectedPriorityDetails.emoji}</span>}
+                            </div>
+                          )}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {priorities.map((p) => (
+                          <SelectItem key={p.value} value={p.value}>
+                            <div className="flex items-center gap-2">
+                              <span className={cn("h-2.5 w-2.5 rounded-full", p.color)} />
+                              <span>{p.label}</span>
+                              {p.emoji && <span className="ml-auto">{p.emoji}</span>}
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">Repeat</label>
+                    <Select value={repeatFrequency} onValueChange={setRepeatFrequency}>
+                      <SelectTrigger className="border-input">
+                        <SelectValue>
                           <div className="flex items-center gap-2">
-                            <span className={cn("h-2.5 w-2.5 rounded-full", p.color)} />
-                            <span>{p.label}</span>
-                            {p.emoji && <span className="ml-auto">{p.emoji}</span>}
+                            <Repeat className="h-4 w-4" />
+                            <span>{repeatOptions.find(r => r.value === repeatFrequency)?.label}</span>
                           </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {repeatOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            <div className="flex items-center gap-2">
+                              <Repeat className="h-4 w-4" />
+                              <span>{option.label}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
 
-                <div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Due Date</label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal"
+                          "w-full justify-start text-left font-normal border-input"
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -363,17 +426,17 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
 
                 <Button 
                   type="submit" 
-                  className="w-full"
+                  className="w-full h-12 text-base font-medium"
                   disabled={!title || !selectedCategory}
                 >
-                  Add Task
+                  Create Task
                 </Button>
               </form>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Streaming App Dialog */}
+        {/* Dialogs */}
         <Dialog open={showStreamingDialog} onOpenChange={setShowStreamingDialog}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -397,7 +460,6 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
           </DialogContent>
         </Dialog>
 
-        {/* Medication Dialog */}
         <Dialog open={showMedicationDialog} onOpenChange={setShowMedicationDialog}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -421,7 +483,6 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
           </DialogContent>
         </Dialog>
 
-        {/* Vehicle Fluid Dialog */}
         <Dialog open={showVehicleDialog} onOpenChange={setShowVehicleDialog}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -452,7 +513,6 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
           </DialogContent>
         </Dialog>
 
-        {/* RickRoll Dialog */}
         <Dialog open={showRickRollDialog} onOpenChange={setShowRickRollDialog}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
