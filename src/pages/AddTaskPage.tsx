@@ -29,7 +29,6 @@ import { toast } from '@/hooks/use-toast';
 interface AddTaskPageProps {
   onAddTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
   onBack: () => void;
-  onNavigateToSubSelector: (category: string, subCategory: string) => void;
   currentTheme: string;
   profile: { name: string | null } | null;
 }
@@ -134,7 +133,7 @@ const repeatOptions = [
   { value: 'monthly', label: 'Monthly' }
 ];
 
-export const AddTaskPage = ({ onAddTask, onBack, onNavigateToSubSelector, currentTheme, profile }: AddTaskPageProps) => {
+export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTaskPageProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedSubCategory, setSelectedSubCategory] = useState<string>('');
   const [selectedTask, setSelectedTask] = useState<string>('');
@@ -193,8 +192,13 @@ export const AddTaskPage = ({ onAddTask, onBack, onNavigateToSubSelector, curren
   };
 
   const handleSubCategoryClick = (category: string, subCategory: string) => {
-    if (taskCategories[category as CategoryKey][subCategory as SubCategoryKey<CategoryKey>].length > 3) {
-      onNavigateToSubSelector(category, subCategory);
+    const categoryData = taskCategories[category as CategoryKey];
+    const subCategoryData = categoryData[subCategory as SubCategoryKey<CategoryKey>] as string[];
+    
+    if (subCategoryData && subCategoryData.length > 3) {
+      // For sub-categories with many options, we could navigate to a sub-selector
+      // For now, just handle it inline
+      handleSubCategorySelect(subCategory);
     } else {
       handleSubCategorySelect(subCategory);
     }
