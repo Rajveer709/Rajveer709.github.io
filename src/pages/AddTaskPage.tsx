@@ -323,22 +323,23 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                                         )} />
                                       </Button>
                                       
-                                      {/* Show subcategory tasks when expanded */}
-                                      {expandedSubCategory === subCategory && subCategoryTasks && (
-                                        <div className="ml-3 space-y-1 animate-fade-in">
-                                          {subCategoryTasks.map((task) => (
-                                            <Button
-                                              key={task}
-                                              variant={selectedTask === task ? "default" : "ghost"}
-                                              size="sm"
-                                              className="w-full justify-start text-left text-xs py-1.5 px-2.5 hover:bg-muted/40 transition-all duration-200"
-                                              onClick={() => handleTaskSelect(task)}
-                                            >
-                                              {task}
-                                            </Button>
-                                          ))}
-                                        </div>
-                                      )}
+                                       {/* Show subcategory tasks when expanded */}
+                                       <div className={cn(
+                                         "ml-3 space-y-1 overflow-hidden transition-all duration-300 ease-out",
+                                         expandedSubCategory === subCategory ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                                       )}>
+                                         {subCategoryTasks && subCategoryTasks.map((task) => (
+                                           <Button
+                                             key={task}
+                                             variant={selectedTask === task ? "default" : "ghost"}
+                                             size="sm"
+                                             className="w-full justify-start text-left text-xs py-1.5 px-2.5 hover:bg-muted/40 transition-all duration-200"
+                                             onClick={() => handleTaskSelect(task)}
+                                           >
+                                             {task}
+                                           </Button>
+                                         ))}
+                                       </div>
                                     </div>
                                   );
                                 })}

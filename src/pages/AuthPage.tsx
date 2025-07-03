@@ -150,20 +150,6 @@ export const AuthPage = () => {
                     </Button>
                   </form>
                 </Form>
-                <div className="relative my-4">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-2 text-muted-foreground">
-                      Or continue with
-                    </span>
-                  </div>
-                </div>
-                <Button variant="outline" className="w-full" onClick={handleSignInWithGoogle} disabled={loading}>
-                  <GoogleIcon className="mr-2 h-4 w-4" />
-                  Sign In with Google
-                </Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -219,20 +205,6 @@ export const AuthPage = () => {
                     </Button>
                   </form>
                 </Form>
-                <div className="relative my-4">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-2 text-muted-foreground">
-                      Or continue with
-                    </span>
-                  </div>
-                </div>
-                <Button variant="outline" className="w-full" onClick={handleSignInWithGoogle} disabled={loading}>
-                  <GoogleIcon className="mr-2 h-4 w-4" />
-                  Sign Up with Google
-                </Button>
               </CardContent>
             </Card>
           </TabsContent>
