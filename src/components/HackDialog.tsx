@@ -44,8 +44,8 @@ export const HackDialog = ({ onUnlock }: HackDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="text-xs text-muted-foreground hover:text-primary h-6 px-2">
-          Cheat Code
+        <Button variant="link" className="text-muted-foreground hover:text-primary !no-underline p-0 h-auto">
+          ...
         </Button>
       </DialogTrigger>
       <DialogContent>
