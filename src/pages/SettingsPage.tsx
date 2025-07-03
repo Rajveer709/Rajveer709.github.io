@@ -104,10 +104,26 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           showAvatar={true}
         />
 
-        <Card className="animate-scale-in bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg" style={{ animationDelay: '100ms' }}>
+        <Card className={`animate-scale-in backdrop-blur-sm border-0 shadow-lg ${
+          userLevel >= 100 
+            ? 'bg-gradient-to-br from-purple-500/20 to-indigo-500/10 border-2 border-purple-500/30' 
+            : userLevel >= 4 
+            ? 'bg-gradient-to-br from-yellow-500/20 to-amber-500/10 border-2 border-yellow-500/30'
+            : userLevel >= 3
+            ? 'bg-gradient-to-br from-purple-500/20 to-pink-500/10 border-2 border-purple-500/30'
+            : userLevel >= 2
+            ? 'bg-gradient-to-br from-orange-500/20 to-red-500/10 border-2 border-orange-500/30'
+            : 'bg-gradient-to-br from-blue-500/20 to-cyan-500/10 border-2 border-blue-500/30'
+        }`} style={{ animationDelay: '100ms' }}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
-              <User className="w-5 h-5" />
+              <rank.Icon className={`w-5 h-5 ${
+                userLevel >= 100 ? 'text-purple-500' 
+                : userLevel >= 4 ? 'text-yellow-600'
+                : userLevel >= 3 ? 'text-purple-600'
+                : userLevel >= 2 ? 'text-orange-600'
+                : 'text-blue-600'
+              }`} />
               <span>Account</span>
             </CardTitle>
             <CardDescription>
