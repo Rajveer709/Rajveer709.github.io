@@ -90,50 +90,50 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-secondary/10">
       <div className="max-w-6xl mx-auto p-4 space-y-6">
-        <PageHeader title="🎮 Quest Central" onBack={onBack} />
+        <PageHeader title="Challenges" onBack={onBack} />
 
         {/* Hero Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/30 shadow-xl">
-            <CardContent className="p-6 text-center">
-              <div className="w-16 h-16 mx-auto mb-3 bg-primary/20 rounded-full flex items-center justify-center">
-                <rank.Icon className="w-8 h-8 text-primary" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <Card className="bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 shadow-lg">
+            <CardContent className="p-4 text-center">
+              <div className="w-10 h-10 mx-auto mb-2 bg-primary/20 rounded-full flex items-center justify-center">
+                <rank.Icon className="w-5 h-5 text-primary" />
               </div>
-              <p className="text-sm text-muted-foreground">Current Rank</p>
-              <p className="font-bold text-xl text-primary">{rank.name}</p>
-              <Badge variant="secondary" className="mt-2">Level {userLevel}</Badge>
+              <p className="text-xs text-muted-foreground">Current Rank</p>
+              <p className="font-bold text-lg text-primary">{rank.name}</p>
+              <Badge variant="secondary" className="mt-1 text-xs">Level {userLevel}</Badge>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-green-500/20 to-emerald-500/10 border-2 border-green-500/30 shadow-xl">
-            <CardContent className="p-6 text-center">
-              <div className="w-16 h-16 mx-auto mb-3 bg-green-500/20 rounded-full flex items-center justify-center">
-                <Trophy className="w-8 h-8 text-green-600" />
+          <Card className="bg-gradient-to-br from-green-500/20 to-emerald-500/10 border border-green-500/30 shadow-lg">
+            <CardContent className="p-4 text-center">
+              <div className="w-10 h-10 mx-auto mb-2 bg-green-500/20 rounded-full flex items-center justify-center">
+                <Trophy className="w-5 h-5 text-green-600" />
               </div>
-              <p className="text-sm text-muted-foreground">Completed</p>
-              <p className="font-bold text-xl text-green-600">{completedChallenges}</p>
+              <p className="text-xs text-muted-foreground">Completed</p>
+              <p className="font-bold text-lg text-green-600">{completedChallenges}</p>
               <p className="text-xs text-muted-foreground">out of {totalChallenges}</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-purple-500/20 to-violet-500/10 border-2 border-purple-500/30 shadow-xl">
-            <CardContent className="p-6 text-center">
-              <div className="w-16 h-16 mx-auto mb-3 bg-purple-500/20 rounded-full flex items-center justify-center">
-                <Star className="w-8 h-8 text-purple-600" />
+          <Card className="bg-gradient-to-br from-purple-500/20 to-violet-500/10 border border-purple-500/30 shadow-lg">
+            <CardContent className="p-4 text-center">
+              <div className="w-10 h-10 mx-auto mb-2 bg-purple-500/20 rounded-full flex items-center justify-center">
+                <Star className="w-5 h-5 text-purple-600" />
               </div>
-              <p className="text-sm text-muted-foreground">Total XP</p>
-              <p className="font-bold text-xl text-purple-600">{userXp}</p>
+              <p className="text-xs text-muted-foreground">Total XP</p>
+              <p className="font-bold text-lg text-purple-600">{userXp}</p>
               <p className="text-xs text-muted-foreground">experience</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-amber-500/20 to-yellow-500/10 border-2 border-amber-500/30 shadow-xl">
-            <CardContent className="p-6 text-center">
-              <div className="w-16 h-16 mx-auto mb-3 bg-amber-500/20 rounded-full flex items-center justify-center">
-                <Target className="w-8 h-8 text-amber-600" />
+          <Card className="bg-gradient-to-br from-amber-500/20 to-yellow-500/10 border border-amber-500/30 shadow-lg">
+            <CardContent className="p-4 text-center">
+              <div className="w-10 h-10 mx-auto mb-2 bg-amber-500/20 rounded-full flex items-center justify-center">
+                <Target className="w-5 h-5 text-amber-600" />
               </div>
-              <p className="text-sm text-muted-foreground">Next Level</p>
-              <p className="font-bold text-xl text-amber-600">
+              <p className="text-xs text-muted-foreground">Next Level</p>
+              <p className="font-bold text-lg text-amber-600">
                 {nextRank ? `${xpToNextLevel - userXp}` : 'MAX'}
               </p>
               <p className="text-xs text-muted-foreground">XP needed</p>
@@ -142,10 +142,10 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
         </div>
 
         {/* Progress Bar */}
-        <Card className="bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 border-2 border-primary/20 shadow-xl">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div>
+        <Card className="bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 border border-primary/20 shadow-lg">
+          <CardContent className="p-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+              <div className="flex-1">
                 <h3 className="text-lg font-bold">Level Progress</h3>
                 <p className="text-sm text-muted-foreground">
                   {nextRank ? `Advance to ${nextRank.name}` : "You've reached the pinnacle!"}
@@ -153,7 +153,7 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
               </div>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
+                  <Button size="sm" className="shrink-0 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
                     <Trophy className="w-4 h-4 mr-2" />
                     View All Ranks
                   </Button>
