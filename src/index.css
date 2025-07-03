@@ -9,56 +9,47 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
-    --background-gradient-start: 265 100% 98%;
-    --background-gradient-end: 270 100% 94%;
+    --background-gradient-start: 0 0% 100%;
+    --background-gradient-end: 0 0% 96%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 262 83% 58%;
+    --primary: 262.1 83.3% 57.8%;
     --primary-foreground: 210 40% 98%;
-    --primary-glow: 270 100% 70%;
-    --primary-deep: 255 100% 45%;
-    --secondary: 270 40% 96%;
+    --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 270 40% 96%;
+    --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 270 100% 96%;
+    --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 270 31.8% 91.4%;
-    --input: 270 31.8% 91.4%;
-    --ring: 262 83% 58%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 262.1 83.3% 57.8%;
     --radius: 0.5rem;
-    
-    /* Blue gradient utilities */
-    --gradient-blue-primary: linear-gradient(135deg, hsl(220 100% 60%), hsl(240 100% 70%));
-    --gradient-blue-text: linear-gradient(135deg, hsl(220 100% 60%), hsl(250 100% 70%), hsl(270 100% 75%));
-    --gradient-blue-deep: linear-gradient(135deg, hsl(210 100% 50%), hsl(240 100% 60%));
   }
 
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-    --background-gradient-start: 265 50% 8%;
-    --background-gradient-end: 270 50% 5%;
+    --background-gradient-start: 222.2 84% 15%;
+    --background-gradient-end: 222.2 84% 10%;
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary-glow: 270 100% 80%;
-    --primary-deep: 255 100% 60%;
-    --secondary: 270 32.6% 17.5%;
+    --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 270 32.6% 17.5%;
-    --muted-foreground: 270 20.2% 65.1%;
-    --accent: 270 32.6% 17.5%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 270 32.6% 17.5%;
-    --input: 270 32.6% 17.5%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
   }
 }
 
@@ -75,31 +66,5 @@
       hsl(var(--background-gradient-end))
     ) fixed;
     min-height: 100vh;
-  }
-
-  /* Blue gradient text utilities */
-  .gradient-text-blue {
-    background: var(--gradient-blue-text);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
-
-  .gradient-text-primary {
-    background: var(--gradient-blue-primary);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
-
-  /* Gradient headings */
-  h1, h2, h3, h4, h5, h6 {
-    background: var(--gradient-blue-text);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
   }
 }
