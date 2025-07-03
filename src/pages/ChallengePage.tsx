@@ -62,9 +62,6 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
       <PageHeader
         title="Challenges"
         onBack={onBack}
-        profile={profile}
-        onUpdateProfile={onUpdateProfile}
-        showAvatar={!showGreeting}
       />
 
       <Card className="mb-6 bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">
