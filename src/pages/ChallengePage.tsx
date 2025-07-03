@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, Circle, Lock, Trophy, Star, Target, Zap, Award, Shield, Crown } from "lucide-react";
+import { CheckCircle2, Circle, Lock, Trophy, Star, Target, Zap, Award, Shield, Crown, Ghost } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Challenge as ChallengeType } from '../config/challenges';
@@ -191,6 +191,32 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
                         </div>
                       );
                     })}
+                    
+                    {/* Special Avi Rank */}
+                    <div className="border-t pt-3 mt-4">
+                      <div 
+                        className={`flex items-center gap-3 p-4 rounded-lg transition-all ${
+                          userLevel >= 100 
+                            ? 'bg-gradient-to-r from-purple-500/30 to-indigo-500/20 border-2 border-purple-500/40' 
+                            : 'bg-muted/30 border border-dashed border-muted-foreground/30'
+                        }`}
+                      >
+                        <Ghost className={`w-8 h-8 ${userLevel >= 100 ? 'text-purple-500' : 'text-muted-foreground'}`} />
+                        <div className="flex-1">
+                          <p className={`font-bold text-lg ${userLevel >= 100 ? 'text-purple-500' : 'text-muted-foreground'}`}>
+                            Avi
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {userLevel >= 100 ? 'Transcendent being with unlimited access' : 'Unlock with cheat code'}
+                          </p>
+                        </div>
+                        {userLevel >= 100 ? (
+                          <Badge className="bg-purple-500 text-white">Transcendent!</Badge>
+                        ) : (
+                          <Badge variant="outline" className="text-muted-foreground">Level ∞</Badge>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </DialogContent>
               </Dialog>
