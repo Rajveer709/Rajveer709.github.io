@@ -8,17 +8,10 @@ export interface Rank {
 }
 
 export const RANKS: Rank[] = [
-  { level: 1, name: 'Novice', Icon: Award },
-  { level: 2, name: 'Apprentice', Icon: Award },
-  { level: 3, name: 'Journeyman', Icon: Medal },
-  { level: 4, name: 'Adept', Icon: Medal },
-  { level: 5, name: 'Expert', Icon: Shield },
-  { level: 6, name: 'Veteran', Icon: Shield },
-  { level: 7, name: 'Artisan', Icon: Trophy },
-  { level: 8, name: 'Master', Icon: Trophy },
-  { level: 9, name: 'Grandmaster', Icon: Trophy },
-  { level: 10, name: 'Champion', Icon: Crown },
-  { level: 11, name: 'Legend', Icon: Crown },
+  { level: 1, name: 'Explorer', Icon: Award },
+  { level: 2, name: 'Warrior', Icon: Shield },
+  { level: 3, name: 'Master', Icon: Trophy },
+  { level: 4, name: 'Legend', Icon: Crown },
   { level: 100, name: 'Avi', Icon: Ghost },
 ];
 
