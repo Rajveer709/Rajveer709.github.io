@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, Circle, Lock, Trophy, Star, Target, Zap, Award, Shield, Crown, Ghost, Gift } from "lucide-react";
+import { CheckCircle2, Circle, Lock, Trophy, Star, Target, Zap, Award, Shield, Crown, Ghost, Gift, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Challenge as ChallengeType } from '../config/challenges';
@@ -12,6 +12,7 @@ import { Profile } from "./Index";
 import { PageHeader } from "../components/PageHeader";
 import { toast } from "sonner";
 import { themes } from '../config/themes';
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export interface Challenge extends ChallengeType {
   completed: boolean;
@@ -39,6 +40,8 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
   const rank = getRankForLevel(userLevel);
   const [showRewardDialog, setShowRewardDialog] = useState(false);
   const [rewardedThemes, setRewardedThemes] = useState<string[]>([]);
+  const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null);
+  const [showChallengeDialog, setShowChallengeDialog] = useState(false);
 
   useEffect(() => {
     if (!hasStartedChallenges) {
@@ -58,6 +61,11 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
     setRewardedThemes(firstTwoThemes.map(t => t.name));
     setShowRewardDialog(true);
     onStartChallenges();
+  };
+
+  const handleChallengeClick = (challenge: Challenge) => {
+    setSelectedChallenge(challenge);
+    setShowChallengeDialog(true);
   };
 
   const getUnlockedThemesByLevel = (level: number) => {
@@ -337,20 +345,23 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
                       </div>
                       <Progress value={progressInLevel} className="h-2" />
                       
-                        <div className="space-y-2 max-h-48 overflow-y-auto">
-                          {levelChallenges.slice(0, 5).map(challenge => {
+                      {/* Scrollable challenges list */}
+                      <ScrollArea className="h-64 w-full rounded-md border p-2">
+                        <div className="space-y-2">
+                          {levelChallenges.map(challenge => {
                             const challengeLevel = getChallengeLevel(challenge.id);
                             const isChallengeUnlocked = hasStartedChallenges && userLevel >= challengeLevel;
 
                             return (
-                              <div 
-                                key={challenge.id} 
-                                className={`flex items-center gap-3 p-2 rounded-lg transition-all text-sm ${
+                              <button
+                                key={challenge.id}
+                                onClick={() => handleChallengeClick(challenge)}
+                                className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all text-sm hover:scale-[1.02] ${
                                   challenge.completed 
-                                    ? 'bg-primary/10 border border-primary/20' 
+                                    ? 'bg-primary/10 border border-primary/20 hover:bg-primary/15' 
                                     : !isChallengeUnlocked 
-                                    ? 'bg-muted/30' 
-                                    : 'bg-card/60 border border-border'
+                                    ? 'bg-muted/30 hover:bg-muted/40' 
+                                    : 'bg-card/60 border border-border hover:bg-muted/20'
                                 }`}
                               >
                                 {challenge.completed ? (
@@ -360,8 +371,8 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
                                 ) : (
                                   <Circle className="w-4 h-4 text-muted-foreground shrink-0" />
                                 )}
-                                <div className="flex-1 min-w-0">
-                                  <p className={`font-medium leading-tight truncate ${
+                                <div className="flex-1 min-w-0 text-left">
+                                  <p className={`font-medium leading-tight ${
                                     challenge.completed 
                                       ? 'text-primary' 
                                       : !isChallengeUnlocked 
@@ -371,25 +382,79 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
                                     {challenge.text}
                                   </p>
                                 </div>
-                                <Badge variant="outline" className="text-xs shrink-0">
-                                  {challenge.xp} XP
-                                </Badge>
-                              </div>
+                                <div className="flex items-center gap-2 shrink-0">
+                                  <Badge variant="outline" className="text-xs">
+                                    {challenge.xp} XP
+                                  </Badge>
+                                  <Info className="w-3 h-3 text-muted-foreground" />
+                                </div>
+                              </button>
                             );
                           })}
-                          {levelChallenges.length > 5 && (
-                            <p className="text-xs text-center text-muted-foreground py-2">
-                              +{levelChallenges.length - 5} more challenges...
-                            </p>
-                          )}
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                      </ScrollArea>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )}
+
+        {/* Challenge Details Dialog */}
+        <Dialog open={showChallengeDialog} onOpenChange={setShowChallengeDialog}>
+          <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                {selectedChallenge?.completed ? (
+                  <CheckCircle2 className="w-5 h-5 text-primary" />
+                ) : (
+                  <Target className="w-5 h-5 text-primary" />
+                )}
+                Challenge Details
+              </DialogTitle>
+            </DialogHeader>
+            {selectedChallenge && (
+              <div className="space-y-4">
+                <div className="p-4 rounded-lg bg-muted/20 border">
+                  <h3 className="font-semibold text-lg mb-2">{selectedChallenge.text}</h3>
+                  <div className="flex items-center justify-between">
+                    <Badge 
+                      variant={selectedChallenge.completed ? "default" : "outline"}
+                      className={selectedChallenge.completed ? "bg-primary/20 text-primary" : ""}
+                    >
+                      {selectedChallenge.xp} XP Reward
+                    </Badge>
+                    <Badge 
+                      variant={selectedChallenge.completed ? "default" : "secondary"}
+                      className={selectedChallenge.completed ? "bg-green-500/20 text-green-600" : ""}
+                    >
+                      {selectedChallenge.completed ? "Completed ✓" : "In Progress"}
+                    </Badge>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <h4 className="font-medium">Challenge Requirements:</h4>
+                  <div className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg">
+                    <p>This challenge will be automatically completed when you meet the required conditions through your task management activities.</p>
+                    {selectedChallenge.completed && (
+                      <p className="mt-2 text-green-600 font-medium">
+                        🎉 Congratulations! You've already completed this challenge and earned {selectedChallenge.xp} XP!
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <Button onClick={() => setShowChallengeDialog(false)}>
+                    Close
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
 
         {/* Reward Dialog */}
         <Dialog open={showRewardDialog} onOpenChange={setShowRewardDialog}>
