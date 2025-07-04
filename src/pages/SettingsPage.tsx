@@ -64,6 +64,12 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
   const [selectedAvatar, setSelectedAvatar] = useState<string | null>(profile?.avatar_url || null);
   const hiddenTasks = tasks.filter(task => task.hidden);
   const rank = getRankForLevel(userLevel);
+
+  // Calculate how many themes should be unlocked based on level
+  const getUnlockedThemeCount = (level: number) => {
+    if (level >= 100) return themes.length; // All themes for Avi rank
+    return Math.min(2 + (level - 1) * 2, 8); // 2 to start, then 2 per level, max 8 of the locked ones
+  };
   
   const avatarOptions = [
     { id: 'avatar1', src: avatar1, name: 'Fruit Bowl' },
@@ -240,10 +246,11 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
 
             <div>
               <h3 className="text-sm font-medium mb-1">Color Theme</h3>
-              <p className="text-xs text-muted-foreground mb-3">Unlocks with Challenges.</p>
+              <p className="text-xs text-muted-foreground mb-3">Unlock with Challenges - 2 themes per rank.</p>
               <div className="grid grid-cols-3 gap-3">
-                {themes.map((theme) => {
-                  const isUnlocked = userLevel >= theme.levelToUnlock;
+                {themes.map((theme, index) => {
+                  const unlockedCount = getUnlockedThemeCount(userLevel);
+                  const isUnlocked = index < unlockedCount;
                   return (
                     isUnlocked ? (
                       <button
@@ -277,7 +284,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
                           </div>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Unlock at level {theme.levelToUnlock}</p>
+                          <p>Unlock by reaching higher ranks</p>
                         </TooltipContent>
                       </Tooltip>
                     )
