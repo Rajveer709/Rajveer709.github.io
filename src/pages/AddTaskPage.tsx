@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Task } from './Index';
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CalendarIcon, ChevronRight, DollarSign, Heart, Home, Briefcase, Gavel, Monitor, Gift, Car, Repeat, Plus } from 'lucide-react';
+import { CalendarIcon, ChevronRight, DollarSign, Heart, Home, Briefcase, Gavel, Monitor, Gift, Car, Repeat, Plus, ChevronDown } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import {
@@ -149,24 +148,37 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   const [medicineName, setMedicineName] = useState('');
   const [selectedFluid, setSelectedFluid] = useState('');
   const [isQuickTasksOpen, setIsQuickTasksOpen] = useState(true);
-  const [expandedSubCategory, setExpandedSubCategory] = useState<string>('');
+  const [expandedSubCategories, setExpandedSubCategories] = useState<Set<string>>(new Set());
 
   const selectedPriorityDetails = priorities.find(p => p.value === priority);
 
   const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
+    // If clicking the same category, close it
+    if (selectedCategory === category) {
+      setSelectedCategory('');
+    } else {
+      setSelectedCategory(category);
+    }
+    // Reset other selections when changing category
     setSelectedSubCategory('');
     setSelectedTask('');
     setTitle('');
-    setExpandedSubCategory('');
+    setExpandedSubCategories(new Set());
   };
 
-  const handleSubCategorySelect = (subCategory: string) => {
+  const handleSubCategoryToggle = (subCategory: string) => {
+    const newExpanded = new Set(expandedSubCategories);
+    if (newExpanded.has(subCategory)) {
+      newExpanded.delete(subCategory);
+    } else {
+      newExpanded.add(subCategory);
+    }
+    setExpandedSubCategories(newExpanded);
+    
+    // Set selected subcategory for form purposes
     setSelectedSubCategory(subCategory);
     setSelectedTask('');
     setTitle('');
-    // Toggle subcategory expansion
-    setExpandedSubCategory(expandedSubCategory === subCategory ? '' : subCategory);
   };
 
   const handleTaskSelect = (task: string) => {
@@ -192,19 +204,6 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
     
     // Set title based on selection
     setTitle(`${selectedSubCategory}: ${task}`);
-  };
-
-  const handleSubCategoryClick = (category: string, subCategory: string) => {
-    const categoryData = taskCategories[category as CategoryKey];
-    const subCategoryData = categoryData[subCategory as keyof Omit<TaskCategoriesType[CategoryKey], 'icon'>] as string[];
-    
-    if (subCategoryData && subCategoryData.length > 3) {
-      // For sub-categories with many options, we could navigate to a sub-selector
-      // For now, just handle it inline
-      handleSubCategorySelect(subCategory);
-    } else {
-      handleSubCategorySelect(subCategory);
-    }
   };
 
   const handleStreamingSubmit = () => {
@@ -265,91 +264,110 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
         <PageHeader title="Add Task" onBack={onBack} className="mb-6" />
 
         <div className="space-y-6">
-          {/* Quick Tasks Section - Slimmer and more refined */}
+          {/* Quick Tasks Section - Fixed animations and visibility */}
           <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm hover:shadow-md transition-all duration-300">
             <Collapsible
               open={isQuickTasksOpen}
               onOpenChange={setIsQuickTasksOpen}
             >
-              <CollapsibleTrigger className="flex w-full items-center justify-between hover:bg-muted/20 rounded-lg p-3 transition-all duration-300 group">
+              <CollapsibleTrigger className="flex w-full items-center justify-between hover:bg-muted/20 rounded-lg p-3 transition-all duration-200 group">
                 <div className="flex items-center gap-3">
                   <div className="p-1.5 rounded-full bg-primary/15">
                     <Plus className="h-4 w-4 text-primary" />
                   </div>
                   <CardTitle className="text-lg font-semibold text-primary">Quick Tasks</CardTitle>
                 </div>
-                <ChevronRight className={cn(
-                  "h-5 w-5 transform transition-all duration-300 ease-out",
-                  isQuickTasksOpen ? 'rotate-90 text-primary' : 'text-muted-foreground'
+                <ChevronDown className={cn(
+                  "h-5 w-5 transform transition-transform duration-200 ease-out",
+                  isQuickTasksOpen ? 'rotate-180 text-primary' : 'text-muted-foreground'
                 )} />
               </CollapsibleTrigger>
               
               <CollapsibleContent className="data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up overflow-hidden">
-                <div className="px-3 pb-3 animate-fade-in">
-                  <Accordion type="single" collapsible className="w-full space-y-2" value={selectedCategory} onValueChange={handleCategorySelect}>
+                <div className="px-3 pb-3">
+                  <div className="space-y-3">
                     {Object.keys(taskCategories).map((category) => {
                       const CategoryIcon = taskCategories[category as CategoryKey].icon;
+                      const isExpanded = selectedCategory === category;
+                      
                       return (
-                        <AccordionItem 
-                          value={category} 
-                          key={category} 
-                          className="border border-border/40 rounded-lg mb-2 overflow-hidden bg-card/30 shadow-sm hover:shadow-md transition-all duration-300 hover:border-border/80 last:mb-0"
+                        <div 
+                          key={category}
+                          className="border border-border/40 rounded-lg overflow-hidden bg-card/30 shadow-sm hover:shadow-md transition-all duration-200 hover:border-border/80"
                         >
-                          <AccordionTrigger className="hover:no-underline px-3 py-2.5 text-sm hover:bg-muted/10 transition-all duration-300 group">
+                          {/* Category Header */}
+                          <button
+                            onClick={() => handleCategorySelect(category)}
+                            className="w-full flex items-center justify-between px-3 py-2.5 text-sm hover:bg-muted/10 transition-all duration-200 group"
+                          >
                             <div className="flex items-center gap-3">
-                              <div className="p-1.5 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300">
+                              <div className="p-1.5 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors duration-200">
                                 <CategoryIcon className="h-4 w-4 text-primary" />
                               </div>
                               <span className="font-medium">{category}</span>
                             </div>
-                          </AccordionTrigger>
-                          <AccordionContent className="animate-accordion-down">
-                            <div className="px-3 pb-2.5 pt-1">
-                              <div className="space-y-2">
-                                {Object.keys(taskCategories[category as CategoryKey]).filter(key => key !== 'icon').map((subCategory) => {
-                                  const subCategoryTasks = taskCategories[category as CategoryKey][subCategory as keyof Omit<TaskCategoriesType[CategoryKey], 'icon'>] as string[];
-                                  return (
-                                    <div key={subCategory} className="space-y-1">
-                                      <Button
-                                        variant={selectedSubCategory === subCategory ? "default" : "ghost"}
-                                        className="w-full justify-between text-left text-sm font-normal h-auto py-2 px-2.5 hover:bg-muted/30 transition-all duration-300 hover:scale-[1.01] group"
-                                        onClick={() => handleSubCategorySelect(subCategory)}
-                                      >
-                                        <span>{subCategory}</span>
-                                        <ChevronRight className={cn(
-                                          "h-3.5 w-3.5 transition-all duration-200",
-                                          expandedSubCategory === subCategory ? 'rotate-90' : '',
-                                          "opacity-50 group-hover:opacity-100"
-                                        )} />
-                                      </Button>
-                                      
-                                       {/* Show subcategory tasks when expanded */}
-                                       <div className={cn(
-                                         "ml-3 space-y-1 overflow-hidden transition-all duration-300 ease-out",
-                                         expandedSubCategory === subCategory ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                                       )}>
-                                         {subCategoryTasks && subCategoryTasks.map((task) => (
-                                           <Button
-                                             key={task}
-                                             variant={selectedTask === task ? "default" : "ghost"}
-                                             size="sm"
-                                             className="w-full justify-start text-left text-xs py-1.5 px-2.5 hover:bg-muted/40 transition-all duration-200"
-                                             onClick={() => handleTaskSelect(task)}
-                                           >
-                                             {task}
-                                           </Button>
-                                         ))}
-                                       </div>
+                            <ChevronDown className={cn(
+                              "h-4 w-4 transition-transform duration-200 ease-out",
+                              isExpanded ? 'rotate-180 text-primary' : 'text-muted-foreground'
+                            )} />
+                          </button>
+
+                          {/* Category Content */}
+                          <div className={cn(
+                            "overflow-hidden transition-all duration-300 ease-out",
+                            isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                          )}>
+                            <div className="px-3 pb-2.5 pt-1 space-y-2">
+                              {Object.keys(taskCategories[category as CategoryKey]).filter(key => key !== 'icon').map((subCategory) => {
+                                const subCategoryTasks = taskCategories[category as CategoryKey][subCategory as keyof Omit<TaskCategoriesType[CategoryKey], 'icon'>] as string[];
+                                const isSubExpanded = expandedSubCategories.has(subCategory);
+                                
+                                return (
+                                  <div key={subCategory} className="space-y-1">
+                                    {/* Subcategory Button */}
+                                    <button
+                                      onClick={() => handleSubCategoryToggle(subCategory)}
+                                      className="w-full flex items-center justify-between text-left text-sm font-normal py-2 px-2.5 hover:bg-muted/30 transition-all duration-200 hover:scale-[1.01] group rounded-md"
+                                    >
+                                      <span>{subCategory}</span>
+                                      <ChevronDown className={cn(
+                                        "h-3.5 w-3.5 transition-transform duration-200 ease-out",
+                                        isSubExpanded ? 'rotate-180 text-primary' : 'text-muted-foreground',
+                                        "opacity-50 group-hover:opacity-100"
+                                      )} />
+                                    </button>
+                                    
+                                    {/* Subcategory Tasks */}
+                                    <div className={cn(
+                                      "ml-3 overflow-hidden transition-all duration-300 ease-out",
+                                      isSubExpanded ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
+                                    )}>
+                                      <div className="space-y-1 py-1">
+                                        {subCategoryTasks && subCategoryTasks.map((task) => (
+                                          <button
+                                            key={task}
+                                            onClick={() => handleTaskSelect(task)}
+                                            className={cn(
+                                              "w-full text-left text-xs py-1.5 px-2.5 rounded-md transition-all duration-200 hover:scale-[1.01]",
+                                              selectedTask === task 
+                                                ? "bg-primary/20 text-primary border border-primary/30" 
+                                                : "hover:bg-muted/40 text-foreground"
+                                            )}
+                                          >
+                                            {task}
+                                          </button>
+                                        ))}
+                                      </div>
                                     </div>
-                                  );
-                                })}
-                              </div>
+                                  </div>
+                                );
+                              })}
                             </div>
-                          </AccordionContent>
-                        </AccordionItem>
+                          </div>
+                        </div>
                       );
                     })}
-                  </Accordion>
+                  </div>
                 </div>
               </CollapsibleContent>
             </Collapsible>
