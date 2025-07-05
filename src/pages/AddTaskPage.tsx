@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/collapsible";
 import { PageHeader } from '@/components/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 
 interface AddTaskPageProps {
   onAddTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
@@ -246,16 +246,14 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
       completed: false
     });
 
-    // Show success toast
-    toast({
-      title: "Task Added Successfully! ✅",
+    // Show success toast in bottom right
+    toast.success("Task Added Successfully! ✅", {
       description: `"${title}" has been added to your tasks.`,
+      position: "bottom-right",
     });
 
-    // Navigate back after a short delay to show the toast
-    setTimeout(() => {
-      onBack();
-    }, 1000);
+    // Navigate back immediately without delay
+    onBack();
   };
 
   return (

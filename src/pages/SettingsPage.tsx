@@ -65,8 +65,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
 
   // Calculate how many themes should be unlocked based on level (3 per rank)
   const getUnlockedThemeCount = (level: number) => {
-    if (level >= 100) return themes.length; // All themes for Avi rank
-    return Math.min(level * 3, 12); // 3 themes per level, max 12 for the regular ranks
+    return Math.min(level * 3, 12); // 3 themes per level, max 12 for the regular ranks (no special Avi themes)
   };
   
   const avatarOptions = [

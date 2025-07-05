@@ -25,12 +25,6 @@ export const themes: Theme[] = [
   { name: 'Emerald', value: 'emerald', colors: { primary: '#10b981', secondary: '#34d399' }, levelToUnlock: 4 },
   { name: 'Amber', value: 'amber', colors: { primary: '#f59e0b', secondary: '#fbbf24' }, levelToUnlock: 4 },
   { name: 'Indigo', value: 'indigo', colors: { primary: '#6366f1', secondary: '#8b5cf6' }, levelToUnlock: 4 },
-  
-  // Avi special themes - unlocked only at level 100 (infinity)
-  { name: 'Golden', value: 'golden', colors: { primary: '#f2994a', secondary: '#f2c94c' }, levelToUnlock: 100 },
-  { name: 'Crimson', value: 'crimson', colors: { primary: '#dc2424', secondary: '#4a569d' }, levelToUnlock: 100 },
-  { name: 'Sky', value: 'sky', colors: { primary: '#00c6ff', secondary: '#0072ff' }, levelToUnlock: 100 },
-  { name: 'Lavender', value: 'lavender', colors: { primary: '#ba5370', secondary: '#f4e2d8' }, levelToUnlock: 100 },
 ];
 
 export const defaultTheme = 'purple';

@@ -69,7 +69,6 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
   };
 
   const getUnlockedThemesByLevel = (level: number) => {
-    if (level >= 100) return themes.length; // All themes for Avi rank
     return Math.min(level * 3, 12); // 3 colors per level, max 12
   };
 
@@ -253,32 +252,6 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
                          </div>
                        );
                      })}
-                    
-                    {/* Special Avi Rank */}
-                     <div className="border-t pt-3 mt-4">
-                       <div 
-                         className={`flex items-center gap-3 p-4 rounded-lg transition-all border-2 ${
-                           userLevel >= 100 
-                             ? 'bg-card/60 border-primary/40' 
-                             : 'bg-muted/30 border-dashed border-muted-foreground/30'
-                         }`}
-                       >
-                         <Ghost className={`w-8 h-8 ${userLevel >= 100 ? 'text-primary' : 'text-muted-foreground'}`} />
-                         <div className="flex-1">
-                           <p className={`font-bold text-lg ${userLevel >= 100 ? 'text-primary' : 'text-muted-foreground'}`}>
-                             Avi
-                           </p>
-                           <p className="text-sm text-muted-foreground">
-                             {userLevel >= 100 ? 'Transcendent being with unlimited access' : 'Unlock with cheat code'}
-                           </p>
-                         </div>
-                         {userLevel >= 100 ? (
-                           <Badge className="bg-primary text-primary-foreground">Transcendent!</Badge>
-                         ) : (
-                           <Badge variant="outline" className="text-muted-foreground">Level ∞</Badge>
-                         )}
-                       </div>
-                     </div>
                   </div>
                 </DialogContent>
                </Dialog>
