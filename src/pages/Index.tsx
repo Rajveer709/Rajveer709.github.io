@@ -116,6 +116,24 @@ const Index = () => {
 
     if (error) {
       console.error('Error fetching profile:', error);
+      // If profile doesn't exist, create one with the user's metadata
+      if (error.code === 'PGRST116') {
+        const { data: newProfile, error: insertError } = await supabase
+          .from('profiles')
+          .insert({
+            id: user.id,
+            email: user.email,
+            name: user.user_metadata?.name || null,
+          })
+          .select()
+          .single();
+
+        if (insertError) {
+          console.error('Error creating profile:', insertError);
+        } else if (newProfile) {
+          setProfile(newProfile as unknown as Profile);
+        }
+      }
     } else if (data) {
       setProfile(data as unknown as Profile);
     }
@@ -250,12 +268,14 @@ const Index = () => {
           setUserLevel(currentLevel);
           toast.info(`Congratulations! You've reached Level ${currentLevel}!`);
           
-          // Give 2 themes per level up
+          // Give 3 themes per level up
           if (levelsGained > 0) {
-            const themesPerLevel = 2;
-            const newThemeCount = Math.min(themesPerLevel, themes.length - (2 + (currentLevel - 2) * 2));
+            const themesPerLevel = 3;
+            const newThemeCount = Math.min(themesPerLevel, themes.length - ((currentLevel - 2) * 3));
             if (newThemeCount > 0) {
-              const unlockedThemeNames = themes.slice(2 + (currentLevel - 2) * 2, 2 + (currentLevel - 1) * 2).map(t => t.name);
+              const startIndex = (currentLevel - 2) * 3;
+              const endIndex = Math.min(startIndex + 3, 12); // Max 12 for regular ranks
+              const unlockedThemeNames = themes.slice(startIndex, endIndex).map(t => t.name);
               toast.success(`New themes unlocked: ${unlockedThemeNames.join(', ')}!`, {
                 description: 'You can change them in Settings.',
               });
@@ -392,7 +412,7 @@ const Index = () => {
   const handleStartChallenges = () => {
     setHasStartedChallenges(true);
     toast.success("Welcome to the challenge system!", {
-      description: "You unlocked Purple and Teal themes to get you started!",
+      description: "You unlocked Purple, Teal, and Orange themes to get you started!",
     });
   };
 

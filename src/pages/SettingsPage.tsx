@@ -5,10 +5,8 @@ import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { themes } from '../config/themes';
 import { getRankForLevel } from '../config/ranks';
-import avatar1 from '../assets/avatar1.jpg';
-import avatar2 from '../assets/avatar2.jpg';
-import avatar3 from '../assets/avatar3.jpg';
-import avatar4 from '../assets/avatar4.jpg';
+import avatar1 from '../assets/avatar1.webp';
+import avatar2 from '../assets/avatar2.webp';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -65,17 +63,15 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
   const hiddenTasks = tasks.filter(task => task.hidden);
   const rank = getRankForLevel(userLevel);
 
-  // Calculate how many themes should be unlocked based on level
+  // Calculate how many themes should be unlocked based on level (3 per rank)
   const getUnlockedThemeCount = (level: number) => {
     if (level >= 100) return themes.length; // All themes for Avi rank
-    return Math.min(2 + (level - 1) * 2, 8); // 2 to start, then 2 per level, max 8 of the locked ones
+    return Math.min(level * 3, 12); // 3 themes per level, max 12 for the regular ranks
   };
   
   const avatarOptions = [
-    { id: 'avatar1', src: avatar1, name: 'Fruit Bowl' },
-    { id: 'avatar2', src: avatar2, name: 'Orange Cat' },
-    { id: 'avatar3', src: avatar3, name: 'Gray Kitten' },
-    { id: 'avatar4', src: avatar4, name: 'Monkey' },
+    { id: 'avatar1', src: avatar1, name: 'Cool Guy' },
+    { id: 'avatar2', src: avatar2, name: 'Panda' },
   ];
   
   useEffect(() => {
@@ -145,7 +141,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
               <div className="space-y-3">
                 <div>
                   <h4 className="text-sm font-medium mb-2">Choose Avatar</h4>
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     {avatarOptions.map((avatar) => (
                       <button
                         key={avatar.id}
@@ -246,7 +242,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
 
             <div>
               <h3 className="text-sm font-medium mb-1">Color Theme</h3>
-              <p className="text-xs text-muted-foreground mb-3">Unlock with Challenges - 2 themes per rank.</p>
+              <p className="text-xs text-muted-foreground mb-3">Unlock with Challenges - 3 themes per rank.</p>
               <div className="grid grid-cols-3 gap-3">
                 {themes.map((theme, index) => {
                   const unlockedCount = getUnlockedThemeCount(userLevel);

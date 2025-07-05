@@ -56,9 +56,9 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
   }, [hasStartedChallenges]);
 
   const handleStartChallenges = () => {
-    // Give user first 2 colors when starting
-    const firstTwoThemes = themes.slice(0, 2);
-    setRewardedThemes(firstTwoThemes.map(t => t.name));
+    // Give user first 3 colors when starting
+    const firstThreeThemes = themes.slice(0, 3);
+    setRewardedThemes(firstThreeThemes.map(t => t.name));
     setShowRewardDialog(true);
     onStartChallenges();
   };
@@ -70,7 +70,7 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
 
   const getUnlockedThemesByLevel = (level: number) => {
     if (level >= 100) return themes.length; // All themes for Avi rank
-    return Math.min(2 + (level - 1) * 2, 8); // 2 colors to start, then 2 per level, max 8
+    return Math.min(level * 3, 12); // 3 colors per level, max 12
   };
 
   // Simplified 4-level system
