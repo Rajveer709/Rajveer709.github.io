@@ -5,25 +5,21 @@ export interface Rank {
   level: number;
   name: string;
   Icon: LucideIcon;
+  description?: string;
 }
 
 export const RANKS: Rank[] = [
-  { level: 1, name: 'Novice', Icon: Award },
-  { level: 2, name: 'Apprentice', Icon: Award },
-  { level: 3, name: 'Journeyman', Icon: Medal },
-  { level: 4, name: 'Adept', Icon: Medal },
-  { level: 5, name: 'Expert', Icon: Shield },
-  { level: 6, name: 'Veteran', Icon: Shield },
-  { level: 7, name: 'Artisan', Icon: Trophy },
-  { level: 8, name: 'Master', Icon: Trophy },
-  { level: 9, name: 'Grandmaster', Icon: Trophy },
-  { level: 10, name: 'Champion', Icon: Crown },
-  { level: 11, name: 'Legend', Icon: Crown },
-  { level: 12, name: 'Mythic', Icon: Gem },
-  { level: 16, name: 'Immortal', Icon: Gem },
-  { level: 100, name: 'Avi', Icon: Ghost },
+  { level: 1, name: 'Explorer', Icon: Award, description: 'Begin your journey' },
+  { level: 2, name: 'Warrior', Icon: Shield, description: 'Build strength and consistency' },
+  { level: 3, name: 'Master', Icon: Trophy, description: 'Advanced mastery achieved' },
+  { level: 4, name: 'Legend', Icon: Crown, description: 'Legendary status unlocked' },
+  { level: 100, name: 'Avi', Icon: Ghost, description: 'Transcendent being with unlimited access' },
 ];
 
 export const getRankForLevel = (level: number): Rank => {
-  return [...RANKS].reverse().find(rank => level >= rank.level) || RANKS[0];
+  // Special handling for Avi rank
+  if (level >= 100) {
+    return RANKS[4]; // Avi rank
+  }
+  return [...RANKS.slice(0, 4)].reverse().find(rank => level >= rank.level) || RANKS[0];
 };

@@ -1,10 +1,12 @@
-import { Moon, Sun, User, Palette, Info, RotateCcw, Lock, LogOut, EyeOff, Eye } from 'lucide-react';
+import { Moon, Sun, User, Palette, Info, RotateCcw, Lock, LogOut, EyeOff, Eye, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { themes } from '../config/themes';
 import { getRankForLevel } from '../config/ranks';
+import avatar1 from '../assets/avatar1.webp';
+import avatar2 from '../assets/avatar2.webp';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -57,8 +59,19 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
   const { profile, onUpdateProfile, showGreeting } = useOutletContext<OutletContextType>();
   const [name, setName] = useState(profile?.name || '');
   const [isEditing, setIsEditing] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(profile?.avatar_url || null);
   const hiddenTasks = tasks.filter(task => task.hidden);
   const rank = getRankForLevel(userLevel);
+
+  // Calculate how many themes should be unlocked based on level (3 per rank)
+  const getUnlockedThemeCount = (level: number) => {
+    return Math.min(level * 3, 12); // 3 themes per level, max 12 for the regular ranks (no special Avi themes)
+  };
+  
+  const avatarOptions = [
+    { id: 'avatar1', src: avatar1, name: 'Cool Guy' },
+    { id: 'avatar2', src: avatar2, name: 'Panda' },
+  ];
   
   useEffect(() => {
     if (!isEditing) {
@@ -73,7 +86,10 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
 
   const handleSaveProfile = () => {
     if (onUpdateProfile) {
-      onUpdateProfile({ name });
+      const updates: Partial<Profile> = {};
+      if (name !== profile?.name) updates.name = name;
+      if (selectedAvatar !== profile?.avatar_url) updates.avatar_url = selectedAvatar || undefined;
+      onUpdateProfile(updates);
     }
     setIsEditing(false);
   }
@@ -86,7 +102,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           onBack={onBack}
           profile={profile}
           onUpdateProfile={onUpdateProfile}
-          showAvatar={!showGreeting}
+          showAvatar={true}
         />
 
         <Card className="animate-scale-in bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg" style={{ animationDelay: '100ms' }}>
@@ -119,10 +135,53 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
                 <p className="text-sm text-muted-foreground">{user?.email}</p>
               </div>
             </div>
+            
+            {isEditing && (
+              <div className="space-y-3">
+                <div>
+                  <h4 className="text-sm font-medium mb-2">Choose Avatar</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    {avatarOptions.map((avatar) => (
+                      <button
+                        key={avatar.id}
+                        onClick={() => setSelectedAvatar(avatar.src)}
+                        className={`relative group p-1 rounded-lg border-2 transition-all ${
+                          selectedAvatar === avatar.src 
+                            ? 'border-primary shadow-md' 
+                            : 'border-border hover:border-primary/50'
+                        }`}
+                      >
+                        <Avatar className="w-12 h-12">
+                          <AvatarImage src={avatar.src} alt={avatar.name} />
+                          <AvatarFallback>{avatar.name[0]}</AvatarFallback>
+                        </Avatar>
+                        {selectedAvatar === avatar.src && (
+                          <div className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full p-1">
+                            <Check className="w-3 h-3" />
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setSelectedAvatar(null)}
+                  className="w-full"
+                >
+                  Remove Avatar
+                </Button>
+              </div>
+            )}
             <div className="flex justify-end gap-2">
               {isEditing ? (
                 <>
-                  <Button onClick={() => { setIsEditing(false); setName(profile?.name || ''); }} variant="ghost" size="sm">Cancel</Button>
+                  <Button onClick={() => { 
+                    setIsEditing(false); 
+                    setName(profile?.name || ''); 
+                    setSelectedAvatar(profile?.avatar_url || null);
+                  }} variant="ghost" size="sm">Cancel</Button>
                   <Button onClick={handleSaveProfile} size="sm">Save Changes</Button>
                 </>
               ) : (
@@ -182,10 +241,11 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
 
             <div>
               <h3 className="text-sm font-medium mb-1">Color Theme</h3>
-              <p className="text-xs text-muted-foreground mb-3">Unlocks with Challenges.</p>
+              <p className="text-xs text-muted-foreground mb-3">Unlock with Challenges - 3 themes per rank.</p>
               <div className="grid grid-cols-3 gap-3">
-                {themes.map((theme) => {
-                  const isUnlocked = userLevel >= theme.levelToUnlock;
+                {themes.map((theme, index) => {
+                  const unlockedCount = getUnlockedThemeCount(userLevel);
+                  const isUnlocked = index < unlockedCount;
                   return (
                     isUnlocked ? (
                       <button
@@ -219,7 +279,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
                           </div>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Unlock at level {theme.levelToUnlock}</p>
+                          <p>Unlock by reaching higher ranks</p>
                         </TooltipContent>
                       </Tooltip>
                     )

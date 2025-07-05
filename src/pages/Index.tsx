@@ -62,6 +62,7 @@ const Index = () => {
   const [challenges, setChallenges] = useState<Challenge[]>(
     ALL_CHALLENGES_DEFINITIONS.map(c => ({...c, completed: false}))
   );
+  const [hasStartedChallenges, setHasStartedChallenges] = useState(false);
 
   const applyTheme = (themeValue: string, isDark: boolean, pageLightness?: number, cardLightnessValue?: number) => {
     const theme = themes.find(t => t.value === themeValue) || themes.find(t => t.value === defaultTheme);
@@ -115,6 +116,24 @@ const Index = () => {
 
     if (error) {
       console.error('Error fetching profile:', error);
+      // If profile doesn't exist, create one with the user's metadata
+      if (error.code === 'PGRST116') {
+        const { data: newProfile, error: insertError } = await supabase
+          .from('profiles')
+          .insert({
+            id: user.id,
+            email: user.email,
+            name: user.user_metadata?.name || null,
+          })
+          .select()
+          .single();
+
+        if (insertError) {
+          console.error('Error creating profile:', insertError);
+        } else if (newProfile) {
+          setProfile(newProfile as unknown as Profile);
+        }
+      }
     } else if (data) {
       setProfile(data as unknown as Profile);
     }
@@ -164,9 +183,11 @@ const Index = () => {
     const savedLevel = localStorage.getItem(`lifeAdminUserLevel_${user.id}`);
     const savedXp = localStorage.getItem(`lifeAdminUserXp_${user.id}`);
     const savedChallenges = localStorage.getItem(`lifeAdminChallenges_${user.id}`);
+    const savedStartedChallenges = localStorage.getItem(`lifeAdminStartedChallenges_${user.id}`);
 
     if (savedLevel) setUserLevel(JSON.parse(savedLevel));
     if (savedXp) setUserXp(JSON.parse(savedXp));
+    if (savedStartedChallenges) setHasStartedChallenges(JSON.parse(savedStartedChallenges));
     if (savedChallenges) {
       const parsedChallenges: { id: number, completed: boolean }[] = JSON.parse(savedChallenges);
       const challengeMap = new Map(parsedChallenges.map(c => [c.id, c.completed]));
@@ -195,10 +216,13 @@ const Index = () => {
       localStorage.setItem(`lifeAdminUserLevel_${user.id}`, JSON.stringify(userLevel));
       localStorage.setItem(`lifeAdminUserXp_${user.id}`, JSON.stringify(userXp));
       localStorage.setItem(`lifeAdminChallenges_${user.id}`, JSON.stringify(challenges));
+      localStorage.setItem(`lifeAdminStartedChallenges_${user.id}`, JSON.stringify(hasStartedChallenges));
     }
-  }, [tasks, currentTheme, isDarkMode, backgroundLightness, cardLightness, userLevel, userXp, challenges, user]);
+  }, [tasks, currentTheme, isDarkMode, backgroundLightness, cardLightness, userLevel, userXp, challenges, hasStartedChallenges, user]);
 
   const checkChallenges = useCallback((currentTasks: Task[]) => {
+    if (!hasStartedChallenges) return; // Only check challenges if user has started
+    
     const completedTasks = currentTasks.filter(t => t.completed);
     const completedCategories = new Set(completedTasks.map(t => t.category.trim()).filter(Boolean));
     let xpGained = 0;
@@ -235,17 +259,27 @@ const Index = () => {
       setUserXp(prevXp => {
         let totalXp = prevXp + xpGained;
         let currentLevel = userLevel;
+        let levelsGained = 0;
         
         while (totalXp >= currentLevel * XP_FOR_LEVEL) {
           totalXp -= currentLevel * XP_FOR_LEVEL;
           currentLevel++;
+          levelsGained++;
           setUserLevel(currentLevel);
           toast.info(`Congratulations! You've reached Level ${currentLevel}!`);
-          const unlockedTheme = themes.find(t => t.levelToUnlock === currentLevel);
-          if (unlockedTheme) {
-            toast.success(`New theme unlocked: ${unlockedTheme.name}!`, {
-              description: 'You can change it in the Settings.',
-            });
+          
+          // Give 3 themes per level up
+          if (levelsGained > 0) {
+            const themesPerLevel = 3;
+            const newThemeCount = Math.min(themesPerLevel, themes.length - ((currentLevel - 2) * 3));
+            if (newThemeCount > 0) {
+              const startIndex = (currentLevel - 2) * 3;
+              const endIndex = Math.min(startIndex + 3, 12); // Max 12 for regular ranks
+              const unlockedThemeNames = themes.slice(startIndex, endIndex).map(t => t.name);
+              toast.success(`New themes unlocked: ${unlockedThemeNames.join(', ')}!`, {
+                description: 'You can change them in Settings.',
+              });
+            }
           }
         }
         return totalXp;
@@ -253,7 +287,7 @@ const Index = () => {
     }
 
     setChallenges(updatedChallenges);
-  }, [challenges, userLevel]);
+  }, [challenges, userLevel, hasStartedChallenges]);
 
   const addTask = (newTask: Omit<Task, 'id' | 'createdAt'>) => {
     const task: Task = {
@@ -273,7 +307,7 @@ const Index = () => {
           : task
       );
       const toggledTask = newTasks.find(t => t.id === taskId);
-      if (toggledTask?.completed) {
+      if (toggledTask?.completed && hasStartedChallenges) {
         checkChallenges(newTasks);
       }
       return newTasks;
@@ -351,6 +385,7 @@ const Index = () => {
         localStorage.removeItem(`lifeAdminChallenges_${user.id}`);
         localStorage.removeItem(`lifeAdminBgLightness_${user.id}`);
         localStorage.removeItem(`lifeAdminCardLightness_${user.id}`);
+        localStorage.removeItem(`lifeAdminStartedChallenges_${user.id}`);
     }
 
     setTasks([]);
@@ -359,6 +394,7 @@ const Index = () => {
     setUserLevel(1);
     setUserXp(0);
     setChallenges(ALL_CHALLENGES_DEFINITIONS.map(c => ({...c, completed: false})));
+    setHasStartedChallenges(false);
     
     navigate('/landing', { replace: true });
     toast.info("App has been reset. Welcome back!");
@@ -367,8 +403,16 @@ const Index = () => {
   const handleUnlockAll = () => {
     setUserLevel(100);
     setUserXp(0);
+    setHasStartedChallenges(true);
     toast.success("Cheats activated! Everything unlocked.", {
         description: "Enjoy your god-like status!",
+    });
+  };
+
+  const handleStartChallenges = () => {
+    setHasStartedChallenges(true);
+    toast.success("Welcome to the challenge system!", {
+      description: "You unlocked Purple, Teal, and Orange themes to get you started!",
     });
   };
 
@@ -467,6 +511,8 @@ const Index = () => {
                     userXp={userXp}
                     xpToNextLevel={userLevel * XP_FOR_LEVEL}
                     challenges={challenges}
+                    hasStartedChallenges={hasStartedChallenges}
+                    onStartChallenges={handleStartChallenges}
                     onBack={() => navigate(-1)}
                   />
                 </PageTransition>

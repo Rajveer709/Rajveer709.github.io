@@ -102,7 +102,7 @@ export const AuthPage = () => {
             <div className="bg-background/20 backdrop-blur-sm p-3 md:p-4 rounded-2xl md:rounded-3xl shadow-lg mr-3 md:mr-4 border">
               <CheckSquare className="w-8 h-8 md:w-12 md:h-12 text-primary" />
             </div>
-            <h1 className="text-3xl md:text-5xl font-bold text-foreground">
+            <h1 className="text-3xl md:text-5xl font-bold text-primary">
               Life Admin
             </h1>
           </div>
@@ -150,20 +150,6 @@ export const AuthPage = () => {
                     </Button>
                   </form>
                 </Form>
-                <div className="relative my-4">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-2 text-muted-foreground">
-                      Or continue with
-                    </span>
-                  </div>
-                </div>
-                <Button variant="outline" className="w-full" onClick={handleSignInWithGoogle} disabled={loading}>
-                  <GoogleIcon className="mr-2 h-4 w-4" />
-                  Sign In with Google
-                </Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -219,20 +205,6 @@ export const AuthPage = () => {
                     </Button>
                   </form>
                 </Form>
-                <div className="relative my-4">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-2 text-muted-foreground">
-                      Or continue with
-                    </span>
-                  </div>
-                </div>
-                <Button variant="outline" className="w-full" onClick={handleSignInWithGoogle} disabled={loading}>
-                  <GoogleIcon className="mr-2 h-4 w-4" />
-                  Sign Up with Google
-                </Button>
               </CardContent>
             </Card>
           </TabsContent>

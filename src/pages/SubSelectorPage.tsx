@@ -7,25 +7,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CalendarIcon, ChevronRight, DollarSign, Heart, Home, Briefcase, Gavel, Monitor, Gift, Car, Repeat, Plus, ChevronDown } from 'lucide-react';
+import { CalendarIcon, ArrowLeft, Repeat, DollarSign, Heart, Home, Briefcase, Gavel, Monitor, Gift, Car } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { PageHeader } from '@/components/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from 'sonner';
+import { toast } from '@/hooks/use-toast';
 
-interface AddTaskPageProps {
+interface SubSelectorPageProps {
+  category: string;
+  subCategory: string;
   onAddTask: (task: Omit<Task, 'id' | 'createdAt'>) => void;
   onBack: () => void;
   currentTheme: string;
@@ -106,6 +97,7 @@ const taskCategories = {
 
 type TaskCategoriesType = typeof taskCategories;
 type CategoryKey = keyof TaskCategoriesType;
+type SubCategoryKey<T extends CategoryKey> = keyof Omit<TaskCategoriesType[T], 'icon'>;
 
 const vehicleFluidOptions = [
   'Engine Oil',
@@ -131,9 +123,7 @@ const repeatOptions = [
   { value: 'monthly', label: 'Monthly' }
 ];
 
-export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTaskPageProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string>('');
+export const SubSelectorPage = ({ category, subCategory, onAddTask, onBack, currentTheme, profile }: SubSelectorPageProps) => {
   const [selectedTask, setSelectedTask] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
@@ -147,39 +137,10 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   const [streamingApp, setStreamingApp] = useState('');
   const [medicineName, setMedicineName] = useState('');
   const [selectedFluid, setSelectedFluid] = useState('');
-  const [isQuickTasksOpen, setIsQuickTasksOpen] = useState(true);
-  const [expandedSubCategories, setExpandedSubCategories] = useState<Set<string>>(new Set());
 
   const selectedPriorityDetails = priorities.find(p => p.value === priority);
-
-  const handleCategorySelect = (category: string) => {
-    // If clicking the same category, close it
-    if (selectedCategory === category) {
-      setSelectedCategory('');
-    } else {
-      setSelectedCategory(category);
-    }
-    // Reset other selections when changing category
-    setSelectedSubCategory('');
-    setSelectedTask('');
-    setTitle('');
-    setExpandedSubCategories(new Set());
-  };
-
-  const handleSubCategoryToggle = (subCategory: string) => {
-    const newExpanded = new Set(expandedSubCategories);
-    if (newExpanded.has(subCategory)) {
-      newExpanded.delete(subCategory);
-    } else {
-      newExpanded.add(subCategory);
-    }
-    setExpandedSubCategories(newExpanded);
-    
-    // Set selected subcategory for form purposes
-    setSelectedSubCategory(subCategory);
-    setSelectedTask('');
-    setTitle('');
-  };
+  const CategoryIcon = taskCategories[category as CategoryKey]?.icon || Gift;
+  const tasks = taskCategories[category as CategoryKey]?.[subCategory as SubCategoryKey<CategoryKey>] as readonly string[] || [];
 
   const handleTaskSelect = (task: string) => {
     setSelectedTask(task);
@@ -203,7 +164,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
     }
     
     // Set title based on selection
-    setTitle(`${selectedSubCategory}: ${task}`);
+    setTitle(`${subCategory}: ${task}`);
   };
 
   const handleStreamingSubmit = () => {
@@ -233,151 +194,72 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!title || !selectedCategory || !dueDate) {
+    if (!title || !category || !dueDate) {
       return;
     }
 
     onAddTask({
       title,
       description: repeatFrequency !== 'none' ? `${description}\n\nRepeats: ${repeatFrequency}` : description,
-      category: selectedCategory,
+      category,
       priority,
       dueDate,
       completed: false
     });
 
-    // Show success toast in bottom right
-    toast.success("Task Added Successfully! ✅", {
+    // Show success toast
+    toast({
+      title: "Task Added Successfully! ✅",
       description: `"${title}" has been added to your tasks.`,
-      position: "bottom-right",
     });
 
-    // Navigate back immediately without delay
-    onBack();
+    // Navigate back after a short delay to show the toast
+    setTimeout(() => {
+      onBack();
+    }, 1000);
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-4 max-w-4xl">
-        <PageHeader title="Add Task" onBack={onBack} className="mb-6" />
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto px-4 py-6 max-w-4xl">
+        <PageHeader 
+          title={`${category} - ${subCategory}`} 
+          onBack={onBack} 
+          className="mb-6" 
+        />
 
-        <div className="space-y-6">
-          {/* Quick Tasks Section - Fixed animations and visibility */}
-          <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm hover:shadow-md transition-all duration-300">
-            <Collapsible
-              open={isQuickTasksOpen}
-              onOpenChange={setIsQuickTasksOpen}
-            >
-              <CollapsibleTrigger className="flex w-full items-center justify-between hover:bg-muted/20 rounded-lg p-3 transition-all duration-200 group">
-                <div className="flex items-center gap-3">
-                  <div className="p-1.5 rounded-full bg-primary/15">
-                    <Plus className="h-4 w-4 text-primary" />
-                  </div>
-                  <CardTitle className="text-lg font-semibold text-primary">Quick Tasks</CardTitle>
-                </div>
-                <ChevronDown className={cn(
-                  "h-5 w-5 transform transition-transform duration-200 ease-out",
-                  isQuickTasksOpen ? 'rotate-180 text-primary' : 'text-muted-foreground'
-                )} />
-              </CollapsibleTrigger>
-              
-              <CollapsibleContent className="data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up overflow-hidden">
-                <div className="px-3 pb-3">
-                  <div className="space-y-3">
-                    {Object.keys(taskCategories).map((category) => {
-                      const CategoryIcon = taskCategories[category as CategoryKey].icon;
-                      const isExpanded = selectedCategory === category;
-                      
-                      return (
-                        <div 
-                          key={category}
-                          className="border border-border/40 rounded-lg overflow-hidden bg-card/30 shadow-sm hover:shadow-md transition-all duration-200 hover:border-border/80"
-                        >
-                          {/* Category Header */}
-                          <button
-                            onClick={() => handleCategorySelect(category)}
-                            className="w-full flex items-center justify-between px-3 py-2.5 text-sm hover:bg-muted/10 transition-all duration-200 group"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="p-1.5 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors duration-200">
-                                <CategoryIcon className="h-4 w-4 text-primary" />
-                              </div>
-                              <span className="font-medium">{category}</span>
-                            </div>
-                            <ChevronDown className={cn(
-                              "h-4 w-4 transition-transform duration-200 ease-out",
-                              isExpanded ? 'rotate-180 text-primary' : 'text-muted-foreground'
-                            )} />
-                          </button>
-
-                          {/* Category Content */}
-                          <div className={cn(
-                            "overflow-hidden transition-all duration-300 ease-out",
-                            isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                          )}>
-                            <div className="px-3 pb-2.5 pt-1 space-y-2">
-                              {Object.keys(taskCategories[category as CategoryKey]).filter(key => key !== 'icon').map((subCategory) => {
-                                const subCategoryTasks = taskCategories[category as CategoryKey][subCategory as keyof Omit<TaskCategoriesType[CategoryKey], 'icon'>] as string[];
-                                const isSubExpanded = expandedSubCategories.has(subCategory);
-                                
-                                return (
-                                  <div key={subCategory} className="space-y-1">
-                                    {/* Subcategory Button */}
-                                    <button
-                                      onClick={() => handleSubCategoryToggle(subCategory)}
-                                      className="w-full flex items-center justify-between text-left text-sm font-normal py-2 px-2.5 hover:bg-muted/30 transition-all duration-200 hover:scale-[1.01] group rounded-md"
-                                    >
-                                      <span>{subCategory}</span>
-                                      <ChevronDown className={cn(
-                                        "h-3.5 w-3.5 transition-transform duration-200 ease-out",
-                                        isSubExpanded ? 'rotate-180 text-primary' : 'text-muted-foreground',
-                                        "opacity-50 group-hover:opacity-100"
-                                      )} />
-                                    </button>
-                                    
-                                    {/* Subcategory Tasks */}
-                                    <div className={cn(
-                                      "ml-3 overflow-hidden transition-all duration-300 ease-out",
-                                      isSubExpanded ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
-                                    )}>
-                                      <div className="space-y-1 py-1">
-                                        {subCategoryTasks && subCategoryTasks.map((task) => (
-                                          <button
-                                            key={task}
-                                            onClick={() => handleTaskSelect(task)}
-                                            className={cn(
-                                              "w-full text-left text-xs py-1.5 px-2.5 rounded-md transition-all duration-200 hover:scale-[1.01]",
-                                              selectedTask === task 
-                                                ? "bg-primary/20 text-primary border border-primary/30" 
-                                                : "hover:bg-muted/40 text-foreground"
-                                            )}
-                                          >
-                                            {task}
-                                          </button>
-                                        ))}
-                                      </div>
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
-          </Card>
-
-          {/* Task Form - Compact mobile layout */}
-          <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg font-semibold text-primary">Task Details</CardTitle>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Task Selection */}
+          <Card className="h-fit bg-card border-border shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-xl font-semibold text-primary flex items-center gap-2">
+                <CategoryIcon className="h-5 w-5" />
+                Select Task
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid gap-3">
+                {tasks.map((task) => (
+                  <Button
+                    key={task}
+                    variant={selectedTask === task ? "default" : "outline"}
+                    className="w-full justify-start text-left text-sm font-normal h-auto py-3 px-4 hover:bg-muted/50 transition-all duration-200 hover:scale-[1.02] animate-fade-in"
+                    onClick={() => handleTaskSelect(task)}
+                  >
+                    {task}
+                  </Button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Task Form */}
+          <Card className="h-fit bg-card border-border shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-xl font-semibold text-primary">Task Details</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">Task Title</label>
                   <Input
@@ -385,7 +267,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
-                    className="border-input bg-background h-10"
+                    className="border-input bg-background"
                   />
                 </div>
 
@@ -400,12 +282,11 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                   />
                 </div>
 
-                {/* Compact grid layout for mobile */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Priority</label>
                     <Select value={priority} onValueChange={(value: 'low' | 'medium' | 'high' | 'urgent') => setPriority(value)}>
-                      <SelectTrigger className="border-input bg-background h-10">
+                      <SelectTrigger className="border-input bg-background">
                         <SelectValue>
                           {selectedPriorityDetails && (
                             <div className="flex items-center gap-2">
@@ -433,7 +314,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Repeat</label>
                     <Select value={repeatFrequency} onValueChange={setRepeatFrequency}>
-                      <SelectTrigger className="border-input bg-background h-10">
+                      <SelectTrigger className="border-input bg-background">
                         <SelectValue>
                           <div className="flex items-center gap-2">
                             <Repeat className="h-4 w-4" />
@@ -462,7 +343,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal border-input bg-background h-10"
+                          "w-full justify-start text-left font-normal border-input bg-background"
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -482,8 +363,8 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
 
                 <Button 
                   type="submit" 
-                  className="w-full h-11 text-base font-medium bg-primary hover:bg-primary/90 transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl"
-                  disabled={!title || !selectedCategory}
+                  className="w-full h-12 text-base font-medium bg-primary hover:bg-primary/90 transition-all duration-200 hover:scale-[1.02]"
+                  disabled={!title || !category}
                 >
                   Add Task
                 </Button>
@@ -581,8 +462,6 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
               </p>
               <Button onClick={() => {
                 setShowRickRollDialog(false);
-                setSelectedCategory('');
-                setSelectedSubCategory('');
                 setSelectedTask('');
               }}>
                 Close

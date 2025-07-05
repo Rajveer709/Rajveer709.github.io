@@ -1,15 +1,18 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, Circle, Lock, ChevronDown } from "lucide-react";
+import { CheckCircle2, Circle, Lock, Trophy, Star, Target, Zap, Award, Shield, Crown, Ghost, Gift, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Challenge as ChallengeType } from '../config/challenges';
 import { getRankForLevel, RANKS as ALL_RANKS } from '../config/ranks';
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { Profile } from "./Index";
 import { PageHeader } from "../components/PageHeader";
+import { toast } from "sonner";
+import { themes } from '../config/themes';
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export interface Challenge extends ChallengeType {
   completed: boolean;
@@ -21,6 +24,8 @@ interface ChallengePageProps {
   xpToNextLevel: number;
   challenges: Challenge[];
   onBack: () => void;
+  hasStartedChallenges: boolean;
+  onStartChallenges: () => void;
 }
 
 interface OutletContextType {
@@ -29,23 +34,50 @@ interface OutletContextType {
   showGreeting: boolean;
 }
 
-export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, onBack }: ChallengePageProps) => {
+export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, onBack, hasStartedChallenges, onStartChallenges }: ChallengePageProps) => {
   const { profile, onUpdateProfile, showGreeting } = useOutletContext<OutletContextType>();
   const progressPercentage = xpToNextLevel > 0 ? Math.round((userXp / xpToNextLevel) * 100) : 0;
   const rank = getRankForLevel(userLevel);
+  const [showRewardDialog, setShowRewardDialog] = useState(false);
+  const [rewardedThemes, setRewardedThemes] = useState<string[]>([]);
+  const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null);
+  const [showChallengeDialog, setShowChallengeDialog] = useState(false);
 
+  useEffect(() => {
+    if (!hasStartedChallenges) {
+      toast.info("Welcome to Challenges!", {
+        description: "Start your journey to unlock new themes and ranks!",
+        action: {
+          label: "Start Challenges",
+          onClick: () => handleStartChallenges()
+        }
+      });
+    }
+  }, [hasStartedChallenges]);
+
+  const handleStartChallenges = () => {
+    // Give user first 3 colors when starting
+    const firstThreeThemes = themes.slice(0, 3);
+    setRewardedThemes(firstThreeThemes.map(t => t.name));
+    setShowRewardDialog(true);
+    onStartChallenges();
+  };
+
+  const handleChallengeClick = (challenge: Challenge) => {
+    setSelectedChallenge(challenge);
+    setShowChallengeDialog(true);
+  };
+
+  const getUnlockedThemesByLevel = (level: number) => {
+    return Math.min(level * 3, 12); // 3 colors per level, max 12
+  };
+
+  // Simplified 4-level system
   const getChallengeLevel = (challengeId: number) => {
-    if (challengeId <= 7) return 1;
-    if (challengeId <= 14) return 2;
-    if (challengeId <= 21) return 3;
-    if (challengeId <= 28) return 4;
-    if (challengeId <= 35) return 5;
-    if (challengeId <= 42) return 6;
-    if (challengeId <= 49) return 7;
-    if (challengeId <= 56) return 8;
-    if (challengeId <= 63) return 9;
-    if (challengeId <= 70) return 10;
-    return 11;
+    if (challengeId <= 19) return 1; // Explorer
+    if (challengeId <= 38) return 2; // Warrior  
+    if (challengeId <= 57) return 3; // Master
+    return 4; // Legend
   };
   
   const challengesByLevel = challenges.reduce<Record<number, Challenge[]>>((acc, challenge) => {
@@ -57,121 +89,377 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
     return acc;
   }, {});
 
+  const completedChallenges = challenges.filter(c => c.completed).length;
+  const totalChallenges = challenges.length;
+  const nextRank = ALL_RANKS.find(r => r.level > userLevel);
+
+  // Level configurations with semantic colors
+  const levelConfigs = {
+    1: { 
+      name: 'Explorer', 
+      color: 'bg-card/60 border-primary/20', 
+      icon: Award,
+      theme: 'Beginner challenges to get you started'
+    },
+    2: { 
+      name: 'Warrior', 
+      color: 'bg-card/60 border-primary/20', 
+      icon: Shield,
+      theme: 'Build strength and consistency'
+    },
+    3: { 
+      name: 'Master', 
+      color: 'bg-card/60 border-primary/20', 
+      icon: Trophy,
+      theme: 'Advanced challenges for experts'
+    },
+    4: { 
+      name: 'Legend', 
+      color: 'bg-card/60 border-primary/20', 
+      icon: Crown,
+      theme: 'Ultimate challenges for legends'
+    }
+  };
+
   return (
-    <div>
-      <PageHeader
-        title="Challenges"
-        onBack={onBack}
-        profile={profile}
-        onUpdateProfile={onUpdateProfile}
-        showAvatar={!showGreeting}
-      />
+    <div className="min-h-screen">
+      <div className="max-w-6xl mx-auto p-4 space-y-6">
+        <PageHeader title="Challenges" onBack={onBack} />
 
-      <Card className="mb-6 bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardDescription>Rank: Level {userLevel}</CardDescription>
-              <CardTitle className="text-2xl flex items-center gap-2">
-                <rank.Icon className="w-7 h-7 text-primary" />
-                {rank.name}
-              </CardTitle>
+        {!hasStartedChallenges && (
+          <Card className="bg-gradient-to-r from-primary/20 to-primary/10 border-primary/30 shadow-lg">
+            <CardContent className="p-6 text-center">
+              <Gift className="w-16 h-16 mx-auto mb-4 text-primary" />
+              <h3 className="text-xl font-bold mb-2">Ready to Start Your Journey?</h3>
+              <p className="text-muted-foreground mb-4">
+                Complete challenges to unlock new themes and climb the ranks!
+              </p>
+              <Button onClick={handleStartChallenges} size="lg" className="bg-primary hover:bg-primary/90">
+                <Star className="w-4 h-4 mr-2" />
+                Start Challenges
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {hasStartedChallenges && (
+          <>
+            {/* Hero Stats Section */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <Card className="bg-card/80 border-primary/20 shadow-lg backdrop-blur-sm">
+                <CardContent className="p-4 text-center">
+                  <div className="w-10 h-10 mx-auto mb-2 bg-primary/20 rounded-full flex items-center justify-center">
+                    <rank.Icon className="w-5 h-5 text-primary" />
+                  </div>
+                  <p className="text-xs text-muted-foreground">Current Rank</p>
+                  <p className="font-bold text-lg text-primary">{hasStartedChallenges ? rank.name : 'Locked'}</p>
+                  <Badge variant="secondary" className="mt-1 text-xs">
+                    {hasStartedChallenges ? `Level ${userLevel}` : 'Start to unlock'}
+                  </Badge>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-card/80 border-primary/20 shadow-lg backdrop-blur-sm">
+                <CardContent className="p-4 text-center">
+                  <div className="w-10 h-10 mx-auto mb-2 bg-primary/20 rounded-full flex items-center justify-center">
+                    <Trophy className="w-5 h-5 text-primary" />
+                  </div>
+                  <p className="text-xs text-muted-foreground">Completed</p>
+                  <p className="font-bold text-lg text-primary">{completedChallenges}</p>
+                  <p className="text-xs text-muted-foreground">out of {totalChallenges}</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-card/80 border-primary/20 shadow-lg backdrop-blur-sm">
+                <CardContent className="p-4 text-center">
+                  <div className="w-10 h-10 mx-auto mb-2 bg-primary/20 rounded-full flex items-center justify-center">
+                    <Star className="w-5 h-5 text-primary" />
+                  </div>
+                  <p className="text-xs text-muted-foreground">Total XP</p>
+                  <p className="font-bold text-lg text-primary">{userXp}</p>
+                  <p className="text-xs text-muted-foreground">experience</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-card/80 border-primary/20 shadow-lg backdrop-blur-sm">
+                <CardContent className="p-4 text-center">
+                  <div className="w-10 h-10 mx-auto mb-2 bg-primary/20 rounded-full flex items-center justify-center">
+                    <Target className="w-5 h-5 text-primary" />
+                  </div>
+                  <p className="text-xs text-muted-foreground">Next Level</p>
+                  <p className="font-bold text-lg text-primary">
+                    {nextRank ? `${xpToNextLevel - userXp}` : 'MAX'}
+                  </p>
+                  <p className="text-xs text-muted-foreground">XP needed</p>
+                </CardContent>
+              </Card>
             </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center gap-4 mb-2">
-            <Progress value={progressPercentage} className="h-3" />
-            <span className="text-sm font-bold text-primary">{userXp} / {xpToNextLevel} XP</span>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {xpToNextLevel > userXp ? `${xpToNextLevel - userXp} XP to level up` : 'Max level reached for now!'}
-          </p>
-        </CardContent>
-      </Card>
+          </>
+        )}
 
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Challenge Log</CardTitle>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm">View Ranks</Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Ranks</DialogTitle>
-                  <DialogDescription>
-                    Level up to achieve new ranks and unlock rewards.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-2 max-h-[60vh] overflow-y-auto p-1 -mr-2 pr-2">
-                  {ALL_RANKS.map((r) => (
-                    <div key={r.level} className="flex items-center gap-4 p-2 rounded-lg">
-                      <r.Icon className="w-8 h-8 text-primary flex-shrink-0" />
-                      <div>
-                        <p className="font-bold text-md">{r.name}</p>
-                        <p className="text-sm text-muted-foreground">Unlocks at Level {r.level}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-          <CardDescription>Complete challenges to earn XP and level up!</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
+        {hasStartedChallenges && (
+          <Card className="bg-card/80 border-primary/20 shadow-lg backdrop-blur-sm">
+          <CardContent className="p-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+              <div className="flex-1">
+                <h3 className="text-lg font-bold">Level Progress</h3>
+                <p className="text-sm text-muted-foreground">
+                  {nextRank ? `Advance to ${nextRank.name}` : "You've reached the pinnacle!"}
+                </p>
+              </div>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button size="sm" className="shrink-0 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
+                    <Trophy className="w-4 h-4 mr-2" />
+                    View All Ranks
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2">
+                      <Crown className="w-5 h-5 text-primary" />
+                      Rank System
+                    </DialogTitle>
+                    <DialogDescription>
+                      Progress through 4 amazing ranks by completing challenges!
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-3">
+                     {ALL_RANKS.slice(0, 4).map((r) => {
+                       const config = levelConfigs[r.level as keyof typeof levelConfigs];
+                       const isUnlocked = hasStartedChallenges && userLevel >= r.level;
+                       return (
+                         <div 
+                           key={r.level} 
+                           className={`flex items-center gap-3 p-4 rounded-lg transition-all border-2 ${
+                             isUnlocked ? config.color : 'bg-muted/50 border-muted'
+                           }`}
+                         >
+                           <r.Icon className={`w-8 h-8 ${isUnlocked ? 'text-primary' : 'text-muted-foreground'}`} />
+                           <div className="flex-1">
+                             <p className={`font-bold text-lg ${isUnlocked ? 'text-primary' : 'text-muted-foreground'}`}>
+                               {r.name}
+                             </p>
+                             <p className="text-sm text-muted-foreground">{config.theme}</p>
+                           </div>
+                           {isUnlocked ? (
+                             <Badge className="bg-primary text-primary-foreground">Unlocked!</Badge>
+                           ) : (
+                             <Badge variant="outline" className="text-muted-foreground">
+                               {hasStartedChallenges ? 'Locked' : 'Start to unlock'}
+                             </Badge>
+                           )}
+                         </div>
+                       );
+                     })}
+                  </div>
+                </DialogContent>
+               </Dialog>
+             </div>
+             <div className="space-y-2">
+               <div className="flex items-center justify-between text-sm">
+                 <span className="font-medium">{userXp} XP</span>
+                 <span className="text-muted-foreground">{nextRank ? `${xpToNextLevel} XP` : 'Maximum Level!'}</span>
+               </div>
+               <Progress value={progressPercentage} className="h-4 bg-muted" />
+               <p className="text-center text-xs text-muted-foreground">
+                 {progressPercentage}% to next rank
+               </p>
+             </div>
+           </CardContent>
+         </Card>
+        )}
+
+        {hasStartedChallenges && (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {Object.entries(challengesByLevel)
               .sort(([a], [b]) => Number(a) - Number(b))
               .map(([level, levelChallenges]) => {
-                const levelRank = getRankForLevel(Number(level));
+                const levelNum = Number(level);
+                const config = levelConfigs[levelNum as keyof typeof levelConfigs];
+                const completedInLevel = levelChallenges.filter(c => c.completed).length;
+                const totalInLevel = levelChallenges.length;
+                const isUnlocked = hasStartedChallenges && userLevel >= levelNum;
+                const progressInLevel = totalInLevel > 0 ? (completedInLevel / totalInLevel) * 100 : 0;
+                
                 return (
-                <Collapsible key={level} defaultOpen={userLevel >= Number(level) || userLevel + 1 === Number(level)} className="space-y-2">
-                  <CollapsibleTrigger className="flex justify-between items-center w-full p-3 rounded-lg bg-secondary/80 hover:bg-secondary transition-colors font-bold text-left group">
-                    <div className="flex items-center gap-3">
-                      <levelRank.Icon className="w-5 h-5 text-primary" />
-                      <span>Level {level} Challenges</span>
-                    </div>
-                    <ChevronDown className="h-5 w-5 transition-transform duration-200 group-data-[state=open]:rotate-180" />
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <div className="space-y-2 pl-4 border-l-2 border-primary/20 ml-1">
-                      {levelChallenges.map(challenge => {
-                        const challengeLevel = getChallengeLevel(challenge.id);
-                        const isLocked = userLevel < challengeLevel;
-
-                        return (
-                        <div key={challenge.id} className={`flex items-center justify-between p-3 rounded-lg transition-all ${challenge.completed ? 'bg-primary/10' : isLocked ? 'bg-muted/50' : 'bg-secondary'}`}>
-                          <div className="flex items-center">
-                            {challenge.completed ? (
-                              <CheckCircle2 className="w-6 h-6 text-primary mr-4 flex-shrink-0" />
-                            ) : isLocked ? (
-                              <Lock className="w-6 h-6 text-muted-foreground mr-4 flex-shrink-0" />
-                            ) : (
-                              <Circle className="w-6 h-6 text-muted-foreground mr-4 flex-shrink-0" />
-                            )}
-                            <div>
-                              <p className={`font-medium ${challenge.completed ? 'text-primary' : isLocked ? 'text-muted-foreground' : 'text-foreground'}`}>{challenge.text}</p>
-                              <p className="text-sm text-muted-foreground">
-                                {challenge.xp} XP
-                                {isLocked && ` | Unlocks at Level ${challengeLevel}`}
-                              </p>
-                            </div>
-                          </div>
-                          {challenge.completed && (
-                            <span className="text-xs font-bold text-primary bg-primary/20 px-2 py-1 rounded-full">DONE</span>
-                          )}
+                  <Card 
+                    key={level} 
+                    className={`shadow-xl transition-all hover:shadow-2xl border-2 ${config.color} ${!isUnlocked ? 'opacity-75' : ''}`}
+                  >
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center gap-4">
+                        <div className={`p-3 rounded-full ${isUnlocked ? 'bg-primary/20' : 'bg-muted/20'}`}>
+                          <config.icon className={`w-8 h-8 ${isUnlocked ? 'text-primary' : 'text-muted-foreground'}`} />
                         </div>
-                      )})}
+                        <div className="flex-1">
+                          <CardTitle className="text-xl flex items-center gap-2">
+                            Level {level}: {config.name}
+                            {!isUnlocked && <Lock className="w-5 h-5 text-muted-foreground" />}
+                          </CardTitle>
+                          <CardDescription className="text-sm">
+                            {config.theme}
+                          </CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">
+                          {completedInLevel}/{totalInLevel} Complete
+                        </span>
+                        <Badge 
+                          variant={isUnlocked ? "default" : "secondary"}
+                          className={isUnlocked ? "bg-primary/20 text-primary hover:bg-primary/30" : ""}
+                        >
+                          {Math.round(progressInLevel)}%
+                        </Badge>
+                      </div>
+                      <Progress value={progressInLevel} className="h-2" />
+                      
+                      {/* Scrollable challenges list */}
+                      <ScrollArea className="h-64 w-full rounded-md border p-2">
+                        <div className="space-y-2">
+                          {levelChallenges.map(challenge => {
+                            const challengeLevel = getChallengeLevel(challenge.id);
+                            const isChallengeUnlocked = hasStartedChallenges && userLevel >= challengeLevel;
+
+                            return (
+                              <button
+                                key={challenge.id}
+                                onClick={() => handleChallengeClick(challenge)}
+                                className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all text-sm hover:scale-[1.02] ${
+                                  challenge.completed 
+                                    ? 'bg-primary/10 border border-primary/20 hover:bg-primary/15' 
+                                    : !isChallengeUnlocked 
+                                    ? 'bg-muted/30 hover:bg-muted/40' 
+                                    : 'bg-card/60 border border-border hover:bg-muted/20'
+                                }`}
+                              >
+                                {challenge.completed ? (
+                                  <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                                ) : !isChallengeUnlocked ? (
+                                  <Lock className="w-4 h-4 text-muted-foreground shrink-0" />
+                                ) : (
+                                  <Circle className="w-4 h-4 text-muted-foreground shrink-0" />
+                                )}
+                                <div className="flex-1 min-w-0 text-left">
+                                  <p className={`font-medium leading-tight ${
+                                    challenge.completed 
+                                      ? 'text-primary' 
+                                      : !isChallengeUnlocked 
+                                      ? 'text-muted-foreground' 
+                                      : 'text-foreground'
+                                  }`}>
+                                    {challenge.text}
+                                  </p>
+                                </div>
+                                <div className="flex items-center gap-2 shrink-0">
+                                  <Badge variant="outline" className="text-xs">
+                                    {challenge.xp} XP
+                                  </Badge>
+                                  <Info className="w-3 h-3 text-muted-foreground" />
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </ScrollArea>
                     </div>
-                  </CollapsibleContent>
-                </Collapsible>
-              )})}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
-        </CardContent>
-      </Card>
+        )}
+
+        {/* Challenge Details Dialog */}
+        <Dialog open={showChallengeDialog} onOpenChange={setShowChallengeDialog}>
+          <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                {selectedChallenge?.completed ? (
+                  <CheckCircle2 className="w-5 h-5 text-primary" />
+                ) : (
+                  <Target className="w-5 h-5 text-primary" />
+                )}
+                Challenge Details
+              </DialogTitle>
+            </DialogHeader>
+            {selectedChallenge && (
+              <div className="space-y-4">
+                <div className="p-4 rounded-lg bg-muted/20 border">
+                  <h3 className="font-semibold text-lg mb-2">{selectedChallenge.text}</h3>
+                  <div className="flex items-center justify-between">
+                    <Badge 
+                      variant={selectedChallenge.completed ? "default" : "outline"}
+                      className={selectedChallenge.completed ? "bg-primary/20 text-primary" : ""}
+                    >
+                      {selectedChallenge.xp} XP Reward
+                    </Badge>
+                    <Badge 
+                      variant={selectedChallenge.completed ? "default" : "secondary"}
+                      className={selectedChallenge.completed ? "bg-green-500/20 text-green-600" : ""}
+                    >
+                      {selectedChallenge.completed ? "Completed ✓" : "In Progress"}
+                    </Badge>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <h4 className="font-medium">Challenge Requirements:</h4>
+                  <div className="text-sm text-muted-foreground bg-muted/10 p-3 rounded-lg">
+                    <p>This challenge will be automatically completed when you meet the required conditions through your task management activities.</p>
+                    {selectedChallenge.completed && (
+                      <p className="mt-2 text-green-600 font-medium">
+                        🎉 Congratulations! You've already completed this challenge and earned {selectedChallenge.xp} XP!
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <Button onClick={() => setShowChallengeDialog(false)}>
+                    Close
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Reward Dialog */}
+        <Dialog open={showRewardDialog} onOpenChange={setShowRewardDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Gift className="w-5 h-5 text-primary" />
+                Congratulations!
+              </DialogTitle>
+              <DialogDescription>
+                You have been rewarded with new themes for {rank.name} rank!
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-3">
+              <p className="text-center">Unlocked themes:</p>
+              <div className="grid grid-cols-2 gap-2">
+                {rewardedThemes.map((themeName, index) => (
+                  <div key={index} className="p-3 border rounded-lg text-center">
+                    <p className="font-medium text-primary">{themeName}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-center text-muted-foreground">
+                Visit Settings to change your theme!
+              </p>
+            </div>
+            <Button onClick={() => setShowRewardDialog(false)} className="w-full">
+              Awesome!
+            </Button>
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 };

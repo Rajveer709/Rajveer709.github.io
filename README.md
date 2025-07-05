@@ -5,10 +5,13 @@ A modern task management application built with React, TypeScript, and Tailwind 
 
 ## 🚀 Project Info
 
+<<<<<<< HEAD
 ### Via Lovable Platform
 Visit the [Lovable Project](https://lovable.dev/projects/ec18fd2a-3dec-46dd-9e4f-59c8fa9be4db) and start prompting for changes.Add commentMore actions
 
 **Live URL**: https://lovable.dev/projects/ec18fd2a-3dec-46dd-9e4f-59c8fa9be4db
+=======
+>>>>>>> cc2ee7f31c1934888ba6fe8dc53b0b0f480490fd
 
 ## 🛠️ Tech Stack
 
