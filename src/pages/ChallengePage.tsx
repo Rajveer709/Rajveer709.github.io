@@ -38,6 +38,7 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
   const { profile, onUpdateProfile, showGreeting } = useOutletContext<OutletContextType>();
   const progressPercentage = xpToNextLevel > 0 ? Math.round((userXp / xpToNextLevel) * 100) : 0;
   const rank = getRankForLevel(userLevel);
+  const isAvi = rank.name === 'Avi';
   const [showRewardDialog, setShowRewardDialog] = useState(false);
   const [rewardedThemes, setRewardedThemes] = useState<string[]>([]);
   const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null);
@@ -89,7 +90,8 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
     return acc;
   }, {});
 
-  const completedChallenges = challenges.filter(c => c.completed).length;
+  // If Avi, treat all challenges as complete for display
+  const completedChallenges = isAvi ? challenges.length : challenges.filter(c => c.completed).length;
   const totalChallenges = challenges.length;
   const nextRank = ALL_RANKS.find(r => r.level > userLevel);
 
@@ -165,7 +167,7 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
                     <Trophy className="w-5 h-5 text-primary" />
                   </div>
                   <p className="text-xs text-muted-foreground">Completed</p>
-                  <p className="font-bold text-lg text-primary">{completedChallenges}</p>
+                  <p className="font-bold text-lg text-primary">{isAvi ? totalChallenges : completedChallenges}</p>
                   <p className="text-xs text-muted-foreground">out of {totalChallenges}</p>
                 </CardContent>
               </Card>
@@ -176,7 +178,7 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
                     <Star className="w-5 h-5 text-primary" />
                   </div>
                   <p className="text-xs text-muted-foreground">Total XP</p>
-                  <p className="font-bold text-lg text-primary">{userXp}</p>
+                  <p className="font-bold text-lg text-primary">{isAvi ? '∞' : userXp}</p>
                   <p className="text-xs text-muted-foreground">experience</p>
                 </CardContent>
               </Card>
@@ -188,13 +190,49 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
                   </div>
                   <p className="text-xs text-muted-foreground">Next Level</p>
                   <p className="font-bold text-lg text-primary">
-                    {nextRank ? `${xpToNextLevel - userXp}` : 'MAX'}
+                    {isAvi ? '∞' : (nextRank ? `${xpToNextLevel - userXp}` : 'MAX')}
                   </p>
                   <p className="text-xs text-muted-foreground">XP needed</p>
                 </CardContent>
               </Card>
             </div>
           </>
+        )}
+
+        {hasStartedChallenges && isAvi && (
+          <div className="flex flex-col items-center justify-center gap-8">
+            <Card className="bg-card/80 border-primary/20 shadow-lg backdrop-blur-sm w-full max-w-2xl">
+              <CardHeader className="pb-3 flex flex-col items-center">
+                <div className="p-4 rounded-full bg-yellow-200/40 mb-2">
+                  <Ghost className="w-12 h-12 text-yellow-500" />
+                </div>
+                <CardTitle className="text-3xl font-extrabold text-yellow-600">Rank: Avi</CardTitle>
+                <CardDescription className="text-lg font-semibold text-yellow-500">Level: God</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold text-yellow-600 mb-2">All Challenges</h3>
+                  <ScrollArea className="h-96 w-full rounded-md border p-2 bg-yellow-50/30">
+                    <div className="space-y-2">
+                      {challenges.map(challenge => (
+                        <div key={challenge.id} className="w-full flex items-center gap-3 p-3 rounded-lg bg-yellow-100/60 border border-yellow-300 text-yellow-800">
+                          <CheckCircle2 className="w-4 h-4 text-yellow-500 shrink-0" />
+                          <div className="flex-1 min-w-0 text-left">
+                            <p className="font-medium leading-tight text-yellow-800">{challenge.text}</p>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <Badge variant="outline" className="text-xs border-yellow-400 text-yellow-700 bg-yellow-100/60">
+                              {challenge.xp} XP
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         )}
 
         {hasStartedChallenges && (

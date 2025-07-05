@@ -96,25 +96,32 @@ export const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md mx-auto">
-        <div className="flex items-center justify-center mb-6">
-            <div className="bg-background/20 backdrop-blur-sm p-3 md:p-4 rounded-2xl md:rounded-3xl shadow-lg mr-3 md:mr-4 border">
-              <CheckSquare className="w-8 h-8 md:w-12 md:h-12 text-primary" />
-            </div>
-            <h1 className="text-3xl md:text-5xl font-bold text-primary">
-              Life Admin
-            </h1>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-background/80 via-background/60 to-background/90 relative p-4">
+      <div className="absolute top-0 left-0 w-full h-full -z-10 opacity-20 pointer-events-none" style={{
+        backgroundImage: 'radial-gradient(circle at 60% 10%, #a78bfa33 0%, transparent 70%), radial-gradient(circle at 20% 80%, #fbbf2433 0%, transparent 70%)',
+        backgroundSize: 'cover',
+      }} />
+      <div className="w-full max-w-md mx-auto flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
+          <div className="bg-white/30 dark:bg-background/30 backdrop-blur-lg p-4 rounded-3xl shadow-2xl mb-4 border border-white/30 dark:border-border/40 flex items-center justify-center" style={{boxShadow:'0 8px 32px 0 rgba(31, 38, 135, 0.15)'}}>
+            <CheckSquare className="w-10 h-10 md:w-12 md:h-12 text-primary" />
           </div>
-        <Tabs defaultValue="signin" className="w-full">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-primary drop-shadow-lg tracking-tight">
+            Life Admin
+          </h1>
+          <p className="text-lg md:text-xl font-medium text-foreground/90 mt-2 animate-fade-in px-2 text-center" style={{ animationDelay: '200ms' }}>
+            Simplify Life. One Task at a Time.
+          </p>
+        </div>
+        <Tabs defaultValue="signin" className="w-full animate-fade-in" style={{ animationDelay: '300ms' }}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="signin">Sign In</TabsTrigger>
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
           <TabsContent value="signin">
-            <Card>
+            <Card className="bg-white/40 dark:bg-card/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/30 dark:border-border/50">
               <CardHeader>
-                <CardTitle>Welcome Back</CardTitle>
+                <CardTitle className="text-center text-2xl font-bold">Welcome Back</CardTitle>
               </CardHeader>
               <CardContent>
                 <Form {...signInForm}>
@@ -154,9 +161,9 @@ export const AuthPage = () => {
             </Card>
           </TabsContent>
           <TabsContent value="signup">
-            <Card>
+            <Card className="bg-white/40 dark:bg-card/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/30 dark:border-border/50">
               <CardHeader>
-                <CardTitle>Create an Account</CardTitle>
+                <CardTitle className="text-center text-2xl font-bold">Create an Account</CardTitle>
               </CardHeader>
               <CardContent>
                 <Form {...signUpForm}>

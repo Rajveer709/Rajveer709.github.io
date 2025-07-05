@@ -62,69 +62,57 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
   ];
 
   return (
-    <div className="min-h-screen bg-background/50 overflow-x-hidden">
-       <div 
-        className="absolute top-0 left-0 w-full h-full -z-10 opacity-10 dark:opacity-20"
-        style={{
-          backgroundImage: `radial-gradient(${theme?.colors.primary} 1px, transparent 1px), radial-gradient(${theme?.colors.secondary} 1px, transparent 1px)`,
-          backgroundSize: '40px 40px',
-          backgroundPosition: '0 0, 20px 20px',
-        }}
-      />
-      <div className="container mx-auto px-4 py-8 md:py-16 max-w-6xl">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-background/80 via-background/60 to-background/90 relative overflow-x-hidden">
+      <div className="absolute top-0 left-0 w-full h-full -z-10 opacity-20 pointer-events-none" style={{
+        backgroundImage: `radial-gradient(circle at 60% 10%, ${theme?.colors.primary}33 0%, transparent 70%), radial-gradient(circle at 20% 80%, ${theme?.colors.secondary}33 0%, transparent 70%)`,
+        backgroundSize: 'cover',
+      }} />
+      <div className="w-full max-w-md mx-auto px-4 py-8 md:py-16 flex flex-col items-center justify-center">
         {/* Hero Section - Optimized for portrait */}
-        <div className="text-center mb-12 md:mb-24">
+        <div className="text-center mb-12 md:mb-20">
           <div className="flex flex-col items-center justify-center mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
-            <div className="bg-background/20 backdrop-blur-sm p-3 md:p-4 rounded-2xl md:rounded-3xl shadow-lg mb-3 md:mb-4 border">
+            <div className="bg-white/30 dark:bg-background/30 backdrop-blur-lg p-4 rounded-3xl shadow-2xl mb-4 border border-white/30 dark:border-border/40 flex items-center justify-center" style={{boxShadow:'0 8px 32px 0 rgba(31, 38, 135, 0.15)'}}>
               <CheckSquare className="w-10 h-10 md:w-12 md:h-12 text-primary" />
             </div>
-            <h1 className="text-3xl md:text-6xl font-bold text-primary">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-primary drop-shadow-lg tracking-tight">
               Life Admin
             </h1>
           </div>
           
-          <p className="text-lg md:text-2xl font-medium text-foreground/90 mb-2 animate-fade-in px-2" style={{ animationDelay: '200ms' }}>
+          <p className="text-lg md:text-xl font-medium text-foreground/90 mb-2 animate-fade-in px-2" style={{ animationDelay: '200ms' }}>
             Simplify Life. One Task at a Time.
           </p>
           
-          <p className="text-base md:text-xl text-muted-foreground mb-3 animate-fade-in px-2" style={{ animationDelay: '250ms' }}>
+          <p className="text-base md:text-lg text-muted-foreground mb-3 animate-fade-in px-2" style={{ animationDelay: '250ms' }}>
             Your personal assistant for life admin tasks
           </p>
           
-          <p className="text-sm md:text-xl text-muted-foreground max-w-3xl mx-auto mb-6 px-4 animate-fade-in leading-relaxed" style={{ animationDelay: '300ms' }}>
+          <p className="text-sm md:text-base text-muted-foreground max-w-md mx-auto mb-6 px-4 animate-fade-in leading-relaxed" style={{ animationDelay: '300ms' }}>
             The focused task manager for all your important life admin - from bills and appointments 
             to renewals and deadlines. Never let important tasks slip through the cracks again.
           </p>
 
           <div className="animate-fade-in px-4" style={{ animationDelay: '400ms' }}>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="flex flex-col gap-3 w-full">
               <Button 
                 onClick={onGetStarted}
                 size="lg"
-                className="px-6 py-3 text-base md:text-lg shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white w-full sm:w-auto"
-                style={{ backgroundColor: theme?.colors.primary }}
+                className="px-6 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white w-full font-semibold tracking-wide"
+                style={{ background: `linear-gradient(90deg, ${theme?.colors.primary}, ${theme?.colors.secondary})` }}
               >
                 Get Started for Free
-                <ArrowRight className="w-4 h-4 md:w-5 md:h-5 ml-2" />
-              </Button>
-              <Button 
-                onClick={onGetStarted}
-                size="lg"
-                variant="outline"
-                className="px-6 py-3 text-base md:text-lg shadow-lg hover:shadow-xl transition-all duration-200 w-full sm:w-auto"
-              >
-                Add Task
+                <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </div>
           </div>
         </div>
 
         {/* Features Grid - Portrait optimized */}
-        <div className="mb-12 md:mb-24">
+        <div className="mb-12 md:mb-20">
            <h2 className="text-2xl md:text-4xl font-bold text-center text-foreground mb-8 md:mb-12 animate-fade-in px-4" style={{ animationDelay: '500ms' }}>
             Everything You Need to Get Organized
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-2">
+          <div className="grid grid-cols-1 gap-6 px-2">
             {features.map((feature, index) => {
               const color = index % 2 === 0 ? theme?.colors.primary : theme?.colors.secondary;
               const bgColor = index % 2 === 0 ? `${theme?.colors.primary}20` : `${theme?.colors.secondary}20`;
@@ -148,12 +136,12 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
         </div>
 
         {/* Task Categories Preview - Portrait optimized */}
-        <div className="bg-card/80 backdrop-blur-sm rounded-2xl p-4 md:p-8 shadow-lg border border-border/50 mb-12 md:mb-24 animate-fade-in mx-2" style={{ animationDelay: '1000ms' }}>
+        <div className="bg-white/40 dark:bg-card/80 backdrop-blur-lg rounded-2xl p-6 shadow-2xl border border-white/30 dark:border-border/50 mb-12 md:mb-20 animate-fade-in mx-2" style={{ animationDelay: '1000ms', boxShadow:'0 8px 32px 0 rgba(31, 38, 135, 0.10)'}}>
           <h2 className="text-2xl md:text-4xl font-bold text-center text-foreground mb-6 md:mb-10">
             Organize Every Aspect of Your Life
           </h2>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+          <div className="grid grid-cols-1 gap-4 md:gap-8">
             {categoryLists.map((category) => (
               <div key={category.title} className="space-y-2 md:space-y-3">
                 <h3 className="font-semibold text-foreground text-sm md:text-lg flex items-center gap-2">
@@ -184,11 +172,11 @@ export const LandingPage = ({ onGetStarted, currentTheme }: LandingPageProps) =>
           <Button 
             onClick={onGetStarted}
             size="lg"
-            className="px-6 md:px-12 py-3 md:py-4 text-base md:text-xl shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white"
-             style={{ backgroundColor: theme?.colors.primary }}
+            className="px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200 border-transparent text-white font-semibold tracking-wide"
+            style={{ background: `linear-gradient(90deg, ${theme?.colors.primary}, ${theme?.colors.secondary})` }}
           >
             Start Organizing Today
-            <ArrowRight className="w-4 h-4 md:w-6 md:h-6 ml-2" />
+            <ArrowRight className="w-6 h-6 ml-2" />
           </Button>
         </div>
       </div>

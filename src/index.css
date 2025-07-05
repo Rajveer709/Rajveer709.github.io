@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
@@ -67,4 +66,28 @@
     ) fixed;
     min-height: 100vh;
   }
+}
+
+/* Avi Rank Gold Gradient and Headings */
+.avi-rank {
+  background: linear-gradient(135deg, #FFD700 0%, #FFB300 50%, #FFFACD 100%) !important;
+  /* fallback for cards, etc. */
+}
+.avi-rank h1, .avi-rank h2, .avi-rank h3, .avi-rank h4, .avi-rank h5, .avi-rank h6, .avi-rank .card-title, .avi-rank .CardTitle {
+  background: linear-gradient(90deg, #FFD700 0%, #FFB300 50%, #FFFACD 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: #FFD700;
+  font-weight: bold;
+}
+
+/* Gold Theme Headings Gradient */
+.theme-gold h1, .theme-gold h2, .theme-gold h3, .theme-gold h4, .theme-gold h5, .theme-gold h6, .theme-gold .card-title, .theme-gold .CardTitle {
+  background: linear-gradient(90deg, #FFD700 0%, #FFB300 50%, #FFFACD 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: #FFD700;
+  font-weight: bold;
 }

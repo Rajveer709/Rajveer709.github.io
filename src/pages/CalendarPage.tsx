@@ -1,4 +1,3 @@
-
 import { Task, Profile } from './Index';
 import { Calendar } from '@/components/ui/calendar';
 import { CheckCircle, Clock, Plus, Calendar as CalendarIcon, Eye, CalendarDays } from 'lucide-react';
@@ -138,15 +137,15 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
   );
 
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-4 max-w-6xl">
+    <div className="min-h-screen flex flex-col items-center justify-center">
+      <div className="w-full max-w-6xl px-4 py-4 flex flex-col items-center">
         <PageHeader
           onBack={onBack}
           title="Calendar View"
           className="mb-6"
         />
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-6 w-full justify-center">
           {/* Calendar Section */}
           <div className="lg:col-span-2">
             <Card className="bg-card/95 backdrop-blur-sm border-border/50">

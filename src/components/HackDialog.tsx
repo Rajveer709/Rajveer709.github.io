@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -44,8 +43,8 @@ export const HackDialog = ({ onUnlock }: HackDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="link" className="text-muted-foreground hover:text-primary !no-underline p-0 h-auto">
-          ...
+        <Button variant="outline" size="sm" className="text-[10px] px-2 py-1 h-5 min-h-0 min-w-0 leading-none rounded-full">
+          cheat code
         </Button>
       </DialogTrigger>
       <DialogContent>

@@ -25,6 +25,8 @@ export const themes: Theme[] = [
   { name: 'Emerald', value: 'emerald', colors: { primary: '#10b981', secondary: '#34d399' }, levelToUnlock: 4 },
   { name: 'Amber', value: 'amber', colors: { primary: '#f59e0b', secondary: '#fbbf24' }, levelToUnlock: 4 },
   { name: 'Indigo', value: 'indigo', colors: { primary: '#6366f1', secondary: '#8b5cf6' }, levelToUnlock: 4 },
+  // Gold theme (locked by default, unlocked by cheat code)
+  { name: 'Gold', value: 'gold', colors: { primary: '#FFD700', secondary: '#FFB300' }, levelToUnlock: 100 },
 ];
 
 export const defaultTheme = 'purple';

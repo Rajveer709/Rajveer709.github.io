@@ -1,12 +1,10 @@
 import { Moon, Sun, User, Palette, Info, RotateCcw, Lock, LogOut, EyeOff, Eye, Check } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button as RawButton } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { themes } from '../config/themes';
 import { getRankForLevel } from '../config/ranks';
-import avatar1 from '../assets/avatar1.webp';
-import avatar2 from '../assets/avatar2.webp';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,6 +27,9 @@ import { Task, Profile } from './Index';
 import { HackDialog } from '../components/HackDialog';
 import { useOutletContext } from 'react-router-dom';
 import { PageHeader } from '../components/PageHeader';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Button: any = RawButton;
 
 interface SettingsPageProps {
   onBack: () => void;
@@ -59,19 +60,14 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
   const { profile, onUpdateProfile, showGreeting } = useOutletContext<OutletContextType>();
   const [name, setName] = useState(profile?.name || '');
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(profile?.avatar_url || null);
   const hiddenTasks = tasks.filter(task => task.hidden);
   const rank = getRankForLevel(userLevel);
+  const isAvi = rank.name === 'Avi';
 
   // Calculate how many themes should be unlocked based on level (3 per rank)
   const getUnlockedThemeCount = (level: number) => {
     return Math.min(level * 3, 12); // 3 themes per level, max 12 for the regular ranks (no special Avi themes)
   };
-  
-  const avatarOptions = [
-    { id: 'avatar1', src: avatar1, name: 'Cool Guy' },
-    { id: 'avatar2', src: avatar2, name: 'Panda' },
-  ];
   
   useEffect(() => {
     if (!isEditing) {
@@ -88,7 +84,6 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
     if (onUpdateProfile) {
       const updates: Partial<Profile> = {};
       if (name !== profile?.name) updates.name = name;
-      if (selectedAvatar !== profile?.avatar_url) updates.avatar_url = selectedAvatar || undefined;
       onUpdateProfile(updates);
     }
     setIsEditing(false);
@@ -136,52 +131,15 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
               </div>
             </div>
             
-            {isEditing && (
-              <div className="space-y-3">
-                <div>
-                  <h4 className="text-sm font-medium mb-2">Choose Avatar</h4>
-                  <div className="grid grid-cols-2 gap-2">
-                    {avatarOptions.map((avatar) => (
-                      <button
-                        key={avatar.id}
-                        onClick={() => setSelectedAvatar(avatar.src)}
-                        className={`relative group p-1 rounded-lg border-2 transition-all ${
-                          selectedAvatar === avatar.src 
-                            ? 'border-primary shadow-md' 
-                            : 'border-border hover:border-primary/50'
-                        }`}
-                      >
-                        <Avatar className="w-12 h-12">
-                          <AvatarImage src={avatar.src} alt={avatar.name} />
-                          <AvatarFallback>{avatar.name[0]}</AvatarFallback>
-                        </Avatar>
-                        {selectedAvatar === avatar.src && (
-                          <div className="absolute -top-1 -right-1 bg-primary text-primary-foreground rounded-full p-1">
-                            <Check className="w-3 h-3" />
-                          </div>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setSelectedAvatar(null)}
-                  className="w-full"
-                >
-                  Remove Avatar
-                </Button>
-              </div>
-            )}
             <div className="flex justify-end gap-2">
               {isEditing ? (
                 <>
                   <Button onClick={() => { 
                     setIsEditing(false); 
-                    setName(profile?.name || ''); 
-                    setSelectedAvatar(profile?.avatar_url || null);
-                  }} variant="ghost" size="sm">Cancel</Button>
+                    setName(profile?.name || '');
+                  }} variant="ghost" size="sm" asChild={false}>
+                    Cancel
+                  </Button>
                   <Button onClick={handleSaveProfile} size="sm">Save Changes</Button>
                 </>
               ) : (

@@ -220,6 +220,21 @@ const Index = () => {
     }
   }, [tasks, currentTheme, isDarkMode, backgroundLightness, cardLightness, userLevel, userXp, challenges, hasStartedChallenges, user]);
 
+  useEffect(() => {
+    if (currentTheme === 'gold') {
+      document.body.classList.add('theme-gold');
+    } else {
+      document.body.classList.remove('theme-gold');
+    }
+  }, [currentTheme]);
+
+  useEffect(() => {
+    if (userLevel >= 100 && currentTheme !== 'gold') {
+      setCurrentTheme('gold');
+      localStorage.setItem(`lifeAdminTheme_${user?.id ?? 'default'}`, 'gold');
+    }
+  }, [userLevel, currentTheme, user]);
+
   const checkChallenges = useCallback((currentTasks: Task[]) => {
     if (!hasStartedChallenges) return; // Only check challenges if user has started
     
@@ -404,8 +419,11 @@ const Index = () => {
     setUserLevel(100);
     setUserXp(0);
     setHasStartedChallenges(true);
+    // Unlock and auto-apply gold theme
+    setCurrentTheme('gold');
+    localStorage.setItem(`lifeAdminTheme_${user?.id ?? 'default'}`, 'gold');
     toast.success("Cheats activated! Everything unlocked.", {
-        description: "Enjoy your god-like status!",
+        description: "Enjoy your god-like status! Gold theme applied!",
     });
   };
 
