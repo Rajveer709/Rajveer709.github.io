@@ -7,15 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CalendarIcon, ChevronRight, DollarSign, Heart, Home, Briefcase, Gavel, Monitor, Gift, Car, Repeat, Plus, ChevronDown } from 'lucide-react';
+import { CalendarIcon, ChevronDown, Plus } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import {
   Collapsible,
   CollapsibleContent,
@@ -34,7 +28,7 @@ interface AddTaskPageProps {
 
 const taskCategories = {
   'Financial Tasks': {
-    icon: DollarSign,
+    icon: '💰',
     'Utility bills': ['Electricity', 'Water', 'Gas'],
     'Insurance': ['Health', 'Auto', 'Home', 'Life Premiums'],
     'Credit Card': ['Payments', 'Installments'],
@@ -44,7 +38,7 @@ const taskCategories = {
     'Subscriptions': ['Streaming apps', 'Memberships']
   },
   'Health & Wellness': {
-    icon: Heart,
+    icon: '🏥',
     'Medical check-ups': ['General practitioners', 'Specialists'],
     'Dentist visits': ['Check-Ups', 'Cleanings'],
     'Medications': ['Dosages', 'Refill Reminders'],
@@ -54,7 +48,7 @@ const taskCategories = {
     'Mental health': ['Therapy', 'Meditation', 'Self-care']
   },
   'Home Management': {
-    icon: Home,
+    icon: '🏠',
     'Household chores': ['Cleaning', 'Repairs', 'Inspections'],
     'Appliance upkeep': ['Maintenance', 'Warranty reminders'],
     'Vehicle care': ['Servicing', 'Oil changes & Top-up', 'Registration', 'Tire change'],
@@ -62,7 +56,7 @@ const taskCategories = {
     'Waste schedule': ['Trash', 'Recycling']
   },
   'Work & Professional': {
-    icon: Briefcase,
+    icon: '💼',
     'Meetings & Deadlines': ['Meetings & Deadlines'],
     'Project Milestones': ['Project Milestones'],
     'Certifications & courses': ['Certifications & courses'],
@@ -70,7 +64,7 @@ const taskCategories = {
     'Work-Related Expenses': ['Documentation']
   },
   'Personal & Social': {
-    icon: Gift,
+    icon: '🎯',
     'Celebrations': ['Birthdays', 'Anniversaries'],
     'Social Planning': ['Events', 'Meetups'],
     'Travel Logistics': ['Tickets', 'Accommodation', 'Itineraries'],
@@ -78,28 +72,28 @@ const taskCategories = {
     'Reading': ['Reading list']
   },
   'Legal Things': {
-    icon: Gavel,
+    icon: '⚖️',
     'Document Renewals': ['Passport', 'License', 'IDs'],
     'Form Submissions': ['Permits', 'Claims', 'Applications'],
     'Civic Tasks': ['Voter Registration', 'Election Reminders'],
     'Estate Management': ['Will Updates', 'Estate Planning']
   },
   'Digital Life': {
-    icon: Monitor,
+    icon: '📱',
     'Passwords': ['Regular Updates'],
     'Backups': ['Photos', 'Docs', 'Cloud Backups'],
     'Software/Device Updates': ['Software/Device Updates'],
     'Inbox upkeep': ['Key follow-ups', 'Zero-Inbox Efforts']
   },
   'Miscellaneous': {
-    icon: Car,
+    icon: '🚗',
     'Charitable giving': ['Donation Reminders'],
     'Pet Care': ['Vet Visits', 'Grooming'],
     'Child-Related activities': ['School', 'Appointments'],
     'Deliveries': ['Parcel Tracking', 'Home Deliveries']
   },
   'Hidden Hacking Features': {
-    icon: Gift,
+    icon: '🎁',
     'Secret Stuff': ['Click for a surprise 🎉']
   }
 } as const;
@@ -148,12 +142,13 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   const [medicineName, setMedicineName] = useState('');
   const [selectedFluid, setSelectedFluid] = useState('');
   const [isQuickTasksOpen, setIsQuickTasksOpen] = useState(true);
-  const [expandedSubCategories, setExpandedSubCategories] = useState<Set<string>>(new Set());
+  
+  // FIXED: Only allow one sub-category to be open at a time
+  const [expandedSubCategory, setExpandedSubCategory] = useState<string>('');
 
   const selectedPriorityDetails = priorities.find(p => p.value === priority);
 
   const handleCategorySelect = (category: string) => {
-    // If clicking the same category, close it
     if (selectedCategory === category) {
       setSelectedCategory('');
     } else {
@@ -163,19 +158,17 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
     setSelectedSubCategory('');
     setSelectedTask('');
     setTitle('');
-    setExpandedSubCategories(new Set());
+    setExpandedSubCategory(''); // Reset expanded subcategory
   };
 
+  // FIXED: Only allow one sub-category to be expanded at a time
   const handleSubCategoryToggle = (subCategory: string) => {
-    const newExpanded = new Set(expandedSubCategories);
-    if (newExpanded.has(subCategory)) {
-      newExpanded.delete(subCategory);
+    if (expandedSubCategory === subCategory) {
+      setExpandedSubCategory(''); // Close if already open
     } else {
-      newExpanded.add(subCategory);
+      setExpandedSubCategory(subCategory); // Open this one and close others
     }
-    setExpandedSubCategories(newExpanded);
     
-    // Set selected subcategory for form purposes
     setSelectedSubCategory(subCategory);
     setSelectedTask('');
     setTitle('');
@@ -246,23 +239,21 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
       completed: false
     });
 
-    // Show success toast in bottom right
     toast.success("Task Added Successfully! ✅", {
       description: `"${title}" has been added to your tasks.`,
       position: "bottom-right",
     });
 
-    // Navigate back immediately without delay
     onBack();
   };
 
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-4 max-w-4xl">
-        <PageHeader title="Add Task" onBack={onBack} className="mb-6" />
+        <PageHeader title="Add Task" onBack={onBack} className="mb-4" />
 
-        <div className="space-y-6">
-          {/* Quick Tasks Section - Fixed animations and visibility */}
+        <div className="space-y-4">
+          {/* Quick Tasks Section - FIXED: Better mobile handling */}
           <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm hover:shadow-md transition-all duration-300">
             <Collapsible
               open={isQuickTasksOpen}
@@ -273,19 +264,19 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                   <div className="p-1.5 rounded-full bg-primary/15">
                     <Plus className="h-4 w-4 text-primary" />
                   </div>
-                  <CardTitle className="text-lg font-semibold text-primary">Quick Tasks</CardTitle>
+                  <CardTitle className="text-base font-semibold text-primary">Quick Tasks</CardTitle>
                 </div>
                 <ChevronDown className={cn(
-                  "h-5 w-5 transform transition-transform duration-200 ease-out",
+                  "h-4 w-4 transform transition-transform duration-200 ease-out",
                   isQuickTasksOpen ? 'rotate-180 text-primary' : 'text-muted-foreground'
                 )} />
               </CollapsibleTrigger>
               
               <CollapsibleContent className="data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up overflow-hidden">
                 <div className="px-3 pb-3">
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     {Object.keys(taskCategories).map((category) => {
-                      const CategoryIcon = taskCategories[category as CategoryKey].icon;
+                      const categoryData = taskCategories[category as CategoryKey];
                       const isExpanded = selectedCategory === category;
                       
                       return (
@@ -296,57 +287,55 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                           {/* Category Header */}
                           <button
                             onClick={() => handleCategorySelect(category)}
-                            className="w-full flex items-center justify-between px-3 py-2.5 text-sm hover:bg-muted/10 transition-all duration-200 group"
+                            className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-muted/10 transition-all duration-200 group"
                           >
-                            <div className="flex items-center gap-3">
-                              <div className="p-1.5 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors duration-200">
-                                <CategoryIcon className="h-4 w-4 text-primary" />
-                              </div>
-                              <span className="font-medium">{category}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-base">{categoryData.icon}</span>
+                              <span className="font-medium text-sm">{category}</span>
                             </div>
                             <ChevronDown className={cn(
-                              "h-4 w-4 transition-transform duration-200 ease-out",
+                              "h-3 w-3 transition-transform duration-200 ease-out",
                               isExpanded ? 'rotate-180 text-primary' : 'text-muted-foreground'
                             )} />
                           </button>
 
-                          {/* Category Content */}
+                          {/* Category Content - FIXED: Better height management */}
                           <div className={cn(
                             "overflow-hidden transition-all duration-300 ease-out",
-                            isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                            isExpanded ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
                           )}>
-                            <div className="px-3 pb-2.5 pt-1 space-y-2">
-                              {Object.keys(taskCategories[category as CategoryKey]).filter(key => key !== 'icon').map((subCategory) => {
-                                const subCategoryTasks = taskCategories[category as CategoryKey][subCategory as keyof Omit<TaskCategoriesType[CategoryKey], 'icon'>] as string[];
-                                const isSubExpanded = expandedSubCategories.has(subCategory);
+                            <div className="px-3 pb-2 pt-1 space-y-1 max-h-72 overflow-y-auto">
+                              {Object.keys(categoryData).filter(key => key !== 'icon').map((subCategory) => {
+                                const subCategoryTasks = categoryData[subCategory as keyof Omit<TaskCategoriesType[CategoryKey], 'icon'>] as string[];
+                                const isSubExpanded = expandedSubCategory === subCategory;
                                 
                                 return (
                                   <div key={subCategory} className="space-y-1">
                                     {/* Subcategory Button */}
                                     <button
                                       onClick={() => handleSubCategoryToggle(subCategory)}
-                                      className="w-full flex items-center justify-between text-left text-sm font-normal py-2 px-2.5 hover:bg-muted/30 transition-all duration-200 hover:scale-[1.01] group rounded-md"
+                                      className="w-full flex items-center justify-between text-left text-xs font-normal py-1.5 px-2 hover:bg-muted/30 transition-all duration-200 hover:scale-[1.01] group rounded-md"
                                     >
-                                      <span>{subCategory}</span>
+                                      <span className="text-xs">{subCategory}</span>
                                       <ChevronDown className={cn(
-                                        "h-3.5 w-3.5 transition-transform duration-200 ease-out",
+                                        "h-3 w-3 transition-transform duration-200 ease-out",
                                         isSubExpanded ? 'rotate-180 text-primary' : 'text-muted-foreground',
                                         "opacity-50 group-hover:opacity-100"
                                       )} />
                                     </button>
                                     
-                                    {/* Subcategory Tasks */}
+                                    {/* Subcategory Tasks - FIXED: Better animation */}
                                     <div className={cn(
-                                      "ml-3 overflow-hidden transition-all duration-300 ease-out",
-                                      isSubExpanded ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
+                                      "ml-2 overflow-hidden transition-all duration-300 ease-out",
+                                      isSubExpanded ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
                                     )}>
-                                      <div className="space-y-1 py-1">
+                                      <div className="space-y-1 py-1 max-h-32 overflow-y-auto">
                                         {subCategoryTasks && subCategoryTasks.map((task) => (
                                           <button
                                             key={task}
                                             onClick={() => handleTaskSelect(task)}
                                             className={cn(
-                                              "w-full text-left text-xs py-1.5 px-2.5 rounded-md transition-all duration-200 hover:scale-[1.01]",
+                                              "w-full text-left text-xs py-1 px-2 rounded-md transition-all duration-200 hover:scale-[1.01]",
                                               selectedTask === task 
                                                 ? "bg-primary/20 text-primary border border-primary/30" 
                                                 : "hover:bg-muted/40 text-foreground"
@@ -373,8 +362,8 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
 
           {/* Task Form - Compact mobile layout */}
           <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg font-semibold text-primary">Task Details</CardTitle>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base font-semibold text-primary">Task Details</CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -385,7 +374,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
-                    className="border-input bg-background h-10"
+                    className="border-input bg-background h-9"
                   />
                 </div>
 
@@ -395,22 +384,21 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                     placeholder="Add task description..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    rows={3}
+                    rows={2}
                     className="border-input resize-none bg-background"
                   />
                 </div>
 
-                {/* Compact grid layout for mobile */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Priority</label>
                     <Select value={priority} onValueChange={(value: 'low' | 'medium' | 'high' | 'urgent') => setPriority(value)}>
-                      <SelectTrigger className="border-input bg-background h-10">
+                      <SelectTrigger className="border-input bg-background h-9">
                         <SelectValue>
                           {selectedPriorityDetails && (
                             <div className="flex items-center gap-2">
-                              <span className={cn("h-2.5 w-2.5 rounded-full", selectedPriorityDetails.color)} />
-                              <span>{selectedPriorityDetails.label}</span>
+                              <span className={cn("h-2 w-2 rounded-full", selectedPriorityDetails.color)} />
+                              <span className="text-sm">{selectedPriorityDetails.label}</span>
                               {selectedPriorityDetails.emoji && <span>{selectedPriorityDetails.emoji}</span>}
                             </div>
                           )}
@@ -420,7 +408,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                         {priorities.map((p) => (
                           <SelectItem key={p.value} value={p.value}>
                             <div className="flex items-center gap-2">
-                              <span className={cn("h-2.5 w-2.5 rounded-full", p.color)} />
+                              <span className={cn("h-2 w-2 rounded-full", p.color)} />
                               <span>{p.label}</span>
                               {p.emoji && <span className="ml-auto">{p.emoji}</span>}
                             </div>
@@ -433,21 +421,15 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Repeat</label>
                     <Select value={repeatFrequency} onValueChange={setRepeatFrequency}>
-                      <SelectTrigger className="border-input bg-background h-10">
+                      <SelectTrigger className="border-input bg-background h-9">
                         <SelectValue>
-                          <div className="flex items-center gap-2">
-                            <Repeat className="h-4 w-4" />
-                            <span>{repeatOptions.find(r => r.value === repeatFrequency)?.label}</span>
-                          </div>
+                          <span className="text-sm">{repeatOptions.find(r => r.value === repeatFrequency)?.label}</span>
                         </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {repeatOptions.map((option) => (
                           <SelectItem key={option.value} value={option.value}>
-                            <div className="flex items-center gap-2">
-                              <Repeat className="h-4 w-4" />
-                              <span>{option.label}</span>
-                            </div>
+                            <span>{option.label}</span>
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -462,7 +444,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal border-input bg-background h-10"
+                          "w-full justify-start text-left font-normal border-input bg-background h-9"
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -482,7 +464,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
 
                 <Button 
                   type="submit" 
-                  className="w-full h-11 text-base font-medium bg-primary hover:bg-primary/90 transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                  className="w-full h-10 text-base font-medium bg-primary hover:bg-primary/90 transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl"
                   disabled={!title || !selectedCategory}
                 >
                   Add Task
