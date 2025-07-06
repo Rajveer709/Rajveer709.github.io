@@ -30,12 +30,25 @@ const priorities = [
   { value: 'urgent', label: 'Urgent Priority' }
 ];
 
+const repeatOptions = [
+  { value: 'none', label: 'No Repeat' },
+  { value: 'daily', label: 'Daily' },
+  { value: 'weekly', label: 'Weekly' },
+  { value: 'monthly', label: 'Monthly' }
+];
+
+const extractRepeat = (desc: string) => {
+  const match = desc.match(/Repeats: (\w+)/);
+  return match ? match[1] : 'none';
+};
+
 export const EditTaskForm = ({ task, onEditTask }: EditTaskFormProps) => {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [category, setCategory] = useState(task.category);
   const [priority, setPriority] = useState<'low' | 'medium' | 'high' | 'urgent'>(task.priority);
   const [dueDate, setDueDate] = useState<Date>(new Date(task.dueDate));
+  const [repeat, setRepeat] = useState(extractRepeat(task.description));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,9 +57,14 @@ export const EditTaskForm = ({ task, onEditTask }: EditTaskFormProps) => {
       return;
     }
 
+    let desc = description;
+    if (repeat !== 'none') {
+      desc = `${description}\n\nRepeats: ${repeat}`;
+    }
+
     onEditTask({
       title,
-      description,
+      description: desc,
       category,
       priority,
       dueDate
@@ -105,6 +123,20 @@ export const EditTaskForm = ({ task, onEditTask }: EditTaskFormProps) => {
             </SelectContent>
           </Select>
         </div>
+      </div>
+
+      <div>
+        <label className="text-xs font-medium">Repeat</label>
+        <Select value={repeat} onValueChange={setRepeat}>
+          <SelectTrigger className="w-full">
+            <SelectValue>{repeatOptions.find(r => r.value === repeat)?.label}</SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            {repeatOptions.map(option => (
+              <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div>

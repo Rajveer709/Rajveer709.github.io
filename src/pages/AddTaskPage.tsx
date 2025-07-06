@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Task } from './Index';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -146,7 +146,18 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   // FIXED: Only allow one sub-category to be open at a time
   const [expandedSubCategory, setExpandedSubCategory] = useState<string>('');
 
+  const [showQuickAddDialog, setShowQuickAddDialog] = useState(false);
+  const [quickAddPopupEnabled, setQuickAddPopupEnabled] = useState(true);
+  const [quickAddTaskTitle, setQuickAddTaskTitle] = useState('');
+  const [quickAddDueDate, setQuickAddDueDate] = useState<Date>(new Date());
+  const [quickAddRepeat, setQuickAddRepeat] = useState('none');
+
   const selectedPriorityDetails = priorities.find(p => p.value === priority);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('quickAddPopupEnabled');
+    setQuickAddPopupEnabled(stored === null ? true : stored === 'true');
+  }, []);
 
   const handleCategorySelect = (category: string) => {
     if (selectedCategory === category) {
@@ -176,6 +187,13 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
 
   const handleTaskSelect = (task: string) => {
     setSelectedTask(task);
+    if (quickAddPopupEnabled) {
+      setQuickAddTaskTitle(`${selectedSubCategory}: ${task}`);
+      setQuickAddDueDate(new Date());
+      setQuickAddRepeat('none');
+      setShowQuickAddDialog(true);
+      return;
+    }
     
     // Handle special cases
     if (task === 'Streaming apps') {
@@ -245,6 +263,27 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
     });
 
     onBack();
+  };
+
+  const handleQuickAddSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!quickAddTaskTitle || !selectedCategory || !quickAddDueDate) return;
+    onAddTask({
+      title: quickAddTaskTitle,
+      description: quickAddRepeat !== 'none' ? `Repeats: ${quickAddRepeat}` : '',
+      category: selectedCategory,
+      priority: 'medium',
+      dueDate: quickAddDueDate,
+      completed: false
+    });
+    toast.success('Task Added Successfully! ✅', {
+      description: `"${quickAddTaskTitle}" has been added to your tasks.`,
+      position: 'bottom-right',
+    });
+    setShowQuickAddDialog(false);
+    setSelectedCategory('');
+    setSelectedSubCategory('');
+    setSelectedTask('');
   };
 
   return (
@@ -570,6 +609,56 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                 Close
               </Button>
             </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Quick Add Dialog */}
+        <Dialog open={showQuickAddDialog} onOpenChange={setShowQuickAddDialog}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Add Task</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleQuickAddSubmit} className="space-y-4">
+              <Input
+                placeholder="Task Title"
+                value={quickAddTaskTitle}
+                onChange={e => setQuickAddTaskTitle(e.target.value)}
+                required
+              />
+              <div>
+                <label className="text-xs font-medium">Due Date</label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="w-full justify-start text-left font-normal">
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {format(quickAddDueDate, 'PPP')}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={quickAddDueDate}
+                      onSelect={date => date && setQuickAddDueDate(date)}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div>
+                <label className="text-xs font-medium">Repeat</label>
+                <Select value={quickAddRepeat} onValueChange={setQuickAddRepeat}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue>{repeatOptions.find(r => r.value === quickAddRepeat)?.label}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {repeatOptions.map(option => (
+                      <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button type="submit" className="w-full bg-primary text-white">Add Task</Button>
+            </form>
           </DialogContent>
         </Dialog>
       </div>

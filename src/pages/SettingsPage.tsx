@@ -63,6 +63,15 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
   const hiddenTasks = tasks.filter(task => task.hidden);
   const rank = getRankForLevel(userLevel);
   const isAvi = rank.name === 'Avi';
+  const [quickAddPopupEnabled, setQuickAddPopupEnabled] = useState(() => {
+    const stored = localStorage.getItem('quickAddPopupEnabled');
+    return stored === null ? true : stored === 'true';
+  });
+  const [desktopView, setDesktopView] = useState(() => {
+    const stored = localStorage.getItem('desktopView');
+    return stored === null ? false : stored === 'true';
+  });
+  const [isMobile, setIsMobile] = useState(false);
 
   // Calculate how many themes should be unlocked based on level (3 per rank) + gold for Avi
   const getUnlockedThemeCount = (level: number) => {
@@ -75,6 +84,21 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
       setName(profile?.name || '');
     }
   }, [profile, isEditing]);
+
+  useEffect(() => {
+    localStorage.setItem('quickAddPopupEnabled', String(quickAddPopupEnabled));
+  }, [quickAddPopupEnabled]);
+
+  useEffect(() => {
+    localStorage.setItem('desktopView', String(desktopView));
+  }, [desktopView]);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const getInitials = (name: string | null | undefined) => {
     if (!name || name.trim() === '') return 'U';
@@ -171,6 +195,35 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
               <Switch id="dark-mode-switch" checked={isDarkMode} onCheckedChange={onToggleDarkMode} />
             </div>
 
+            {/* Quick Add Pop-up Toggle */}
+            <div className="flex items-center justify-between">
+              <label htmlFor="quick-add-popup-switch" className="flex items-center gap-2 cursor-pointer text-sm">
+                <span>Quick Add Pop-up in Add Task Page</span>
+              </label>
+              <Switch id="quick-add-popup-switch" checked={quickAddPopupEnabled} onCheckedChange={setQuickAddPopupEnabled} />
+            </div>
+
+            {/* Desktop View Toggle */}
+            <div className="flex items-center justify-between">
+              <label htmlFor="desktop-view-switch" className="flex items-center gap-2 cursor-pointer text-sm">
+                <span>Desktop View (Optimize for Desktop)</span>
+              </label>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>
+                      <Switch id="desktop-view-switch" checked={desktopView} onCheckedChange={setDesktopView} disabled={isMobile} />
+                    </span>
+                  </TooltipTrigger>
+                  {isMobile && (
+                    <TooltipContent>
+                      <span>Desktop View is only available on larger screens.</span>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+
             <div className="space-y-2">
               <label htmlFor="bg-lightness-slider" className="text-xs font-medium">Page Background</label>
               <Slider
@@ -205,7 +258,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
               <div className="grid grid-cols-3 gap-2">
                 {themes.map((theme, index) => {
                   const unlockedCount = getUnlockedThemeCount(userLevel);
-                  const isUnlocked = index < unlockedCount;
+                  const isUnlocked = isAvi || index < unlockedCount;
                   return (
                     isUnlocked ? (
                       <button

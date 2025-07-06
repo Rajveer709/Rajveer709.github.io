@@ -1,7 +1,8 @@
 import { Task, Profile } from './Index';
 import { Calendar } from '@/components/ui/calendar';
 import { CheckCircle, Clock, Calendar as CalendarIcon, Eye, CalendarDays, Filter } from 'lucide-react';
-import { format, isSameDay, isSameMonth } from 'date-fns';
+import { format, isSameDay, isSameMonth, startOfWeek, endOfWeek } from 'date-fns';
+import { isWithinInterval } from 'date-fns/isWithinInterval';
 import { useState } from 'react';
 import { PageHeader } from '../components/PageHeader';
 import { useOutletContext } from 'react-router-dom';
@@ -18,12 +19,13 @@ interface OutletContextType {
   profile: Profile | null;
   onUpdateProfile: (updatedProfile: Partial<Profile>, avatarFile?: File) => Promise<void>;
   showGreeting: boolean;
+  desktopView?: boolean;
 }
 
 export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
-  const { profile, onUpdateProfile } = useOutletContext<OutletContextType>();
+  const { profile, onUpdateProfile, desktopView } = useOutletContext<OutletContextType & { desktopView?: boolean }>();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [viewMode, setViewMode] = useState<'day' | 'month'>('day');
+  const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('day');
 
   const tasksForSelectedDate = tasks.filter(task => 
     isSameDay(new Date(task.dueDate), selectedDate)
@@ -33,11 +35,21 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
     isSameMonth(new Date(task.dueDate), selectedDate)
   );
 
+  // Week logic
+  const weekStart = startOfWeek(selectedDate, { weekStartsOn: 1 }); // Monday
+  const weekEnd = endOfWeek(selectedDate, { weekStartsOn: 1 });
+  const tasksForCurrentWeek = tasks.filter(task =>
+    isWithinInterval(new Date(task.dueDate), { start: weekStart, end: weekEnd })
+  );
+
   const completedTasksDay = tasksForSelectedDate.filter(task => task.completed);
   const pendingTasksDay = tasksForSelectedDate.filter(task => !task.completed);
 
   const completedTasksMonth = tasksForCurrentMonth.filter(task => task.completed);
   const pendingTasksMonth = tasksForCurrentMonth.filter(task => !task.completed);
+
+  const completedTasksWeek = tasksForCurrentWeek.filter(task => task.completed);
+  const pendingTasksWeek = tasksForCurrentWeek.filter(task => !task.completed);
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -49,7 +61,7 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
     }
   };
 
-  const renderTaskList = (pendingTasks: Task[], completedTasks: Task[], viewType: 'day' | 'month') => (
+  const renderTaskList = (pendingTasks: Task[], completedTasks: Task[], viewType: 'day' | 'week' | 'month') => (
     <div className="space-y-3 max-h-80 overflow-y-auto">
       {/* Pending Tasks */}
       {pendingTasks.length > 0 && (
@@ -145,7 +157,7 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
           <CalendarIcon className="w-8 h-8 mx-auto mb-2 text-muted-foreground/30" />
           <h3 className="font-medium mb-1 text-muted-foreground text-sm">No tasks</h3>
           <p className="text-xs text-muted-foreground/60">
-            {viewType === 'day' ? 'This day is free!' : 'This month is clear!'}
+            {viewType === 'day' ? 'This day is free!' : viewType === 'week' ? 'This week is free!' : 'This month is clear!'}
           </p>
         </div>
       )}
@@ -153,106 +165,112 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
   );
 
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-4 max-w-6xl">
-        {/* FIXED: Better header with proper spacing */}
-        <PageHeader
-          onBack={onBack}
-          title="Calendar"
-          className="mb-4"
-          profile={profile}
-          onUpdateProfile={onUpdateProfile}
-          showAvatar={true}
-        />
-
-        <div className="grid lg:grid-cols-3 gap-4 w-full">
-          {/* Calendar Section - FIXED: Better mobile layout */}
-          <div className="lg:col-span-2">
-            <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base font-semibold text-primary flex items-center gap-2">
-                  <CalendarIcon className="w-4 h-4" />
-                  Calendar View
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={(date) => date && setSelectedDate(date)}
-                  className="rounded-lg border-0 w-full pointer-events-auto"
-                />
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Tasks Section - FIXED: Better mobile layout and header */}
-          <div className="space-y-4">
-            {/* Quick Stats Card */}
-            <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold text-primary flex items-center gap-2">
-                  <Filter className="w-3 h-3" />
-                  Quick Stats
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="grid grid-cols-2 gap-3 text-center">
-                  <div>
-                    <div className="text-lg font-bold text-primary">
-                      {viewMode === 'day' ? pendingTasksDay.length : pendingTasksMonth.length}
-                    </div>
-                    <div className="text-xs text-muted-foreground">Pending</div>
-                  </div>
-                  <div>
-                    <div className="text-lg font-bold text-green-600 dark:text-green-400">
-                      {viewMode === 'day' ? completedTasksDay.length : completedTasksMonth.length}
-                    </div>
-                    <div className="text-xs text-muted-foreground">Done</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Tasks Card */}
-            <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-base font-semibold text-primary">
-                    Tasks
+    <div className={desktopView ? "min-h-screen bg-background" : "min-h-screen"}>
+      <div className={desktopView ? "mx-auto py-8 max-w-7xl px-8" : "container mx-auto px-4 py-4 max-w-6xl"}>
+        {/* Header left-aligned */}
+        <div className={desktopView ? "flex flex-col items-start mb-8" : "flex flex-col items-start mb-4"}>
+          <PageHeader
+            onBack={onBack}
+            title="Calendar"
+            className="mb-0"
+            profile={profile}
+            onUpdateProfile={onUpdateProfile}
+            showAvatar={true}
+          />
+        </div>
+        {/* Main content center-aligned */}
+        <div className={desktopView ? "flex flex-row gap-8 w-full" : "flex flex-col items-center w-full"}>
+          <div className={desktopView ? "flex-1 flex flex-col items-start" : "grid lg:grid-cols-3 gap-4 w-full max-w-5xl"}>
+            {/* Calendar Section */}
+            <div className={desktopView ? "mb-0" : "lg:col-span-2 flex flex-col items-start"}>
+              <Card className={desktopView ? "bg-card/95 border-border/50 shadow-lg w-full mb-8" : "bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full"}>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base font-semibold text-primary flex items-center gap-2">
+                    <CalendarIcon className="w-4 h-4" />
+                    Calendar View
                   </CardTitle>
-                  <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'day' | 'month')} className="w-auto">
-                    <TabsList className="grid w-full grid-cols-2 h-7">
-                      <TabsTrigger value="day" className="text-xs px-2 py-1">
-                        <Eye className="w-3 h-3 mr-1" />
-                        Day
-                      </TabsTrigger>
-                      <TabsTrigger value="month" className="text-xs px-2 py-1">
-                        <CalendarDays className="w-3 h-3 mr-1" />
-                        Month
-                      </TabsTrigger>
-                    </TabsList>
-                  </Tabs>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="text-xs text-muted-foreground">
-                    {viewMode === 'day' 
-                      ? format(selectedDate, "MMM d, yyyy")
-                      : format(selectedDate, "MMMM yyyy")
-                    }
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={(date) => date && setSelectedDate(date)}
+                    className="rounded-lg border-0 w-full pointer-events-auto"
+                  />
+                </CardContent>
+              </Card>
+            </div>
+            {/* Tasks Section */}
+            <div className={desktopView ? "flex-1 flex flex-col gap-8" : "space-y-4 flex flex-col items-center w-full"}>
+              {/* Tasks Card */}
+              <Card className={desktopView ? "bg-card/95 border-border/50 shadow-lg w-full" : "bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full"}>
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <CardTitle className="text-base font-semibold text-primary">
+                      Tasks
+                    </CardTitle>
+                    <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as 'day' | 'week' | 'month')} className="w-auto">
+                      <TabsList className="grid w-full grid-cols-3 h-7">
+                        <TabsTrigger value="day" className="text-xs px-2 py-1">
+                          <Eye className="w-3 h-3 mr-1" />
+                          Day
+                        </TabsTrigger>
+                        <TabsTrigger value="week" className="text-xs px-2 py-1">
+                          <CalendarDays className="w-3 h-3 mr-1" />
+                          Week
+                        </TabsTrigger>
+                        <TabsTrigger value="month" className="text-xs px-2 py-1">
+                          <CalendarIcon className="w-3 h-3 mr-1" />
+                          Month
+                        </TabsTrigger>
+                      </TabsList>
+                    </Tabs>
                   </div>
-                  <Badge variant="secondary" className="text-xs px-2 py-0.5">
-                    {viewMode === 'day' ? tasksForSelectedDate.length : tasksForCurrentMonth.length} tasks
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0">
-                {viewMode === 'day' 
-                  ? renderTaskList(pendingTasksDay, completedTasksDay, 'day')
-                  : renderTaskList(pendingTasksMonth, completedTasksMonth, 'month')
-                }
-              </CardContent>
-            </Card>
+                  <div className="flex items-center justify-between">
+                    <div className="text-xs text-muted-foreground">
+                      {viewMode === 'day' && format(selectedDate, "MMM d, yyyy")}
+                      {viewMode === 'week' && `${format(weekStart, 'MMM d')} - ${format(weekEnd, 'MMM d, yyyy')}`}
+                      {viewMode === 'month' && format(selectedDate, "MMMM yyyy")}
+                    </div>
+                    <Badge variant="secondary" className="text-xs px-2 py-0.5">
+                      {viewMode === 'day' && tasksForSelectedDate.length}
+                      {viewMode === 'week' && tasksForCurrentWeek.length}
+                      {viewMode === 'month' && tasksForCurrentMonth.length} tasks
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  {viewMode === 'day' && renderTaskList(pendingTasksDay, completedTasksDay, 'day')}
+                  {viewMode === 'week' && renderTaskList(pendingTasksWeek, completedTasksWeek, 'week')}
+                  {viewMode === 'month' && renderTaskList(pendingTasksMonth, completedTasksMonth, 'month')}
+                </CardContent>
+              </Card>
+              {/* Quick Stats Card (moved below Tasks) */}
+              <Card className={desktopView ? "bg-card/95 border-border/50 shadow-lg w-full" : "bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full"}>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-semibold text-primary flex items-center gap-2">
+                    <Filter className="w-3 h-3" />
+                    Quick Stats
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="grid grid-cols-2 gap-3 text-center">
+                    <div>
+                      <div className="text-lg font-bold text-primary">
+                        {viewMode === 'day' ? pendingTasksDay.length : viewMode === 'week' ? pendingTasksWeek.length : pendingTasksMonth.length}
+                      </div>
+                      <div className="text-xs text-muted-foreground">Pending</div>
+                    </div>
+                    <div>
+                      <div className="text-lg font-bold text-green-600 dark:text-green-400">
+                        {viewMode === 'day' ? completedTasksDay.length : viewMode === 'week' ? completedTasksWeek.length : completedTasksMonth.length}
+                      </div>
+                      <div className="text-xs text-muted-foreground">Done</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </div>

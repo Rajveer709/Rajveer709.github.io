@@ -32,10 +32,11 @@ interface OutletContextType {
   profile: Profile | null;
   onUpdateProfile: (updatedProfile: Partial<Profile>, avatarFile?: File) => Promise<void>;
   showGreeting: boolean;
+  desktopView?: boolean;
 }
 
 export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, onBack, hasStartedChallenges, onStartChallenges }: ChallengePageProps) => {
-  const { profile, onUpdateProfile, showGreeting } = useOutletContext<OutletContextType>();
+  const { profile, onUpdateProfile, showGreeting, desktopView } = useOutletContext<OutletContextType & { desktopView?: boolean }>();
   const progressPercentage = xpToNextLevel > 0 ? Math.round((userXp / xpToNextLevel) * 100) : 0;
   const rank = getRankForLevel(userLevel);
   const isAvi = rank.name === 'Avi';
@@ -124,8 +125,8 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="max-w-6xl mx-auto p-4 space-y-6">
+    <div className={desktopView ? "min-h-screen bg-background" : "min-h-screen"}>
+      <div className={desktopView ? "max-w-7xl mx-auto p-8 space-y-10" : "max-w-6xl mx-auto p-4 space-y-6"}>
         <PageHeader title="Challenges" onBack={onBack} />
 
         {!hasStartedChallenges && (
@@ -147,7 +148,7 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
         {hasStartedChallenges && (
           <>
             {/* Hero Stats Section */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className={desktopView ? "grid grid-cols-4 xl:grid-cols-6 gap-6" : "grid grid-cols-2 md:grid-cols-4 gap-3"}>
               <Card className="bg-card/80 border-primary/20 shadow-lg backdrop-blur-sm">
                 <CardContent className="p-4 text-center">
                   <div className="w-10 h-10 mx-auto mb-2 bg-primary/20 rounded-full flex items-center justify-center">
