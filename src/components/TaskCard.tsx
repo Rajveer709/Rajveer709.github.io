@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Task } from '../pages/Index';
 import { Card, CardContent } from '@/components/ui/card';
@@ -73,75 +72,75 @@ export const TaskCard = ({ task, onToggle, onDelete, onEdit, onHide }: TaskCardP
 
   return (
     <Card className={`
-      bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg 
-      hover:shadow-xl transition-all duration-300 hover:-translate-y-1
+      bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-sm 
+      hover:shadow-md transition-all duration-300 hover:scale-[1.01]
       ${task.completed ? 'opacity-60' : ''}
-      ${isOverdue ? 'ring-2 ring-destructive/50' : ''}
+      ${isOverdue ? 'ring-1 ring-destructive/50' : ''}
     `}>
-      <CardContent className="p-6">
+      <CardContent className="p-4">
         <div className="flex items-start justify-between">
-          <div className="flex items-start space-x-4 flex-1">
+          <div className="flex items-start space-x-3 flex-1">
             <Checkbox
               checked={task.completed}
               onCheckedChange={onToggle}
-              className="mt-1"
+              className="mt-0.5"
             />
             
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2">
-                <Icon className="w-4 h-4 text-gray-600" />
-                <h3 className={`font-semibold text-gray-800 ${task.completed ? 'line-through' : ''}`}>
+                <Icon className="w-3 h-3 text-gray-600" />
+                <h3 className={`font-semibold text-sm text-gray-800 ${task.completed ? 'line-through' : ''}`}>
                   {task.title}
                 </h3>
                 {isOverdue && !task.completed && (
-                  <AlertTriangle className="w-4 h-4 text-red-500" />
+                  <AlertTriangle className="w-3 h-3 text-red-500" />
                 )}
               </div>
               
               {task.description && (
-                <p className={`text-gray-600 mb-3 ${task.completed ? 'line-through' : ''}`}>
+                <p className={`text-gray-600 mb-2 text-xs ${task.completed ? 'line-through' : ''}`}>
                   {task.description}
                 </p>
               )}
               
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center gap-1">
                 <Badge 
                   variant="outline"
-                  className={CATEGORY_COLORS[task.category] || 'bg-gray-100 text-gray-800'}
+                  className={`text-xs px-1.5 py-0.5 ${CATEGORY_COLORS[task.category] || 'bg-gray-100 text-gray-800'}`}
                 >
                   {task.category}
                 </Badge>
                 
                 <Badge 
                   variant="outline"
-                  className={PRIORITY_COLORS[task.priority]}
+                  className={`text-xs px-1.5 py-0.5 ${PRIORITY_COLORS[task.priority]}`}
                 >
-                  {task.priority} priority
+                  {task.priority}
                 </Badge>
                 
-                <div className={`flex items-center text-sm ${
+                <div className={`flex items-center text-xs ${
                   isOverdue && !task.completed ? 'text-red-600 font-medium' : 'text-gray-500'
                 }`}>
-                  <CalendarIcon className="w-4 h-4 mr-1" />
-                  {format(new Date(task.dueDate), 'MMM d, yyyy')}
+                  <CalendarIcon className="w-3 h-3 mr-1" />
+                  {format(new Date(task.dueDate), 'MMM d')}
                   {!task.completed && (
-                    <span className="ml-2">{getDateText()}</span>
+                    <span className="ml-1">{getDateText()}</span>
                   )}
                 </div>
               </div>
             </div>
           </div>
           
-          <div className="flex items-center space-x-2 ml-4">
+          <div className="flex items-center space-x-1 ml-3">
             {task.completed && (
-              <Button variant="ghost" size="sm" onClick={onHide} className="text-gray-500 hover:text-blue-600">
-                <EyeOff className="w-4 h-4" />
+              <Button variant="ghost" size="sm" onClick={onHide} className="h-7 w-7 p-0 text-gray-500 hover:text-blue-600">
+                <EyeOff className="w-3 h-3" />
               </Button>
             )}
             <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
               <DialogTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-gray-500 hover:text-blue-600">
-                  <Pencil className="w-4 h-4" />
+                <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-gray-500 hover:text-blue-600">
+                  <Pencil className="w-3 h-3" />
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-md">
@@ -156,9 +155,9 @@ export const TaskCard = ({ task, onToggle, onDelete, onEdit, onHide }: TaskCardP
               variant="ghost" 
               size="sm" 
               onClick={onDelete}
-              className="text-gray-500 hover:text-red-600"
+              className="h-7 w-7 p-0 text-gray-500 hover:text-red-600"
             >
-              <Trash className="w-4 h-4" />
+              <Trash className="w-3 h-3" />
             </Button>
           </div>
         </div>

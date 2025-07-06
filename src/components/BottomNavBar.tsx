@@ -9,11 +9,11 @@ export const BottomNavBar = () => {
     { to: '/challenges', icon: Trophy, label: 'Challenges' },
   ];
 
-  const linkClasses = "flex flex-col items-center justify-center gap-1 transition-all duration-200 ease-in-out text-foreground/60 hover:text-primary";
+  const linkClasses = "flex flex-col items-center justify-center gap-1 transition-all duration-200 ease-in-out text-foreground/60 hover:text-primary min-h-[48px] px-2";
   const activeLinkClasses = "!text-primary transform scale-110";
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t h-16 z-50">
+    <nav className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t h-16 z-50 safe-area-pb">
       <div className="flex justify-around items-center h-full max-w-lg mx-auto">
         {navItems.map((item) => (
           <NavLink

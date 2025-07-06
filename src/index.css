@@ -66,12 +66,16 @@
     ) fixed;
     min-height: 100vh;
   }
+
+  /* Safe area support for mobile devices */
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
 
 /* Avi Rank Gold Gradient and Headings */
 .avi-rank {
   background: linear-gradient(135deg, #FFD700 0%, #FFB300 50%, #FFFACD 100%) !important;
-  /* fallback for cards, etc. */
 }
 .avi-rank h1, .avi-rank h2, .avi-rank h3, .avi-rank h4, .avi-rank h5, .avi-rank h6, .avi-rank .card-title, .avi-rank .CardTitle {
   background: linear-gradient(90deg, #FFD700 0%, #FFB300 50%, #FFFACD 100%);
@@ -90,4 +94,19 @@
   background-clip: text;
   color: #FFD700;
   font-weight: bold;
+}
+
+/* Enhanced touch feedback */
+@layer utilities {
+  .touch-feedback {
+    @apply active:scale-95 transition-transform duration-150;
+  }
+  
+  .button-primary {
+    @apply min-h-[48px] px-6 py-3 text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98];
+  }
+  
+  .card-compact {
+    @apply p-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-300;
+  }
 }

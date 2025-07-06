@@ -1,4 +1,3 @@
-
 import { useNavigate } from 'react-router-dom';
 import { Task } from '../pages/Index';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -49,8 +48,6 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
     return !task.completed && taskDate >= today && taskDate <= nextWeek;
   }).length;
 
-  const completionPercentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-
   const categoryCounts = tasks.reduce((acc, task) => {
     if (!task.completed) {
       acc[task.category] = (acc[task.category] || 0) + 1;
@@ -59,96 +56,96 @@ export const TaskDashboard = ({ tasks }: TaskDashboardProps) => {
   }, {} as { [key: string]: number });
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      {/* Overview Cards */}
+    <div className="grid grid-cols-2 gap-3">
+      {/* Overview Cards - Compact */}
       <Card 
-        className="bg-blue-50 dark:bg-blue-500/10 border-0 shadow-lg hover:shadow-xl hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-all duration-300 h-full cursor-pointer"
+        className="bg-blue-50 dark:bg-blue-500/10 border-0 shadow-sm hover:shadow-md hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-all duration-300 cursor-pointer"
         onClick={() => navigate('/tasks/all')}
       >
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Tasks</CardTitle>
-          <CheckCircle className="h-5 w-5 text-blue-500" />
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+          <CardTitle className="text-xs font-medium text-gray-600 dark:text-gray-400">Total</CardTitle>
+          <CheckCircle className="h-4 w-4 text-blue-500" />
         </CardHeader>
-        <CardContent>
-          <div className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">{totalTasks}</div>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {completedTasks} completed
+        <CardContent className="pt-0">
+          <div className="text-xl font-bold text-blue-600 dark:text-blue-400">{totalTasks}</div>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {completedTasks} done
           </p>
         </CardContent>
       </Card>
 
       <Card 
-        className="bg-orange-50 dark:bg-orange-500/10 border-0 shadow-lg hover:shadow-xl hover:bg-orange-100 dark:hover:bg-orange-500/20 transition-all duration-300 h-full cursor-pointer"
+        className="bg-orange-50 dark:bg-orange-500/10 border-0 shadow-sm hover:shadow-md hover:bg-orange-100 dark:hover:bg-orange-500/20 transition-all duration-300 cursor-pointer"
         onClick={() => navigate('/tasks/due-soon')}
       >
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Due Tasks</CardTitle>
-          <Clock className="h-5 w-5 text-orange-500" />
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+          <CardTitle className="text-xs font-medium text-gray-600 dark:text-gray-400">Due Soon</CardTitle>
+          <Clock className="h-4 w-4 text-orange-500" />
         </CardHeader>
-        <CardContent>
-          <div className="text-2xl md:text-3xl font-bold text-orange-600 dark:text-orange-400">{upcomingTasks}</div>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Coming up soon
+        <CardContent className="pt-0">
+          <div className="text-xl font-bold text-orange-600 dark:text-orange-400">{upcomingTasks}</div>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            This week
           </p>
         </CardContent>
       </Card>
 
       <Card 
-        className="bg-red-50 dark:bg-destructive/25 border-0 shadow-lg hover:shadow-xl hover:bg-red-100 dark:hover:bg-destructive/35 transition-all duration-300 h-full cursor-pointer"
+        className="bg-red-50 dark:bg-destructive/25 border-0 shadow-sm hover:shadow-md hover:bg-red-100 dark:hover:bg-destructive/35 transition-all duration-300 cursor-pointer"
         onClick={() => navigate('/tasks/overdue')}
       >
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">OverDue Tasks</CardTitle>
-          <AlertTriangle className="h-5 w-5 text-destructive" />
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+          <CardTitle className="text-xs font-medium text-gray-600 dark:text-gray-400">Overdue</CardTitle>
+          <AlertTriangle className="h-4 w-4 text-destructive" />
         </CardHeader>
-        <CardContent>
-          <div className="text-2xl md:text-3xl font-bold text-destructive">{overdueTasks}</div>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+        <CardContent className="pt-0">
+          <div className="text-xl font-bold text-destructive">{overdueTasks}</div>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             Need attention
           </p>
         </CardContent>
       </Card>
 
       <Card 
-        className="bg-green-50 dark:bg-green-500/10 border-0 shadow-lg hover:shadow-xl hover:bg-green-100 dark:hover:bg-green-500/20 transition-all duration-300 h-full cursor-pointer"
+        className="bg-green-50 dark:bg-green-500/10 border-0 shadow-sm hover:shadow-md hover:bg-green-100 dark:hover:bg-green-500/20 transition-all duration-300 cursor-pointer"
         onClick={() => navigate('/tasks/completed')}
       >
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Completed Tasks</CardTitle>
-          <CheckCircle className="h-5 w-5 text-green-500" />
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-1">
+          <CardTitle className="text-xs font-medium text-gray-600 dark:text-gray-400">Complete</CardTitle>
+          <CheckCircle className="h-4 w-4 text-green-500" />
         </CardHeader>
-        <CardContent>
-            <div className="text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400">
-              {completedTasks}
-            </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              out of {totalTasks} tasks
-            </p>
+        <CardContent className="pt-0">
+          <div className="text-xl font-bold text-green-600 dark:text-green-400">
+            {completedTasks}
+          </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            of {totalTasks}
+          </p>
         </CardContent>
       </Card>
 
-      {/* Category Breakdown */}
-      <Card className="col-span-full bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold text-gray-800 dark:text-gray-200">Active Tasks by Category</CardTitle>
+      {/* Category Breakdown - Compact */}
+      <Card className="col-span-full bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-sm">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-semibold text-gray-800 dark:text-gray-200">Active by Category</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-3">
+        <CardContent className="pt-0">
+          <div className="flex flex-wrap gap-2">
             {Object.entries(categoryCounts).map(([category, count]) => {
               const Icon = categoryIcons[category] || FileText;
               return (
                 <Badge 
                   key={category} 
                   variant="outline"
-                  className={`${categoryColors[category] || 'bg-gray-100 text-gray-800'} px-3 py-2 text-sm font-medium flex items-center gap-2`}
+                  className={`${categoryColors[category] || 'bg-gray-100 text-gray-800'} px-2 py-1 text-xs font-medium flex items-center gap-1`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-3 h-3" />
                   {category}: {count}
                 </Badge>
               );
             })}
             {Object.keys(categoryCounts).length === 0 && (
-              <p className="text-gray-500 dark:text-gray-400 text-sm">No active tasks</p>
+              <p className="text-gray-500 dark:text-gray-400 text-xs">No active tasks</p>
             )}
           </div>
         </CardContent>

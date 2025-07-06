@@ -79,13 +79,25 @@ const Index = () => {
         const cardLightness = cardLightnessValue !== undefined ? cardLightnessValue : (isDark ? 18 : 94);
 
         if (isDark) {
+          root.style.setProperty('--background', `${primaryHsl.h} ${primaryHsl.s * 0.2}% ${bgLightness}%`);
           root.style.setProperty('--background-gradient-start', `${primaryHsl.h} ${primaryHsl.s * 0.3}% ${bgLightness}%`);
           root.style.setProperty('--background-gradient-end', `${primaryHsl.h} ${primaryHsl.s * 0.3}% ${bgLightness - 5}%`);
           root.style.setProperty('--card', `${primaryHsl.h} ${primaryHsl.s * 0.4}% ${cardLightness}%`);
+          root.style.setProperty('--foreground', '210 40% 98%');
+          root.style.setProperty('--muted', '217.2 32.6% 17.5%');
+          root.style.setProperty('--muted-foreground', '215 20.2% 65.1%');
+          root.style.setProperty('--border', '217.2 32.6% 17.5%');
+          root.style.setProperty('--input', '217.2 32.6% 17.5%');
         } else {
+          root.style.setProperty('--background', `0 0% 100%`);
           root.style.setProperty('--background-gradient-start', `${primaryHsl.h} 50% ${bgLightness}%`);
-          root.style.setProperty('--background-gradient-end', `0 0% 100%`); // to white
+          root.style.setProperty('--background-gradient-end', `0 0% 100%`);
           root.style.setProperty('--card', `${primaryHsl.h} 60% ${cardLightness}%`);
+          root.style.setProperty('--foreground', '222.2 84% 4.9%');
+          root.style.setProperty('--muted', '210 40% 96.1%');
+          root.style.setProperty('--muted-foreground', '215.4 16.3% 46.9%');
+          root.style.setProperty('--border', '214.3 31.8% 91.4%');
+          root.style.setProperty('--input', '214.3 31.8% 91.4%');
         }
     }
   };
@@ -228,10 +240,13 @@ const Index = () => {
     }
   }, [currentTheme]);
 
+  // Auto-unlock gold theme for Avi rank (level 100+)
   useEffect(() => {
     if (userLevel >= 100 && currentTheme !== 'gold') {
       setCurrentTheme('gold');
-      localStorage.setItem(`lifeAdminTheme_${user?.id ?? 'default'}`, 'gold');
+      if (user) {
+        localStorage.setItem(`lifeAdminTheme_${user.id}`, 'gold');
+      }
     }
   }, [userLevel, currentTheme, user]);
 
@@ -406,6 +421,8 @@ const Index = () => {
     setTasks([]);
     setCurrentTheme(defaultTheme);
     setIsDarkMode(false);
+    setBackgroundLightness(96);
+    setCardLightness(94);
     setUserLevel(1);
     setUserXp(0);
     setChallenges(ALL_CHALLENGES_DEFINITIONS.map(c => ({...c, completed: false})));
@@ -421,7 +438,9 @@ const Index = () => {
     setHasStartedChallenges(true);
     // Unlock and auto-apply gold theme
     setCurrentTheme('gold');
-    localStorage.setItem(`lifeAdminTheme_${user?.id ?? 'default'}`, 'gold');
+    if (user) {
+      localStorage.setItem(`lifeAdminTheme_${user.id}`, 'gold');
+    }
     toast.success("Cheats activated! Everything unlocked.", {
         description: "Enjoy your god-like status! Gold theme applied!",
     });

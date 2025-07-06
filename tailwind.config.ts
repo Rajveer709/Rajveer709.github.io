@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -13,7 +12,7 @@ export default {
 	theme: {
 		container: {
 			center: true,
-			padding: '2rem',
+			padding: '1rem',
 			screens: {
 				'2xl': '1400px'
 			}
@@ -67,6 +66,9 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				}
 			},
+			spacing: {
+				'safe-bottom': 'env(safe-area-inset-bottom)',
+			},
 			backgroundImage: {
 				'gradient-primary': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
 				'gradient-secondary': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
@@ -102,7 +104,7 @@ export default {
         "fade-in": {
           "0%": {
             opacity: "0",
-            transform: "translateY(20px)"
+            transform: "translateY(10px)"
           },
           "100%": {
             opacity: "1",
@@ -133,6 +135,22 @@ export default {
             opacity: "1"
           }
         },
+        "bounce-in": {
+          "0%": {
+            transform: "scale(0.3)",
+            opacity: "0"
+          },
+          "50%": {
+            transform: "scale(1.05)"
+          },
+          "70%": {
+            transform: "scale(0.9)"
+          },
+          "100%": {
+            transform: "scale(1)",
+            opacity: "1"
+          }
+        },
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -141,9 +159,9 @@ export default {
         'pulse-glow': 'pulse-glow 2.5s ease-in-out infinite',
         "scale-in": "scale-in 0.3s ease-out forwards",
         "slide-in-from-left": "slide-in-from-left 0.5s ease-out forwards",
+        "bounce-in": "bounce-in 0.6s ease-out forwards",
 			}
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
-

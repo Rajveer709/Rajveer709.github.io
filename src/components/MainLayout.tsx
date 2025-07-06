@@ -1,4 +1,3 @@
-
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Header } from './Header';
 import { BottomNavBar } from './BottomNavBar';
@@ -23,7 +22,7 @@ export const MainLayout = ({
 
   return (
     <>
-      <div className="container mx-auto px-4 pt-6 max-w-sm pb-20">
+      <div className="container mx-auto px-4 pt-4 max-w-sm pb-20">
         {showGreeting && (
           <Header
             profile={profile}
