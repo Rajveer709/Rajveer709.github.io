@@ -120,13 +120,13 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
                   <rank.Icon className="w-3 h-3 text-primary" />
                 </div>
               </div>
-              <div className="flex-grow space-y-1">
+              <div className="flex-grow space-y-1 min-w-0">
                 {isEditing ? (
                   <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your Name" className="h-8" />
                 ) : (
-                  <p className="font-semibold text-sm">{profile?.name || 'No name set'}</p>
+                  <p className="font-semibold text-sm truncate">{profile?.name || 'No name set'}</p>
                 )}
-                <p className="text-xs text-muted-foreground">{user?.email}</p>
+                <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
               </div>
             </div>
             
@@ -249,7 +249,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           </CardContent>
         </Card>
 
-        {/* Hidden Tasks Card - Compact */}
+        {/* Hidden Tasks Card - FIXED: Better text overflow handling */}
         {hiddenTasks.length > 0 && (
           <Card className="animate-scale-in bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg" style={{ animationDelay: '300ms' }}>
             <CardHeader className="pb-3">
@@ -257,33 +257,42 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
                 <EyeOff className="w-4 h-4" />
                 <span>Hidden Tasks ({hiddenTasks.length})</span>
               </CardTitle>
+              <CardDescription className="text-xs">
+                Restore tasks that you've hidden from your main list.
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <Accordion type="single" collapsible className="w-full">
+              <div className="space-y-2 max-h-64 overflow-y-auto">
                 {hiddenTasks.map((task) => (
-                  <AccordionItem value={task.id} key={task.id} className="border-b-border/50">
-                    <AccordionTrigger className="hover:no-underline py-2 text-sm">
-                      <span className="truncate">{task.title}</span>
-                    </AccordionTrigger>
-                    <AccordionContent className="pb-2">
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs text-muted-foreground">
-                          Due: {format(new Date(task.dueDate), 'P')}
-                        </p>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => onRestoreTask(task.id)}
-                          className="h-7 px-2 text-xs"
-                        >
-                          <Eye className="w-3 h-3 mr-1" />
-                          Restore
-                        </Button>
+                  <div key={task.id} className="border border-border/50 rounded-lg p-3 space-y-2">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-sm text-foreground break-words line-clamp-2 leading-tight">
+                          {task.title}
+                        </h4>
+                        {task.description && (
+                          <p className="text-xs text-muted-foreground mt-1 break-words line-clamp-1">
+                            {task.description}
+                          </p>
+                        )}
                       </div>
-                    </AccordionContent>
-                  </AccordionItem>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onRestoreTask(task.id)}
+                        className="h-7 px-2 text-xs shrink-0"
+                      >
+                        <Eye className="w-3 h-3 mr-1" />
+                        Restore
+                      </Button>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>Due: {format(new Date(task.dueDate), 'MMM d, yyyy')}</span>
+                      <span className="capitalize">{task.priority} priority</span>
+                    </div>
+                  </div>
                 ))}
-              </Accordion>
+              </div>
             </CardContent>
           </Card>
         )}
