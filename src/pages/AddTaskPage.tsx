@@ -293,7 +293,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen mt-4 mb-2 bg-background">
       <div className="container mx-auto px-4 py-4 max-w-4xl">
         <PageHeader title="Add Task" onBack={onBack} className="mb-4" />
 
