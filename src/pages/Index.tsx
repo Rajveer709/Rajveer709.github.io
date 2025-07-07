@@ -19,7 +19,6 @@ import { MainLayout } from '../components/MainLayout';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import { PublicRoute } from '../components/PublicRoute';
 import { ChallengePage, type Challenge } from './ChallengePage';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 export interface Task {
   id: string;
@@ -64,39 +63,6 @@ const Index = () => {
     ALL_CHALLENGES_DEFINITIONS.map(c => ({...c, completed: false}))
   );
   const [hasStartedChallenges, setHasStartedChallenges] = useState(false);
-
-  const [showTutorial, setShowTutorial] = useState(false);
-  const [tutorialStep, setTutorialStep] = useState(0);
-  const tutorialSteps = [
-    {
-      title: "Welcome to LifeAdmin!",
-      content: "Let\'s take a quick tour of your new productivity app."
-    },
-    {
-      title: "Dashboard",
-      content: "This is your Dashboard. Here you\'ll see your progress, quick stats, and upcoming tasks."
-    },
-    {
-      title: "Add Task",
-      content: "Use the Add Task page to quickly add new tasks and reminders."
-    },
-    {
-      title: "Calendar",
-      content: "The Calendar page helps you visualize your tasks and deadlines."
-    },
-    {
-      title: "Challenges",
-      content: "Complete challenges to unlock new themes and ranks!"
-    },
-    {
-      title: "Settings",
-      content: "Customize your experience in Settings, including themes and desktop view."
-    },
-    {
-      title: "All Set!",
-      content: "You\'re ready to get started. Good luck and stay organized!"
-    }
-  ];
 
   const applyTheme = (themeValue: string, isDark: boolean, pageLightness?: number, cardLightnessValue?: number) => {
     const theme = themes.find(t => t.value === themeValue) || themes.find(t => t.value === defaultTheme);
@@ -162,7 +128,6 @@ const Index = () => {
 
     if (error) {
       console.error('Error fetching profile:', error);
-      // If profile doesn't exist, create one with the user's metadata
       if (error.code === 'PGRST116') {
         const { data: newProfile, error: insertError } = await supabase
           .from('profiles')
@@ -188,19 +153,13 @@ const Index = () => {
   useEffect(() => {
     if (user) {
       fetchProfile(user);
-      // Show tutorial only for first-time signups
-      const firstTimeKey = `lifeAdminFirstTime_${user.id}`;
-      const isFirstTime = localStorage.getItem(firstTimeKey);
-      if (isFirstTime === null || isFirstTime === 'true') {
-        setShowTutorial(true);
-      }
     } else {
       setProfile(null);
     }
   }, [user, fetchProfile]);
 
   useEffect(() => {
-    if (!user) return; // Don't run this effect if user is not logged in
+    if (!user) return;
 
     const savedTasks = localStorage.getItem(`lifeAdminTasks_${user.id}`);
     if (savedTasks) {
@@ -280,7 +239,6 @@ const Index = () => {
     }
   }, [currentTheme]);
 
-  // Auto-unlock gold theme for Avi rank (level 100+)
   useEffect(() => {
     if (userLevel >= 100 && currentTheme !== 'gold') {
       setCurrentTheme('gold');
@@ -291,7 +249,7 @@ const Index = () => {
   }, [userLevel, currentTheme, user]);
 
   const checkChallenges = useCallback((currentTasks: Task[]) => {
-    if (!hasStartedChallenges) return; // Only check challenges if user has started
+    if (!hasStartedChallenges) return;
     
     const completedTasks = currentTasks.filter(t => t.completed);
     const completedCategories = new Set(completedTasks.map(t => t.category.trim()).filter(Boolean));
@@ -338,13 +296,12 @@ const Index = () => {
           setUserLevel(currentLevel);
           toast.info(`Congratulations! You've reached Level ${currentLevel}!`);
           
-          // Give 3 themes per level up
           if (levelsGained > 0) {
             const themesPerLevel = 3;
             const newThemeCount = Math.min(themesPerLevel, themes.length - ((currentLevel - 2) * 3));
             if (newThemeCount > 0) {
               const startIndex = (currentLevel - 2) * 3;
-              const endIndex = Math.min(startIndex + 3, 12); // Max 12 for regular ranks
+              const endIndex = Math.min(startIndex + 3, 12);
               const unlockedThemeNames = themes.slice(startIndex, endIndex).map(t => t.name);
               toast.success(`New themes unlocked: ${unlockedThemeNames.join(', ')}!`, {
                 description: 'You can change them in Settings.',
@@ -426,7 +383,7 @@ const Index = () => {
   const handleToggleDarkMode = () => {
     setIsDarkMode(prev => {
         const newIsDarkMode = !prev;
-        setBackgroundLightness(newIsDarkMode ? 15 : 96); // reset to default on toggle
+        setBackgroundLightness(newIsDarkMode ? 15 : 96);
         setCardLightness(newIsDarkMode ? 18 : 94);
         return newIsDarkMode;
     });
@@ -476,7 +433,6 @@ const Index = () => {
     setUserLevel(100);
     setUserXp(0);
     setHasStartedChallenges(true);
-    // Unlock and auto-apply gold theme
     setCurrentTheme('gold');
     if (user) {
       localStorage.setItem(`lifeAdminTheme_${user.id}`, 'gold');
@@ -528,7 +484,6 @@ const Index = () => {
     };
     
     if (Object.keys(updates).length <= 1 && !avatar_url) {
-        // Only updated_at is present, nothing to update
         return;
     }
 
@@ -635,45 +590,6 @@ const Index = () => {
           <Route path="*" element={<Navigate to={session ? "/" : "/landing"} replace />} />
         </Routes>
       </AnimatePresence>
-      {showTutorial && (
-        <Dialog open onOpenChange={() => {}}>
-          <DialogContent className="max-w-md text-center">
-            <DialogHeader>
-              <DialogTitle>{tutorialSteps[tutorialStep].title}</DialogTitle>
-            </DialogHeader>
-            <div className="my-4 text-base">{tutorialSteps[tutorialStep].content}</div>
-            <div className="flex justify-center gap-2 mt-6">
-              {tutorialStep < tutorialSteps.length - 1 ? (
-                <button
-                  className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90"
-                  onClick={() => setTutorialStep(tutorialStep + 1)}
-                >
-                  Next
-                </button>
-              ) : (
-                <button
-                  className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90"
-                  onClick={() => {
-                    setShowTutorial(false);
-                    if (user) localStorage.setItem(`lifeAdminFirstTime_${user.id}`, 'false');
-                  }}
-                >
-                  Finish
-                </button>
-              )}
-              <button
-                className="ml-2 text-muted-foreground underline"
-                onClick={() => {
-                  setShowTutorial(false);
-                  if (user) localStorage.setItem(`lifeAdminFirstTime_${user.id}`, 'false');
-                }}
-              >
-                Skip Tutorial
-              </button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
     </div>
   );
 };

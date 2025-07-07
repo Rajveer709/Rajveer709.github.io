@@ -1,4 +1,3 @@
-
 import { Task } from '../pages/Index';
 import { TaskCard } from './TaskCard';
 import { Card, CardContent } from '@/components/ui/card';
@@ -20,11 +19,20 @@ export const TaskList = ({
 }: TaskListProps) => {
   const visibleTasks = tasks.filter(task => !task.hidden);
   
-  // Sort tasks: incomplete first (by due date), then completed
+  // Sort tasks: incomplete first (by priority then due date), then completed
+  const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 };
+  
   const sortedTasks = [...visibleTasks].sort((a, b) => {
     if (a.completed !== b.completed) {
       return a.completed ? 1 : -1;
     }
+    
+    // For incomplete tasks, sort by priority first, then by due date
+    if (!a.completed && !b.completed) {
+      const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
+      if (priorityDiff !== 0) return priorityDiff;
+    }
+    
     return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
   });
 

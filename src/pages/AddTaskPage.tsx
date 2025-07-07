@@ -28,7 +28,6 @@ interface AddTaskPageProps {
 
 const taskCategories = {
   'Financial Tasks': {
-    icon: '💰',
     'Utility bills': ['Electricity', 'Water', 'Gas'],
     'Insurance': ['Health', 'Auto', 'Home', 'Life Premiums'],
     'Credit Card': ['Payments', 'Installments'],
@@ -38,7 +37,6 @@ const taskCategories = {
     'Subscriptions': ['Streaming apps', 'Memberships']
   },
   'Health & Wellness': {
-    icon: '🏥',
     'Medical check-ups': ['General practitioners', 'Specialists'],
     'Dentist visits': ['Check-Ups', 'Cleanings'],
     'Medications': ['Dosages', 'Refill Reminders'],
@@ -48,7 +46,6 @@ const taskCategories = {
     'Mental health': ['Therapy', 'Meditation', 'Self-care']
   },
   'Home Management': {
-    icon: '🏠',
     'Household chores': ['Cleaning', 'Repairs', 'Inspections'],
     'Appliance upkeep': ['Maintenance', 'Warranty reminders'],
     'Vehicle care': ['Servicing', 'Oil changes & Top-up', 'Registration', 'Tire change'],
@@ -56,7 +53,6 @@ const taskCategories = {
     'Waste schedule': ['Trash', 'Recycling']
   },
   'Work & Professional': {
-    icon: '💼',
     'Meetings & Deadlines': ['Meetings & Deadlines'],
     'Project Milestones': ['Project Milestones'],
     'Certifications & courses': ['Certifications & courses'],
@@ -64,7 +60,6 @@ const taskCategories = {
     'Work-Related Expenses': ['Documentation']
   },
   'Personal & Social': {
-    icon: '🎯',
     'Celebrations': ['Birthdays', 'Anniversaries'],
     'Social Planning': ['Events', 'Meetups'],
     'Travel Logistics': ['Tickets', 'Accommodation', 'Itineraries'],
@@ -72,28 +67,24 @@ const taskCategories = {
     'Reading': ['Reading list']
   },
   'Legal Things': {
-    icon: '⚖️',
     'Document Renewals': ['Passport', 'License', 'IDs'],
     'Form Submissions': ['Permits', 'Claims', 'Applications'],
     'Civic Tasks': ['Voter Registration', 'Election Reminders'],
     'Estate Management': ['Will Updates', 'Estate Planning']
   },
   'Digital Life': {
-    icon: '📱',
     'Passwords': ['Regular Updates'],
     'Backups': ['Photos', 'Docs', 'Cloud Backups'],
     'Software/Device Updates': ['Software/Device Updates'],
     'Inbox upkeep': ['Key follow-ups', 'Zero-Inbox Efforts']
   },
   'Miscellaneous': {
-    icon: '🚗',
     'Charitable giving': ['Donation Reminders'],
     'Pet Care': ['Vet Visits', 'Grooming'],
     'Child-Related activities': ['School', 'Appointments'],
     'Deliveries': ['Parcel Tracking', 'Home Deliveries']
   },
   'Hidden Hacking Features': {
-    icon: '🎁',
     'Secret Stuff': ['Click for a surprise 🎉']
   }
 } as const;
@@ -112,10 +103,10 @@ const vehicleFluidOptions = [
 ];
 
 const priorities = [
-  { value: 'low', label: 'Low Priority', color: 'bg-green-500' },
-  { value: 'medium', label: 'Medium Priority', color: 'bg-yellow-500' },
-  { value: 'high', label: 'High Priority', color: 'bg-orange-500' },
-  { value: 'urgent', label: 'Urgent Priority', color: 'bg-red-500', emoji: '🚨' }
+  { value: 'low', label: 'Low Priority', color: 'text-green-600' },
+  { value: 'medium', label: 'Medium Priority', color: 'text-yellow-600' },
+  { value: 'high', label: 'High Priority', color: 'text-orange-600' },
+  { value: 'urgent', label: 'Urgent', color: 'text-red-600' }
 ];
 
 const repeatOptions = [
@@ -143,7 +134,6 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   const [selectedFluid, setSelectedFluid] = useState('');
   const [isQuickTasksOpen, setIsQuickTasksOpen] = useState(true);
   
-  // FIXED: Only allow one sub-category to be open at a time
   const [expandedSubCategory, setExpandedSubCategory] = useState<string>('');
 
   const [showQuickAddDialog, setShowQuickAddDialog] = useState(false);
@@ -151,6 +141,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
   const [quickAddTaskTitle, setQuickAddTaskTitle] = useState('');
   const [quickAddDueDate, setQuickAddDueDate] = useState<Date>(new Date());
   const [quickAddRepeat, setQuickAddRepeat] = useState('none');
+  const [quickAddPriority, setQuickAddPriority] = useState<'low' | 'medium' | 'high' | 'urgent'>('medium');
 
   const selectedPriorityDetails = priorities.find(p => p.value === priority);
 
@@ -165,19 +156,17 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
     } else {
       setSelectedCategory(category);
     }
-    // Reset other selections when changing category
     setSelectedSubCategory('');
     setSelectedTask('');
     setTitle('');
-    setExpandedSubCategory(''); // Reset expanded subcategory
+    setExpandedSubCategory('');
   };
 
-  // FIXED: Only allow one sub-category to be expanded at a time
   const handleSubCategoryToggle = (subCategory: string) => {
     if (expandedSubCategory === subCategory) {
-      setExpandedSubCategory(''); // Close if already open
+      setExpandedSubCategory('');
     } else {
-      setExpandedSubCategory(subCategory); // Open this one and close others
+      setExpandedSubCategory(subCategory);
     }
     
     setSelectedSubCategory(subCategory);
@@ -191,11 +180,11 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
       setQuickAddTaskTitle(`${selectedSubCategory}: ${task}`);
       setQuickAddDueDate(new Date());
       setQuickAddRepeat('none');
+      setQuickAddPriority('medium');
       setShowQuickAddDialog(true);
       return;
     }
     
-    // Handle special cases
     if (task === 'Streaming apps') {
       setShowStreamingDialog(true);
       return;
@@ -213,7 +202,6 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
       return;
     }
     
-    // Set title based on selection
     setTitle(`${selectedSubCategory}: ${task}`);
   };
 
@@ -272,7 +260,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
       title: quickAddTaskTitle,
       description: quickAddRepeat !== 'none' ? `Repeats: ${quickAddRepeat}` : '',
       category: selectedCategory,
-      priority: 'medium',
+      priority: quickAddPriority,
       dueDate: quickAddDueDate,
       completed: false
     });
@@ -292,7 +280,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
         <PageHeader title="Add Task" onBack={onBack} className="mb-4" />
 
         <div className="space-y-4">
-          {/* Quick Tasks Section - FIXED: Better mobile handling */}
+          {/* Quick Tasks Section */}
           <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm hover:shadow-md transition-all duration-300">
             <Collapsible
               open={isQuickTasksOpen}
@@ -323,13 +311,12 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                           key={category}
                           className="border border-border/40 rounded-lg overflow-hidden bg-card/30 shadow-sm hover:shadow-md transition-all duration-200 hover:border-border/80"
                         >
-                          {/* Category Header */}
+                          {/* Category Header - removed icons */}
                           <button
                             onClick={() => handleCategorySelect(category)}
                             className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-muted/10 transition-all duration-200 group"
                           >
                             <div className="flex items-center gap-2">
-                              <span className="text-base">{categoryData.icon}</span>
                               <span className="font-medium text-sm">{category}</span>
                             </div>
                             <ChevronDown className={cn(
@@ -338,14 +325,14 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                             )} />
                           </button>
 
-                          {/* Category Content - FIXED: Better height management */}
+                          {/* Category Content */}
                           <div className={cn(
                             "overflow-hidden transition-all duration-300 ease-out",
                             isExpanded ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
                           )}>
                             <div className="px-3 pb-2 pt-1 space-y-1 max-h-72 overflow-y-auto">
-                              {Object.keys(categoryData).filter(key => key !== 'icon').map((subCategory) => {
-                                const subCategoryTasks = categoryData[subCategory as keyof Omit<TaskCategoriesType[CategoryKey], 'icon'>] as string[];
+                              {Object.keys(categoryData).map((subCategory) => {
+                                const subCategoryTasks = categoryData[subCategory as keyof TaskCategoriesType[CategoryKey]] as string[];
                                 const isSubExpanded = expandedSubCategory === subCategory;
                                 
                                 return (
@@ -363,7 +350,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                                       )} />
                                     </button>
                                     
-                                    {/* Subcategory Tasks - FIXED: Better animation */}
+                                    {/* Subcategory Tasks */}
                                     <div className={cn(
                                       "ml-2 overflow-hidden transition-all duration-300 ease-out",
                                       isSubExpanded ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
@@ -399,7 +386,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
             </Collapsible>
           </Card>
 
-          {/* Task Form - Compact mobile layout */}
+          {/* Task Form */}
           <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold text-primary">Task Details</CardTitle>
@@ -436,9 +423,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                         <SelectValue>
                           {selectedPriorityDetails && (
                             <div className="flex items-center gap-2">
-                              <span className={cn("h-2 w-2 rounded-full", selectedPriorityDetails.color)} />
                               <span className="text-sm">{selectedPriorityDetails.label}</span>
-                              {selectedPriorityDetails.emoji && <span>{selectedPriorityDetails.emoji}</span>}
                             </div>
                           )}
                         </SelectValue>
@@ -447,9 +432,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                         {priorities.map((p) => (
                           <SelectItem key={p.value} value={p.value}>
                             <div className="flex items-center gap-2">
-                              <span className={cn("h-2 w-2 rounded-full", p.color)} />
                               <span>{p.label}</span>
-                              {p.emoji && <span className="ml-auto">{p.emoji}</span>}
                             </div>
                           </SelectItem>
                         ))}
@@ -612,7 +595,7 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
           </DialogContent>
         </Dialog>
 
-        {/* Quick Add Dialog */}
+        {/* Quick Add Dialog - with priority */}
         <Dialog open={showQuickAddDialog} onOpenChange={setShowQuickAddDialog}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
@@ -625,6 +608,19 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                 onChange={e => setQuickAddTaskTitle(e.target.value)}
                 required
               />
+              <div>
+                <label className="text-xs font-medium">Priority</label>
+                <Select value={quickAddPriority} onValueChange={(value: 'low' | 'medium' | 'high' | 'urgent') => setQuickAddPriority(value)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue>{priorities.find(p => p.value === quickAddPriority)?.label}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {priorities.map(p => (
+                      <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <div>
                 <label className="text-xs font-medium">Due Date</label>
                 <Popover>

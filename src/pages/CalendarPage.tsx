@@ -23,7 +23,7 @@ interface OutletContextType {
 }
 
 export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
-  const { profile, onUpdateProfile, desktopView } = useOutletContext<OutletContextType & { desktopView?: boolean }>();
+  const { desktopView } = useOutletContext<OutletContextType & { desktopView?: boolean }>();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [viewMode, setViewMode] = useState<'day' | 'week' | 'month'>('day');
 
@@ -167,30 +167,28 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
   return (
     <div className={desktopView ? "min-h-screen bg-background" : "min-h-screen"}>
       <div className={desktopView ? "mx-auto py-8 max-w-7xl px-8" : "container mx-auto px-4 py-4 max-w-6xl"}>
-        {/* Header left-aligned */}
+        {/* Header - removed profile photo */}
         <div className={desktopView ? "flex flex-col items-start mb-8" : "flex flex-col items-start mb-4"}>
           <PageHeader
             onBack={onBack}
             title="Calendar"
             className="mb-0"
-            profile={profile}
-            onUpdateProfile={onUpdateProfile}
-            showAvatar={true}
           />
         </div>
-        {/* Main content center-aligned */}
-        <div className={desktopView ? "flex flex-row gap-8 w-full" : "flex flex-col items-center w-full"}>
-          <div className={desktopView ? "flex-1 flex flex-col items-start" : "grid lg:grid-cols-3 gap-4 w-full max-w-5xl"}>
-            {/* Calendar Section */}
-            <div className={desktopView ? "mb-0" : "lg:col-span-2 flex flex-col items-start"}>
-              <Card className={desktopView ? "bg-card/95 border-border/50 shadow-lg w-full mb-8" : "bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full"}>
+        
+        {/* Main content - centered layout */}
+        <div className="flex flex-col items-center w-full max-w-5xl mx-auto">
+          <div className="grid lg:grid-cols-3 gap-6 w-full">
+            {/* Calendar Section - centered */}
+            <div className="lg:col-span-2 flex flex-col items-center">
+              <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full max-w-md">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-semibold text-primary flex items-center gap-2">
+                  <CardTitle className="text-base font-semibold text-primary flex items-center gap-2 justify-center">
                     <CalendarIcon className="w-4 h-4" />
                     Calendar View
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="pt-0">
+                <CardContent className="pt-0 flex justify-center">
                   <Calendar
                     mode="single"
                     selected={selectedDate}
@@ -200,10 +198,11 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
                 </CardContent>
               </Card>
             </div>
-            {/* Tasks Section */}
-            <div className={desktopView ? "flex-1 flex flex-col gap-8" : "space-y-4 flex flex-col items-center w-full"}>
+            
+            {/* Tasks Section - centered */}
+            <div className="space-y-4 flex flex-col items-center w-full">
               {/* Tasks Card */}
-              <Card className={desktopView ? "bg-card/95 border-border/50 shadow-lg w-full" : "bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full"}>
+              <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between mb-2">
                     <CardTitle className="text-base font-semibold text-primary">
@@ -245,10 +244,11 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
                   {viewMode === 'month' && renderTaskList(pendingTasksMonth, completedTasksMonth, 'month')}
                 </CardContent>
               </Card>
-              {/* Quick Stats Card (moved below Tasks) */}
-              <Card className={desktopView ? "bg-card/95 border-border/50 shadow-lg w-full" : "bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full"}>
+              
+              {/* Quick Stats Card */}
+              <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm font-semibold text-primary flex items-center gap-2">
+                  <CardTitle className="text-sm font-semibold text-primary flex items-center gap-2 justify-center">
                     <Filter className="w-3 h-3" />
                     Quick Stats
                   </CardTitle>
