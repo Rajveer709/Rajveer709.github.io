@@ -308,17 +308,17 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
           )}
         </div>
         <Dialog open={!!selectedChallenge} onOpenChange={() => setSelectedChallenge(null)}>
-          <DialogContent className="p-0 overflow-hidden rounded-xl max-w-md">
+          <DialogContent className="p-0 overflow-hidden rounded-xl max-w-xs">
             {selectedChallenge && (
-              <div className="bg-gradient-to-r from-primary/80 to-primary/60 px-6 py-4 flex items-center gap-3">
-                <Star className="w-8 h-8 text-white drop-shadow" />
+              <div className="bg-gradient-to-r from-primary/80 to-primary/60 px-4 py-3 flex items-center gap-2">
+                <Star className="w-7 h-7 text-white drop-shadow" />
                 <div>
-                  <h2 className="text-lg font-bold text-white leading-tight">{selectedChallenge.text}</h2>
+                  <h2 className="text-base font-bold text-white leading-tight">{selectedChallenge.text}</h2>
                   <span className="text-xs text-white/80">Challenge #{selectedChallenge.id}</span>
                 </div>
               </div>
             )}
-            <div className="p-6">
+            <div className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Badge variant="outline" className="text-xs px-2 py-1 bg-primary/10 text-primary border-primary/30">{selectedChallenge?.xp} XP</Badge>
                 <span className={`text-xs font-semibold ${selectedChallenge?.completed ? 'text-green-600' : 'text-muted-foreground'}`}>{selectedChallenge?.completed ? 'Completed' : 'Incomplete'}</span>

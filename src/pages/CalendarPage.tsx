@@ -165,7 +165,7 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
   );
 
   return (
-    <div className={desktopView ? "min-h-screen bg-background" : "min-h-screen"}>
+    <div className={desktopView ? "min-h-screen bg-background" : "min-h-screen mt-4 mb-2 bg-background"}>
       <div className={desktopView ? "mx-auto py-8 max-w-7xl px-8" : "container mx-auto px-4 py-4 max-w-6xl"}>
         {/* Header - removed profile photo */}
         <div className={desktopView ? "flex flex-col items-start mb-8" : "flex flex-col items-start mb-4"}>

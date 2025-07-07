@@ -30,7 +30,7 @@ export const MainLayout = ({
 
   return (
     <>
-      <div className={desktopView ? "flex min-h-screen" : "container mx-auto px-4 pt-4 max-w-sm pb-20"}>
+      <div className={desktopView ? "flex min-h-screen" : "container mx-auto px-4 pt-4 max-w-sm pb-20 mt-4 mb-2"}>
         {desktopView && <SidebarNavBar />}
         <div className={desktopView ? "flex-1 px-8 py-8 max-w-6xl mx-auto" : undefined}>
           {showGreeting && (
