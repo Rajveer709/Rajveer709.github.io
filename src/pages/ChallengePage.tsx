@@ -133,44 +133,44 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
           {hasStartedChallenges && (
             <>
               {/* Progress Overview */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <Card className="text-center bg-primary/5 border-primary/20 rounded-xl">
-                  <CardContent className="p-6 flex flex-col items-center">
-                    <div className="w-12 h-12 mb-2 bg-primary/20 rounded-full flex items-center justify-center">
-                      <rank.Icon className="w-6 h-6 text-primary" />
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Card className="text-center bg-primary/5 border-primary/20 rounded-xl min-h-[110px] p-0">
+                  <CardContent className="p-3 flex flex-col items-center justify-center">
+                    <div className="w-8 h-8 mb-1 bg-primary/20 rounded-full flex items-center justify-center">
+                      <rank.Icon className="w-4 h-4 text-primary" />
                     </div>
                     <p className="text-xs text-muted-foreground">Rank</p>
-                    <p className="font-bold text-lg text-primary">{rank.name}</p>
-                    <Badge variant="secondary" className="mt-1 text-xs">Level {userLevel}</Badge>
+                    <p className="font-bold text-base text-primary leading-tight">{rank.name}</p>
+                    <Badge variant="secondary" className="mt-1 text-xs">Lvl {userLevel}</Badge>
                   </CardContent>
                 </Card>
-                <Card className="text-center bg-primary/5 border-primary/20 rounded-xl">
-                  <CardContent className="p-6 flex flex-col items-center">
-                    <div className="w-12 h-12 mb-2 bg-primary/20 rounded-full flex items-center justify-center">
-                      <Trophy className="w-6 h-6 text-primary" />
+                <Card className="text-center bg-primary/5 border-primary/20 rounded-xl min-h-[110px] p-0">
+                  <CardContent className="p-3 flex flex-col items-center justify-center">
+                    <div className="w-8 h-8 mb-1 bg-primary/20 rounded-full flex items-center justify-center">
+                      <Trophy className="w-4 h-4 text-primary" />
                     </div>
                     <p className="text-xs text-muted-foreground">Completed</p>
-                    <p className="font-bold text-lg text-primary">{isAvi ? totalChallenges : completedChallenges}</p>
-                    <p className="text-xs text-muted-foreground">of {totalChallenges}</p>
+                    <p className="font-bold text-base text-primary leading-tight">{isAvi ? totalChallenges : completedChallenges}</p>
+                    <p className="text-xs text-muted-foreground">/ {totalChallenges}</p>
                   </CardContent>
                 </Card>
-                <Card className="text-center bg-primary/5 border-primary/20 rounded-xl">
-                  <CardContent className="p-6 flex flex-col items-center">
-                    <div className="w-12 h-12 mb-2 bg-primary/20 rounded-full flex items-center justify-center">
-                      <Star className="w-6 h-6 text-primary" />
+                <Card className="text-center bg-primary/5 border-primary/20 rounded-xl min-h-[110px] p-0">
+                  <CardContent className="p-3 flex flex-col items-center justify-center">
+                    <div className="w-8 h-8 mb-1 bg-primary/20 rounded-full flex items-center justify-center">
+                      <Star className="w-4 h-4 text-primary" />
                     </div>
                     <p className="text-xs text-muted-foreground">XP</p>
-                    <p className="font-bold text-lg text-primary">{isAvi ? '∞' : userXp}</p>
+                    <p className="font-bold text-base text-primary leading-tight">{isAvi ? '∞' : userXp}</p>
                     <p className="text-xs text-muted-foreground">points</p>
                   </CardContent>
                 </Card>
-                <Card className="text-center bg-primary/5 border-primary/20 rounded-xl">
-                  <CardContent className="p-6 flex flex-col items-center">
-                    <div className="w-12 h-12 mb-2 bg-primary/20 rounded-full flex items-center justify-center">
-                      <Target className="w-6 h-6 text-primary" />
+                <Card className="text-center bg-primary/5 border-primary/20 rounded-xl min-h-[110px] p-0">
+                  <CardContent className="p-3 flex flex-col items-center justify-center">
+                    <div className="w-8 h-8 mb-1 bg-primary/20 rounded-full flex items-center justify-center">
+                      <Target className="w-4 h-4 text-primary" />
                     </div>
                     <p className="text-xs text-muted-foreground">Next</p>
-                    <p className="font-bold text-lg text-primary">
+                    <p className="font-bold text-base text-primary leading-tight">
                       {isAvi ? '∞' : (nextRank ? `${xpToNextLevel - userXp}` : 'MAX')}
                     </p>
                     <p className="text-xs text-muted-foreground">XP left</p>
@@ -308,18 +308,26 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
           )}
         </div>
         <Dialog open={!!selectedChallenge} onOpenChange={() => setSelectedChallenge(null)}>
-          <DialogContent>
-            <UIDialogHeader>
-              <DialogTitle>{selectedChallenge?.text}</DialogTitle>
-              <DialogDescription>XP Reward: {selectedChallenge?.xp}</DialogDescription>
-              {selectedChallenge && (
-                <div className="mt-4 text-sm text-foreground space-y-2">
-                  <div><b>Challenge ID:</b> {selectedChallenge.id}</div>
-                  <div><b>Status:</b> {selectedChallenge.completed ? 'Completed' : 'Incomplete'}</div>
-                  {/* Add more details here if available, e.g. description, tips, etc. */}
+          <DialogContent className="p-0 overflow-hidden rounded-xl max-w-md">
+            {selectedChallenge && (
+              <div className="bg-gradient-to-r from-primary/80 to-primary/60 px-6 py-4 flex items-center gap-3">
+                <Star className="w-8 h-8 text-white drop-shadow" />
+                <div>
+                  <h2 className="text-lg font-bold text-white leading-tight">{selectedChallenge.text}</h2>
+                  <span className="text-xs text-white/80">Challenge #{selectedChallenge.id}</span>
                 </div>
-              )}
-            </UIDialogHeader>
+              </div>
+            )}
+            <div className="p-6">
+              <div className="flex items-center gap-2 mb-2">
+                <Badge variant="outline" className="text-xs px-2 py-1 bg-primary/10 text-primary border-primary/30">{selectedChallenge?.xp} XP</Badge>
+                <span className={`text-xs font-semibold ${selectedChallenge?.completed ? 'text-green-600' : 'text-muted-foreground'}`}>{selectedChallenge?.completed ? 'Completed' : 'Incomplete'}</span>
+              </div>
+              {/* Add more details here if available, e.g. description, tips, etc. */}
+              <div className="text-sm text-muted-foreground mt-2">
+                <span>More info about this challenge can go here.</span>
+              </div>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
