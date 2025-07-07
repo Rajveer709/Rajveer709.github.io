@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">life-admin-zen</string>
+    <string name="title_activity_main">life-admin-zen</string>
+    <string name="package_name">app.lovable.ec18fd2a3dec46dd9e4f59c8fa9be4db</string>
+    <string name="custom_url_scheme">app.lovable.ec18fd2a3dec46dd9e4f59c8fa9be4db</string>
+</resources>
