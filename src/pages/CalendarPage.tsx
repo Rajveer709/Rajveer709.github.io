@@ -165,7 +165,7 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
   );
 
   return (
-    <div className={desktopView ? "min-h-screen bg-background" : "min-h-screen mt-4 mb-2 bg-background"}>
+    <div className={desktopView ? "min-h-screen bg-background" : "min-h-screen bg-background"}>
       <div className={desktopView ? "mx-auto py-8 max-w-7xl px-8" : "container mx-auto px-4 py-4 max-w-6xl"}>
         {/* Header - removed profile photo */}
         <div className={desktopView ? "flex flex-col items-start mb-8" : "flex flex-col items-start mb-4"}>
@@ -177,10 +177,10 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
         </div>
         
         {/* Main content - centered layout */}
-        <div className="flex flex-col items-center w-full max-w-5xl mx-auto">
+        <div className="flex flex-col items-center w-full max-w-5xl mx-auto overflow-y-auto" style={{ maxHeight: 'calc(100vh - 56px)' }}>
           <div className="grid lg:grid-cols-3 gap-6 w-full">
-            {/* Calendar Section - centered */}
-            <div className="lg:col-span-2 flex flex-col items-center">
+            {/* Calendar Section - always centered */}
+            <div className="lg:col-span-2 flex flex-col justify-center items-center">
               <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full max-w-md">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base font-semibold text-primary flex items-center gap-2 justify-center">

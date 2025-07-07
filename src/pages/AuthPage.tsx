@@ -155,6 +155,16 @@ export const AuthPage = () => {
                     <Button type="submit" className="w-full" disabled={loading}>
                       {loading ? 'Signing In...' : 'Sign In'}
                     </Button>
+                    <Button
+                      type="button"
+                      className="w-full mt-2 flex items-center justify-center gap-2 border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                      onClick={handleSignInWithGoogle}
+                      disabled={loading}
+                      variant="outline"
+                    >
+                      <GoogleIcon className="w-5 h-5" />
+                      {loading ? 'Redirecting...' : 'Sign in with Google'}
+                    </Button>
                   </form>
                 </Form>
               </CardContent>
