@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader as UIDialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, Circle, Lock, Trophy, Star, Target, Award, Shield, Crown, Ghost } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,7 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
   const { desktopView } = useOutletContext<OutletContextType & { desktopView?: boolean }>();
   const progressPercentage = xpToNextLevel > 0 ? Math.round((userXp / xpToNextLevel) * 100) : 0;
   const rank = getRankForLevel(userLevel);
+  const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null);
   const isAvi = rank.name === 'Avi';
 
   useEffect(() => {
@@ -52,6 +54,10 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
 
   const handleStartChallenges = () => {
     onStartChallenges();
+  };
+
+  const handleChallengeClick = (challenge: Challenge) => {
+    setSelectedChallenge(challenge);
   };
 
   const completedChallenges = isAvi ? challenges.length : challenges.filter(c => c.completed).length;
@@ -257,16 +263,16 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
                           <div className="space-y-2">
                             <Progress value={progressInLevel} className="h-2" />
                             
-                            {/* Challenge Preview - Show first 3 */}
-                            <div className="space-y-1">
-                              {levelChallenges.slice(0, 3).map(challenge => {
+                            {/* Challenge List - Scrollable */}
+                            <div className="space-y-1 max-h-60 overflow-y-auto pr-1">
+                              {levelChallenges.map(challenge => {
                                 const challengeLevel = getChallengeLevel(challenge.id);
                                 const isChallengeUnlocked = userLevel >= challengeLevel;
 
                                 return (
                                   <div
                                     key={challenge.id}
-                                    className={`flex items-center gap-2 p-2 rounded text-xs ${
+                                    className={`flex items-center gap-2 p-2 rounded text-xs cursor-pointer ${
                                       challenge.completed 
                                         ? 'bg-primary/10 text-primary' 
                                         : !isChallengeUnlocked 
@@ -282,27 +288,34 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
                                       <Circle className="w-3 h-3 shrink-0" />
                                     )}
                                     <span className="flex-1 truncate">{challenge.text}</span>
-                                    <Badge variant="outline" className="text-xs px-1">
-                                      {challenge.xp}
-                                    </Badge>
+                                    <Badge variant="outline" className="text-xs px-1">{challenge.xp}</Badge>
                                   </div>
                                 );
                               })}
-                              {levelChallenges.length > 3 && (
-                                <p className="text-xs text-muted-foreground text-center py-1">
-                                  +{levelChallenges.length - 3} more challenges
-                                </p>
-                              )}
+                            </div>
+                            <div className="text-right">
+                              <Badge variant={isUnlocked ? "default" : "secondary"} className="text-xs">
+                                {completedInLevel}/{totalInLevel}
+                              </Badge>
                             </div>
                           </div>
                         </CardContent>
                       </Card>
                     );
                   })}
+                </div>
               </div>
             )}
           </>
         )}
+      <Dialog open={!!selectedChallenge} onOpenChange={() => setSelectedChallenge(null)}>
+        <DialogContent>
+          <UIDialogHeader>
+            <DialogTitle>{selectedChallenge?.text}</DialogTitle>
+            <DialogDescription>XP Reward: {selectedChallenge?.xp}</DialogDescription>
+          </UIDialogHeader>
+        </DialogContent>
+      </Dialog>
       </div>
     </div>
   );
