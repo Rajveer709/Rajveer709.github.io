@@ -176,9 +176,9 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
           />
         </div>
         
-        {/* Main content - centered layout with left tilt */}
+        {/* Main content - centered layout */}
         <div className="flex flex-col items-center w-full max-w-5xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-6 w-full transform -rotate-1">
+          <div className="grid lg:grid-cols-3 gap-6 w-full">
             {/* Calendar Section - centered */}
             <div className="lg:col-span-2 flex flex-col items-center">
               <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full max-w-md">
