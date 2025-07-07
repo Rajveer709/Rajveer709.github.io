@@ -75,29 +75,29 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
     return acc;
   }, {});
 
-  // Level configurations
+  // Level configurations with theme colors
   const levelConfigs = {
     1: { 
       name: 'Explorer', 
-      color: 'bg-blue-50 border-blue-200', 
+      color: 'bg-primary/10 border-primary/30 text-primary', 
       icon: Award,
       theme: 'Beginner challenges'
     },
     2: { 
       name: 'Warrior', 
-      color: 'bg-green-50 border-green-200', 
+      color: 'bg-primary/10 border-primary/30 text-primary', 
       icon: Shield,
       theme: 'Build consistency'
     },
     3: { 
       name: 'Master', 
-      color: 'bg-purple-50 border-purple-200', 
+      color: 'bg-primary/10 border-primary/30 text-primary', 
       icon: Trophy,
       theme: 'Advanced challenges'
     },
     4: { 
       name: 'Legend', 
-      color: 'bg-yellow-50 border-yellow-200', 
+      color: 'bg-primary/10 border-primary/30 text-primary', 
       icon: Crown,
       theme: 'Ultimate challenges'
     }
@@ -105,7 +105,7 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
 
   return (
     <div className={desktopView ? "min-h-screen bg-background" : "min-h-screen"}>
-      <div className={desktopView ? "max-w-6xl mx-auto p-8 space-y-8" : "max-w-4xl mx-auto p-4 space-y-6"}>
+      <div className={desktopView ? "max-w-5xl mx-auto p-8 space-y-6" : "max-w-4xl mx-auto p-4 space-y-4"}>
         <PageHeader title="Challenges" onBack={onBack} />
 
         {!hasStartedChallenges && (
@@ -126,74 +126,70 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
 
         {hasStartedChallenges && (
           <>
-            {/* Progress Overview */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Card className="text-center">
-                <CardContent className="p-4">
-                  <div className="w-10 h-10 mx-auto mb-2 bg-primary/20 rounded-full flex items-center justify-center">
-                    <rank.Icon className="w-5 h-5 text-primary" />
+            {/* Progress Overview - Simplified */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <Card className="text-center bg-primary/5 border-primary/20">
+                <CardContent className="p-3">
+                  <div className="w-8 h-8 mx-auto mb-2 bg-primary/20 rounded-full flex items-center justify-center">
+                    <rank.Icon className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-xs text-muted-foreground">Current Rank</p>
-                  <p className="font-bold text-lg text-primary">{rank.name}</p>
+                  <p className="text-xs text-muted-foreground">Rank</p>
+                  <p className="font-bold text-sm text-primary">{rank.name}</p>
                   <Badge variant="secondary" className="mt-1 text-xs">Level {userLevel}</Badge>
                 </CardContent>
               </Card>
 
-              <Card className="text-center">
-                <CardContent className="p-4">
-                  <div className="w-10 h-10 mx-auto mb-2 bg-primary/20 rounded-full flex items-center justify-center">
-                    <Trophy className="w-5 h-5 text-primary" />
+              <Card className="text-center bg-primary/5 border-primary/20">
+                <CardContent className="p-3">
+                  <div className="w-8 h-8 mx-auto mb-2 bg-primary/20 rounded-full flex items-center justify-center">
+                    <Trophy className="w-4 h-4 text-primary" />
                   </div>
                   <p className="text-xs text-muted-foreground">Completed</p>
-                  <p className="font-bold text-lg text-primary">{isAvi ? totalChallenges : completedChallenges}</p>
-                  <p className="text-xs text-muted-foreground">out of {totalChallenges}</p>
+                  <p className="font-bold text-sm text-primary">{isAvi ? totalChallenges : completedChallenges}</p>
+                  <p className="text-xs text-muted-foreground">of {totalChallenges}</p>
                 </CardContent>
               </Card>
 
-              <Card className="text-center">
-                <CardContent className="p-4">
-                  <div className="w-10 h-10 mx-auto mb-2 bg-primary/20 rounded-full flex items-center justify-center">
-                    <Star className="w-5 h-5 text-primary" />
+              <Card className="text-center bg-primary/5 border-primary/20">
+                <CardContent className="p-3">
+                  <div className="w-8 h-8 mx-auto mb-2 bg-primary/20 rounded-full flex items-center justify-center">
+                    <Star className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-xs text-muted-foreground">Total XP</p>
-                  <p className="font-bold text-lg text-primary">{isAvi ? '∞' : userXp}</p>
-                  <p className="text-xs text-muted-foreground">experience</p>
+                  <p className="text-xs text-muted-foreground">XP</p>
+                  <p className="font-bold text-sm text-primary">{isAvi ? '∞' : userXp}</p>
+                  <p className="text-xs text-muted-foreground">points</p>
                 </CardContent>
               </Card>
 
-              <Card className="text-center">
-                <CardContent className="p-4">
-                  <div className="w-10 h-10 mx-auto mb-2 bg-primary/20 rounded-full flex items-center justify-center">
-                    <Target className="w-5 h-5 text-primary" />
+              <Card className="text-center bg-primary/5 border-primary/20">
+                <CardContent className="p-3">
+                  <div className="w-8 h-8 mx-auto mb-2 bg-primary/20 rounded-full flex items-center justify-center">
+                    <Target className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-xs text-muted-foreground">Next Level</p>
-                  <p className="font-bold text-lg text-primary">
+                  <p className="text-xs text-muted-foreground">Next</p>
+                  <p className="font-bold text-sm text-primary">
                     {isAvi ? '∞' : (nextRank ? `${xpToNextLevel - userXp}` : 'MAX')}
                   </p>
-                  <p className="text-xs text-muted-foreground">XP needed</p>
+                  <p className="text-xs text-muted-foreground">XP left</p>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Level Progress */}
-            <Card>
+            {/* Level Progress - Simplified */}
+            <Card className="bg-primary/5 border-primary/20">
               <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-3">
                   <div>
-                    <h3 className="text-lg font-bold">Level Progress</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {nextRank ? `Advance to ${nextRank.name}` : "You've reached the pinnacle!"}
+                    <h3 className="text-base font-bold text-primary">Progress to Next Rank</h3>
+                    <p className="text-xs text-muted-foreground">
+                      {nextRank ? `${nextRank.name} Rank` : "Maximum Level Reached!"}
                     </p>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium">{userXp} XP</span>
-                    <span className="text-muted-foreground">{nextRank ? `${xpToNextLevel} XP` : 'Maximum Level!'}</span>
-                  </div>
-                  <Progress value={progressPercentage} className="h-4 bg-muted" />
+                  <Progress value={progressPercentage} className="h-3 bg-muted" />
                   <p className="text-center text-xs text-muted-foreground">
-                    {progressPercentage}% to next rank
+                    {progressPercentage}% complete
                   </p>
                 </div>
               </CardContent>
@@ -202,29 +198,27 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
             {/* Avi Special Display */}
             {isAvi && (
               <Card className="bg-gradient-to-r from-yellow-100 to-yellow-50 border-yellow-300">
-                <CardHeader className="text-center">
-                  <div className="p-4 rounded-full bg-yellow-200/40 mb-2 w-fit mx-auto">
-                    <Ghost className="w-12 h-12 text-yellow-600" />
+                <CardHeader className="text-center pb-2">
+                  <div className="p-3 rounded-full bg-yellow-200/40 mb-2 w-fit mx-auto">
+                    <Ghost className="w-10 h-10 text-yellow-600" />
                   </div>
-                  <CardTitle className="text-3xl font-extrabold text-yellow-700">Rank: Avi</CardTitle>
-                  <p className="text-lg font-semibold text-yellow-600">Level: God</p>
+                  <CardTitle className="text-2xl font-extrabold text-yellow-700">Avi Rank</CardTitle>
+                  <p className="text-base font-semibold text-yellow-600">God Level Achieved</p>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-center text-yellow-700 mb-4">
-                    🎉 Congratulations! You've unlocked everything and achieved the highest rank!
+                <CardContent className="text-center">
+                  <p className="text-yellow-700 mb-3">
+                    🎉 You've unlocked everything and achieved the highest rank!
                   </p>
-                  <div className="text-center">
-                    <Badge className="bg-yellow-200 text-yellow-800 border-yellow-400">
-                      All {totalChallenges} Challenges Complete
-                    </Badge>
-                  </div>
+                  <Badge className="bg-yellow-200 text-yellow-800 border-yellow-400">
+                    All {totalChallenges} Challenges Complete
+                  </Badge>
                 </CardContent>
               </Card>
             )}
 
-            {/* Challenge Levels */}
+            {/* Challenge Levels - Simplified Layout */}
             {!isAvi && (
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="space-y-4">
                 {Object.entries(challengesByLevel)
                   .sort(([a], [b]) => Number(a) - Number(b))
                   .map(([level, levelChallenges]) => {
@@ -238,78 +232,65 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
                     return (
                       <Card 
                         key={level} 
-                        className={`shadow-lg transition-all hover:shadow-xl border-2 ${config.color} ${!isUnlocked ? 'opacity-75' : ''}`}
+                        className={`shadow-md transition-all hover:shadow-lg border-2 ${config.color} ${!isUnlocked ? 'opacity-60' : ''}`}
                       >
-                        <CardHeader className="pb-3">
-                          <div className="flex items-center gap-4">
-                            <div className={`p-3 rounded-full ${isUnlocked ? 'bg-primary/20' : 'bg-muted/20'}`}>
-                              <config.icon className={`w-8 h-8 ${isUnlocked ? 'text-primary' : 'text-muted-foreground'}`} />
+                        <CardHeader className="pb-2">
+                          <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-full ${isUnlocked ? 'bg-primary/20' : 'bg-muted/20'}`}>
+                              <config.icon className={`w-6 h-6 ${isUnlocked ? 'text-primary' : 'text-muted-foreground'}`} />
                             </div>
                             <div className="flex-1">
-                              <CardTitle className="text-xl flex items-center gap-2">
+                              <CardTitle className="text-lg flex items-center gap-2">
                                 Level {level}: {config.name}
-                                {!isUnlocked && <Lock className="w-5 h-5 text-muted-foreground" />}
+                                {!isUnlocked && <Lock className="w-4 h-4 text-muted-foreground" />}
                               </CardTitle>
-                              <p className="text-sm text-muted-foreground">{config.theme}</p>
+                              <p className="text-xs text-muted-foreground">{config.theme}</p>
+                            </div>
+                            <div className="text-right">
+                              <Badge variant={isUnlocked ? "default" : "secondary"} className="text-xs">
+                                {completedInLevel}/{totalInLevel}
+                              </Badge>
                             </div>
                           </div>
                         </CardHeader>
-                        <CardContent>
-                          <div className="space-y-3">
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm font-medium">
-                                {completedInLevel}/{totalInLevel} Complete
-                              </span>
-                              <Badge variant={isUnlocked ? "default" : "secondary"}>
-                                {Math.round(progressInLevel)}%
-                              </Badge>
-                            </div>
+                        <CardContent className="pt-0">
+                          <div className="space-y-2">
                             <Progress value={progressInLevel} className="h-2" />
                             
-                            {/* Challenge List */}
-                            <div className="space-y-2 max-h-48 overflow-y-auto">
-                              {levelChallenges.slice(0, 5).map(challenge => {
+                            {/* Challenge Preview - Show first 3 */}
+                            <div className="space-y-1">
+                              {levelChallenges.slice(0, 3).map(challenge => {
                                 const challengeLevel = getChallengeLevel(challenge.id);
                                 const isChallengeUnlocked = userLevel >= challengeLevel;
 
                                 return (
                                   <div
                                     key={challenge.id}
-                                    className={`flex items-center gap-3 p-2 rounded-lg text-sm ${
+                                    className={`flex items-center gap-2 p-2 rounded text-xs ${
                                       challenge.completed 
-                                        ? 'bg-primary/10 border border-primary/20' 
+                                        ? 'bg-primary/10 text-primary' 
                                         : !isChallengeUnlocked 
-                                        ? 'bg-muted/30' 
-                                        : 'bg-card/60 border border-border'
+                                        ? 'bg-muted/30 text-muted-foreground' 
+                                        : 'bg-card text-foreground'
                                     }`}
                                   >
                                     {challenge.completed ? (
-                                      <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                                      <CheckCircle2 className="w-3 h-3 shrink-0" />
                                     ) : !isChallengeUnlocked ? (
-                                      <Lock className="w-4 h-4 text-muted-foreground shrink-0" />
+                                      <Lock className="w-3 h-3 shrink-0" />
                                     ) : (
-                                      <Circle className="w-4 h-4 text-muted-foreground shrink-0" />
+                                      <Circle className="w-3 h-3 shrink-0" />
                                     )}
-                                    <div className="flex-1 min-w-0">
-                                      <p className={`font-medium leading-tight ${
-                                        challenge.completed 
-                                          ? 'text-primary' 
-                                          : !isChallengeUnlocked 
-                                          ? 'text-muted-foreground' 
-                                          : 'text-foreground'
-                                      }`}>
-                                        {challenge.text}
-                                      </p>
-                                    </div>
-                                    <Badge variant="outline" className="text-xs">
-                                      {challenge.xp} XP
+                                    <span className="flex-1 truncate">{challenge.text}</span>
+                                    <Badge variant="outline" className="text-xs px-1">
+                                      {challenge.xp}
                                     </Badge>
                                   </div>
                                 );
                               })}
-                              {levelChallenges.length > 5 && (
-                                <p className="text-xs text-muted-foreground text-center">
-                                  +{levelChallenges.length - 5} more challenges...
+                              {levelChallenges.length > 3 && (
+                                <p className="text-xs text-muted-foreground text-center py-1">
+                                  +{levelChallenges.length - 3} more challenges
                                 </p>
                               )}
                             </div>

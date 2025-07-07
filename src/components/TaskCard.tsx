@@ -72,7 +72,7 @@ export const TaskCard = ({ task, onToggle, onDelete, onEdit, onHide }: TaskCardP
 
   return (
     <Card className={`
-      bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-sm 
+      task-card bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-sm 
       hover:shadow-md transition-all duration-300 hover:scale-[1.01]
       ${task.completed ? 'opacity-60' : ''}
       ${isOverdue ? 'ring-1 ring-destructive/50' : ''}

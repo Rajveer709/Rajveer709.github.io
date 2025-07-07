@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Task } from './Index';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { CalendarIcon, ChevronDown, Plus } from 'lucide-react';
+import { CalendarIcon, ChevronDown, Plus, DollarSign, Heart, Home, Briefcase, Users, Scale, Smartphone, Car } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import {
@@ -28,6 +28,8 @@ interface AddTaskPageProps {
 
 const taskCategories = {
   'Financial Tasks': {
+    icon: DollarSign,
+    color: 'text-green-600',
     'Utility bills': ['Electricity', 'Water', 'Gas'],
     'Insurance': ['Health', 'Auto', 'Home', 'Life Premiums'],
     'Credit Card': ['Payments', 'Installments'],
@@ -37,6 +39,8 @@ const taskCategories = {
     'Subscriptions': ['Streaming apps', 'Memberships']
   },
   'Health & Wellness': {
+    icon: Heart,
+    color: 'text-red-600',
     'Medical check-ups': ['General practitioners', 'Specialists'],
     'Dentist visits': ['Check-Ups', 'Cleanings'],
     'Medications': ['Dosages', 'Refill Reminders'],
@@ -46,6 +50,8 @@ const taskCategories = {
     'Mental health': ['Therapy', 'Meditation', 'Self-care']
   },
   'Home Management': {
+    icon: Home,
+    color: 'text-blue-600',
     'Household chores': ['Cleaning', 'Repairs', 'Inspections'],
     'Appliance upkeep': ['Maintenance', 'Warranty reminders'],
     'Vehicle care': ['Servicing', 'Oil changes & Top-up', 'Registration', 'Tire change'],
@@ -53,6 +59,8 @@ const taskCategories = {
     'Waste schedule': ['Trash', 'Recycling']
   },
   'Work & Professional': {
+    icon: Briefcase,
+    color: 'text-purple-600',
     'Meetings & Deadlines': ['Meetings & Deadlines'],
     'Project Milestones': ['Project Milestones'],
     'Certifications & courses': ['Certifications & courses'],
@@ -60,31 +68,41 @@ const taskCategories = {
     'Work-Related Expenses': ['Documentation']
   },
   'Personal & Social': {
+    icon: Users,
+    color: 'text-pink-600',
     'Celebrations': ['Birthdays', 'Anniversaries'],
     'Social Planning': ['Events', 'Meetups'],
     'Travel Logistics': ['Tickets', 'Accommodation', 'Itineraries'],
     'Learning': ['Courses', 'Workshops', 'Learning Goals'],
     'Reading': ['Reading list']
   },
-  'Legal Things': {
+  'Legal & Admin': {
+    icon: Scale,
+    color: 'text-amber-600',
     'Document Renewals': ['Passport', 'License', 'IDs'],
     'Form Submissions': ['Permits', 'Claims', 'Applications'],
     'Civic Tasks': ['Voter Registration', 'Election Reminders'],
     'Estate Management': ['Will Updates', 'Estate Planning']
   },
   'Digital Life': {
+    icon: Smartphone,
+    color: 'text-indigo-600',
     'Passwords': ['Regular Updates'],
     'Backups': ['Photos', 'Docs', 'Cloud Backups'],
     'Software/Device Updates': ['Software/Device Updates'],
     'Inbox upkeep': ['Key follow-ups', 'Zero-Inbox Efforts']
   },
   'Miscellaneous': {
+    icon: Car,
+    color: 'text-gray-600',
     'Charitable giving': ['Donation Reminders'],
     'Pet Care': ['Vet Visits', 'Grooming'],
     'Child-Related activities': ['School', 'Appointments'],
     'Deliveries': ['Parcel Tracking', 'Home Deliveries']
   },
   'Hidden Hacking Features': {
+    icon: Plus,
+    color: 'text-orange-600',
     'Secret Stuff': ['Click for a surprise 🎉']
   }
 } as const;
@@ -145,10 +163,10 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
 
   const selectedPriorityDetails = priorities.find(p => p.value === priority);
 
-  useEffect(() => {
+  useState(() => {
     const stored = localStorage.getItem('quickAddPopupEnabled');
     setQuickAddPopupEnabled(stored === null ? true : stored === 'true');
-  }, []);
+  });
 
   const handleCategorySelect = (category: string) => {
     if (selectedCategory === category) {
@@ -305,18 +323,20 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                     {Object.keys(taskCategories).map((category) => {
                       const categoryData = taskCategories[category as CategoryKey];
                       const isExpanded = selectedCategory === category;
+                      const CategoryIcon = categoryData.icon;
                       
                       return (
                         <div 
                           key={category}
                           className="border border-border/40 rounded-lg overflow-hidden bg-card/30 shadow-sm hover:shadow-md transition-all duration-200 hover:border-border/80"
                         >
-                          {/* Category Header - removed icons */}
+                          {/* Category Header with icons */}
                           <button
                             onClick={() => handleCategorySelect(category)}
                             className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-muted/10 transition-all duration-200 group"
                           >
                             <div className="flex items-center gap-2">
+                              <CategoryIcon className={`w-4 h-4 ${categoryData.color}`} />
                               <span className="font-medium text-sm">{category}</span>
                             </div>
                             <ChevronDown className={cn(
@@ -331,8 +351,8 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
                             isExpanded ? "max-h-80 opacity-100" : "max-h-0 opacity-0"
                           )}>
                             <div className="px-3 pb-2 pt-1 space-y-1 max-h-72 overflow-y-auto">
-                              {Object.keys(categoryData).map((subCategory) => {
-                                const subCategoryTasks = categoryData[subCategory as keyof TaskCategoriesType[CategoryKey]] as string[];
+                              {Object.keys(categoryData).filter(key => key !== 'icon' && key !== 'color').map((subCategory) => {
+                                const subCategoryTasks = categoryData[subCategory as keyof Omit<TaskCategoriesType[CategoryKey], 'icon' | 'color'>] as string[];
                                 const isSubExpanded = expandedSubCategory === subCategory;
                                 
                                 return (

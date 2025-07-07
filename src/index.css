@@ -73,27 +73,46 @@
   }
 }
 
-/* Avi Rank Gold Gradient and Headings */
+/* Avi Rank Gold Gradient and Headings - Enhanced visibility */
 .avi-rank {
   background: linear-gradient(135deg, #FFD700 0%, #FFB300 50%, #FFFACD 100%) !important;
 }
 .avi-rank h1, .avi-rank h2, .avi-rank h3, .avi-rank h4, .avi-rank h5, .avi-rank h6, .avi-rank .card-title, .avi-rank .CardTitle {
-  background: linear-gradient(90deg, #FFD700 0%, #FFB300 50%, #FFFACD 100%);
+  background: linear-gradient(90deg, #B8860B 0%, #DAA520 50%, #FFD700 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  color: #FFD700;
+  color: #B8860B;
   font-weight: bold;
+  text-shadow: 0 1px 2px rgba(184, 134, 11, 0.3);
 }
 
-/* Gold Theme Headings Gradient */
+/* Gold Theme Headings Gradient - Enhanced visibility */
 .theme-gold h1, .theme-gold h2, .theme-gold h3, .theme-gold h4, .theme-gold h5, .theme-gold h6, .theme-gold .card-title, .theme-gold .CardTitle {
-  background: linear-gradient(90deg, #FFD700 0%, #FFB300 50%, #FFFACD 100%);
+  background: linear-gradient(90deg, #B8860B 0%, #DAA520 50%, #FFD700 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  color: #FFD700;
+  color: #B8860B;
   font-weight: bold;
+  text-shadow: 0 1px 2px rgba(184, 134, 11, 0.3);
+}
+
+/* Exclude task cards from gold text styling */
+.theme-gold .task-card h1, 
+.theme-gold .task-card h2, 
+.theme-gold .task-card h3, 
+.theme-gold .task-card h4, 
+.theme-gold .task-card h5, 
+.theme-gold .task-card h6,
+.theme-gold .task-card .card-title,
+.theme-gold .task-card .CardTitle {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+  background-clip: unset !important;
+  color: inherit !important;
+  text-shadow: none !important;
 }
 
 /* Enhanced touch feedback */
