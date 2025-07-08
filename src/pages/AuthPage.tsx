@@ -109,33 +109,31 @@ export const AuthPage = () => {
     if (!guestName.trim()) return;
     localStorage.setItem('lifeAdminGuestName', guestName.trim());
     setShowNameDialog(false);
-    navigate('/');
+    navigate('/dashboard'); // Redirect to main app page for guests
   };
 
   const handleDeleteAccount = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    // Call Edge Function to delete user from Auth
-    const response = await fetch('https://<YOUR_PROJECT_ID>.functions.supabase.co/delete-user', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: user.id }),
+    // Call Edge Function using supabase client
+    const { error } = await supabase.functions.invoke('delete-account', {
+      body: { userId: user.id },
     });
-
-    if (!response.ok) {
-      const { error } = await response.json();
-      toast.error(error || 'Failed to delete account.');
+    if (error) {
+      console.error('Error deleting account:', error);
+      toast.error(error.message || 'Failed to delete account.');
       return;
     }
 
     // Delete profile from DB
     await supabase.from('profiles').delete().eq('id', user.id);
 
-    // Clear all localStorage
-    localStorage.clear();
+    // Remove only your app's keys from localStorage
+    Object.keys(localStorage)
+      .filter(key => key.startsWith('lifeAdmin'))
+      .forEach(key => localStorage.removeItem(key));
 
-    // Sign out and redirect
     await supabase.auth.signOut();
     toast.success('Account deleted.');
     navigate('/auth');

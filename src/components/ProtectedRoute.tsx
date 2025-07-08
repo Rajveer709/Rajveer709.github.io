@@ -7,9 +7,10 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute = ({ session }: ProtectedRouteProps) => {
-  if (!session) {
+  // Allow guests if guest flag is set in localStorage
+  const isGuest = typeof window !== 'undefined' && localStorage.getItem('lifeAdminGuest') === 'true';
+  if (!session && !isGuest) {
     return <Navigate to="/landing" replace />;
   }
-
   return <Outlet />;
 };
