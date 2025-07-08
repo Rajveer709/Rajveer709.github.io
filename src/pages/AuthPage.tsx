@@ -99,27 +99,15 @@ export const AuthPage = () => {
     // On success, Supabase handles the redirect, so no need to set loading to false.
   };
 
-  const handleGuestLogin = async () => {
-    setLoading(true);
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: 'guest@demo.com',
-      password: 'guest1234',
-    });
-    setLoading(false);
-    if (error) {
-      toast.error('Guest login failed.');
-    } else {
-      toast.success('Logged in as guest!');
-      setGuestUserId(data.user?.id || null);
-      setShowNameDialog(true);
-    }
+  const handleGuestLogin = () => {
+    // Set guest session flag and show name dialog
+    localStorage.setItem('lifeAdminGuest', 'true');
+    setShowNameDialog(true);
   };
 
-  // Add a function to update the guest's name after login
-  const handleGuestNameSubmit = async () => {
-    if (!guestName.trim() || !guestUserId) return;
-    // Update profile in Supabase
-    await supabase.from('profiles').update({ name: guestName.trim() }).eq('id', guestUserId);
+  const handleGuestNameSubmit = () => {
+    if (!guestName.trim()) return;
+    localStorage.setItem('lifeAdminGuestName', guestName.trim());
     setShowNameDialog(false);
     navigate('/');
   };
