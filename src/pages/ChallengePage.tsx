@@ -312,21 +312,12 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
             {selectedChallenge && (
               <div className="bg-gradient-to-r from-primary/80 to-primary/60 px-4 py-3 flex items-center gap-2">
                 <Star className="w-7 h-7 text-white drop-shadow" />
-                <div>
-                  <h2 className="text-base font-bold text-white leading-tight">{selectedChallenge.text}</h2>
-                  <span className="text-xs text-white/80">Challenge #{selectedChallenge.id}</span>
-                </div>
+                <h2 className="text-base font-bold text-white leading-tight flex-1">{selectedChallenge.text}</h2>
               </div>
             )}
-            <div className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Badge variant="outline" className="text-xs px-2 py-1 bg-primary/10 text-primary border-primary/30">{selectedChallenge?.xp} XP</Badge>
-                <span className={`text-xs font-semibold ${selectedChallenge?.completed ? 'text-green-600' : 'text-muted-foreground'}`}>{selectedChallenge?.completed ? 'Completed' : 'Incomplete'}</span>
-              </div>
-              {/* Add more details here if available, e.g. description, tips, etc. */}
-              <div className="text-sm text-muted-foreground mt-2">
-                <span>More info about this challenge can go here.</span>
-              </div>
+            <div className="p-4 flex flex-col gap-2 items-start">
+              <Badge variant="outline" className="text-xs px-2 py-1 bg-primary/10 text-primary border-primary/30">{selectedChallenge?.xp} XP</Badge>
+              <span className={`text-xs font-semibold ${selectedChallenge?.completed ? 'text-green-600' : 'text-muted-foreground'}`}>{selectedChallenge?.completed ? 'Completed' : 'Incomplete'}</span>
             </div>
           </DialogContent>
         </Dialog>
