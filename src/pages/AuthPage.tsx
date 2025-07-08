@@ -155,15 +155,30 @@ export const AuthPage = () => {
                     <Button type="submit" className="w-full" disabled={loading}>
                       {loading ? 'Signing In...' : 'Sign In'}
                     </Button>
+                    {/* Guest Login Button */}
                     <Button
                       type="button"
                       className="w-full mt-2 flex items-center justify-center gap-2 border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-                      onClick={handleSignInWithGoogle}
+                      onClick={async () => {
+                        setLoading(true);
+                        // Use a fixed guest account or create a temp one
+                        const { error } = await supabase.auth.signInWithPassword({
+                          email: 'guest@demo.com',
+                          password: 'guest1234',
+                        });
+                        setLoading(false);
+                        if (error) {
+                          toast.error('Guest login failed.');
+                        } else {
+                          toast.success('Logged in as guest!');
+                          navigate('/');
+                        }
+                      }}
                       disabled={loading}
                       variant="outline"
                     >
-                      <GoogleIcon className="w-5 h-5" />
-                      {loading ? 'Redirecting...' : 'Sign in with Google'}
+                      <CheckSquare className="w-5 h-5" />
+                      {loading ? 'Logging in...' : 'Login as Guest'}
                     </Button>
                   </form>
                 </Form>
