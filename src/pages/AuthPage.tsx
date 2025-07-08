@@ -34,9 +34,6 @@ const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export const AuthPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [showNameDialog, setShowNameDialog] = useState(false);
-  const [guestName, setGuestName] = useState('');
-  const [guestUserId, setGuestUserId] = useState<string | null>(null);
 
   const signUpForm = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -99,35 +96,14 @@ export const AuthPage = () => {
     // On success, Supabase handles the redirect, so no need to set loading to false.
   };
 
-  const handleGuestLogin = () => {
-    // Set guest session flag and show name dialog
-    localStorage.setItem('lifeAdminGuest', 'true');
-    setShowNameDialog(true);
-  };
-
-  const handleGuestNameSubmit = () => {
-    if (!guestName.trim()) return;
-    localStorage.setItem('lifeAdminGuestName', guestName.trim());
-    setShowNameDialog(false);
-    navigate('/dashboard'); // Redirect to main app page for guests
-  };
-
   const handleDeleteAccount = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-
-    // Call Edge Function using supabase client
-    const { error } = await supabase.functions.invoke('delete-account', {
-      body: { userId: user.id },
-    });
+    // Use Supabase client to call the new edge function
+    const { error } = await supabase.functions.invoke('delete-account');
     if (error) {
       console.error('Error deleting account:', error);
       toast.error(error.message || 'Failed to delete account.');
       return;
     }
-
-    // Delete profile from DB
-    await supabase.from('profiles').delete().eq('id', user.id);
 
     // Remove only your app's keys from localStorage
     Object.keys(localStorage)
@@ -199,17 +175,6 @@ export const AuthPage = () => {
                     <Button type="submit" className="w-full" disabled={loading}>
                       {loading ? 'Signing In...' : 'Sign In'}
                     </Button>
-                    {/* Guest Login Button */}
-                    <Button
-                      type="button"
-                      className="w-full mt-2 flex items-center justify-center gap-2"
-                      onClick={handleGuestLogin}
-                      disabled={loading}
-                      variant="outline"
-                    >
-                      <CheckSquare className="w-5 h-5 text-muted-foreground" />
-                      {loading ? 'Logging in...' : 'Login as Guest'}
-                    </Button>
                   </form>
                 </Form>
               </CardContent>
@@ -272,36 +237,6 @@ export const AuthPage = () => {
           </TabsContent>
         </Tabs>
       </div>
-      {/* Name Prompt Dialog for Guest */}
-      <Dialog open={showNameDialog} onOpenChange={setShowNameDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Welcome, Guest!</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-2">
-            <label htmlFor="guest-name" className="block text-sm font-medium">Enter your name to personalize your experience:</label>
-            <input
-              id="guest-name"
-              type="text"
-              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring"
-              value={guestName}
-              onChange={e => setGuestName(e.target.value)}
-              autoFocus
-              maxLength={32}
-              placeholder="Your Name"
-            />
-          </div>
-          <DialogFooter>
-            <Button
-              onClick={handleGuestNameSubmit}
-              disabled={!guestName.trim()}
-              className="w-full mt-2"
-            >
-              Continue
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
