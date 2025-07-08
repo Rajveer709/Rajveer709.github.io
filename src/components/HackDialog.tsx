@@ -15,6 +15,9 @@ import { Heart, Calculator, Atom, Users, Smile, Palette, BookOpen, KeyRound, Sta
 
 interface HackDialogProps {
   onUnlock: (type: string) => void;
+  buttonTitle?: string;
+  buttonGradient?: string;
+  cheatType?: string;
 }
 
 const CHEAT_CODES = [
@@ -84,13 +87,19 @@ const CHEAT_CODES = [
   },
 ];
 
-export const HackDialog = ({ onUnlock }: HackDialogProps) => {
+
+export const HackDialog = ({ onUnlock, buttonTitle = 'cheat code', buttonGradient = '', cheatType }: HackDialogProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [code, setCode] = useState('');
   const [cheat, setCheat] = useState<any>(null);
 
   const handleUnlockAttempt = () => {
-    const found = CHEAT_CODES.find(entry => entry.codes.some(c => c.toLowerCase() === code.trim().toLowerCase()));
+    let found;
+    if (cheatType) {
+      found = CHEAT_CODES.find(entry => entry.type === cheatType);
+    } else {
+      found = CHEAT_CODES.find(entry => entry.codes.some(c => c.toLowerCase() === code.trim().toLowerCase()));
+    }
     if (found) {
       setCheat(found);
       onUnlock(found.type);
@@ -110,29 +119,42 @@ export const HackDialog = ({ onUnlock }: HackDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="text-[10px] px-2 py-1 h-5 min-h-0 min-w-0 leading-none rounded-full">
-          cheat code
+        <Button
+          variant="outline"
+          size="sm"
+          className={`text-[10px] px-2 py-1 h-5 min-h-0 min-w-0 leading-none rounded-full font-bold ${buttonGradient}`}
+          style={buttonGradient ? { backgroundClip: 'text', WebkitBackgroundClip: 'text', color: 'transparent', WebkitTextFillColor: 'transparent', backgroundImage: undefined } : {}}
+        >
+          {buttonTitle}
         </Button>
       </DialogTrigger>
       <DialogContent className="flex flex-col items-center justify-center">
         <DialogHeader>
-          <DialogTitle>Unlock Everything</DialogTitle>
+          <DialogTitle>{buttonTitle}</DialogTitle>
           <DialogDescription>
-            Enter a secret code to unlock themes, ranks, or see a surprise!
+            {cheatType === 'colors'
+              ? 'Unlock all color themes (except Avi/Gold)!'
+              : cheatType === 'unlockAll' || buttonTitle.toLowerCase().includes('rank')
+                ? 'Unlock the highest rank (Avi) and all features!'
+                : 'Enter a secret code to unlock themes, ranks, or see a surprise!'}
           </DialogDescription>
         </DialogHeader>
         {!cheat ? (
-          <div className="py-4 w-full flex flex-col items-center">
-            <Input
-              placeholder="Secret code..."
-              type="text"
-              value={code}
-              onChange={e => setCode(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter') handleUnlockAttempt(); }}
-              className="mb-2"
-            />
-            <Button onClick={handleUnlockAttempt} className="w-full">Unlock</Button>
-          </div>
+          !cheatType ? (
+            <div className="py-4 w-full flex flex-col items-center">
+              <Input
+                placeholder="Secret code..."
+                type="text"
+                value={code}
+                onChange={e => setCode(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') handleUnlockAttempt(); }}
+                className="mb-2"
+              />
+              <Button onClick={handleUnlockAttempt} className="w-full">Unlock</Button>
+            </div>
+          ) : (
+            <Button onClick={handleUnlockAttempt} className="w-full mt-4">Unlock Instantly</Button>
+          )
         ) : (
           <div className="flex flex-col items-center justify-center py-6">
             <cheat.icon className={`w-16 h-16 mb-4 ${cheat.color} animate-bounce`} />

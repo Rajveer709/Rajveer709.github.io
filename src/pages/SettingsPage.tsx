@@ -388,9 +388,19 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           </AlertDialogContent>
         </AlertDialog>
 
-        {/* Cheat Code */}
-        <div className="pt-2 text-center">
-          <HackDialog onUnlock={onUnlockAll} />
+        {/* Cheat Code Buttons */}
+        <div className="pt-2 flex flex-col items-center gap-3">
+          <HackDialog
+            onUnlock={onUnlockAll}
+            buttonTitle="Unlock Highest Rank"
+            buttonGradient="bg-gradient-to-r from-yellow-400 via-yellow-200 to-yellow-500 text-white shadow-gold"
+          />
+          <HackDialog
+            onUnlock={onUnlockAll}
+            buttonTitle="Unlock All Themes"
+            buttonGradient="bg-gradient-to-r from-pink-500 via-yellow-400 via-green-400 via-blue-500 to-purple-500 text-white shadow-rainbow"
+            cheatType="colors"
+          />
         </div>
       </div>
     </TooltipProvider>
