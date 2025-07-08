@@ -11,34 +11,101 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
+import { Heart, Calculator, Atom, Users, Smile, Palette, BookOpen, KeyRound, Star } from 'lucide-react';
 
 interface HackDialogProps {
-  onUnlock: () => void;
+  onUnlock: (type: string) => void;
 }
 
-const HACK_CODE = "AlwaysHappy@12";
+const CHEAT_CODES = [
+  {
+    codes: ['TJsir', 'Ajaysir'],
+    message: 'Physics Rocks',
+    icon: Atom,
+    color: 'text-blue-500',
+    type: 'physics',
+  },
+  {
+    codes: ['Paulsir'],
+    message: 'math is a way of life',
+    icon: Calculator,
+    color: 'text-green-500',
+    type: 'math',
+  },
+  {
+    codes: ['Satanisir'],
+    message: 'mathematics has taught me the importance of patience',
+    icon: BookOpen,
+    color: 'text-yellow-500',
+    type: 'math',
+  },
+  {
+    codes: ['Mamma'],
+    message: 'Hi, Ma',
+    icon: Heart,
+    color: 'text-red-500',
+    type: 'love',
+  },
+  {
+    codes: ['Avi', 'Dhruv'],
+    message: 'Love you, bhai!',
+    icon: Heart,
+    color: 'text-pink-500',
+    type: 'love',
+  },
+  {
+    codes: ['Rashi'],
+    message: 'Hi Bestie',
+    icon: Users,
+    color: 'text-purple-500',
+    type: 'friends',
+  },
+  {
+    codes: ['Rajveer709'],
+    message: 'Cheat Codes:\n- TJsir/Ajaysir: Physics Rocks\n- Paulsir: math is a way of life\n- Satanisir: mathematics has taught me the importance of patience\n- Mamma: Hi, Ma\n- Avi/Dhruv: Love you, bhai!\n- Rashi: Hi Bestie\n- colors: Unlock all themes (except Avi/Gold)',
+    icon: KeyRound,
+    color: 'text-orange-500',
+    type: 'showAll',
+  },
+  {
+    codes: ['colors'],
+    message: 'All themes unlocked (except Avi/Gold)!',
+    icon: Palette,
+    color: 'text-emerald-500',
+    type: 'colors',
+  },
+  // Default fallback
+  {
+    codes: ['AlwaysHappy@12'],
+    message: 'Cheats activated! Everything unlocked.',
+    icon: Star,
+    color: 'text-yellow-400',
+    type: 'unlockAll',
+  },
+];
 
 export const HackDialog = ({ onUnlock }: HackDialogProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [code, setCode] = useState('');
+  const [cheat, setCheat] = useState<any>(null);
 
   const handleUnlockAttempt = () => {
-    if (code === HACK_CODE) {
-      onUnlock();
-      setIsOpen(false);
+    const found = CHEAT_CODES.find(entry => entry.codes.some(c => c.toLowerCase() === code.trim().toLowerCase()));
+    if (found) {
+      setCheat(found);
+      onUnlock(found.type);
       setCode('');
     } else {
-      toast.error("Incorrect code. Try again!");
+      toast.error('Incorrect code. Try again!');
       setCode('');
     }
   };
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
-    if (!open) {
-      setCode('');
-    }
-  }
+    setCode('');
+    setCheat(null);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
@@ -47,26 +114,32 @@ export const HackDialog = ({ onUnlock }: HackDialogProps) => {
           cheat code
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="flex flex-col items-center justify-center">
         <DialogHeader>
           <DialogTitle>Unlock Everything</DialogTitle>
           <DialogDescription>
-            Enter the secret code to unlock all themes and ranks. This is a one-way trip.
+            Enter a secret code to unlock themes, ranks, or see a surprise!
           </DialogDescription>
         </DialogHeader>
-        <div className="py-4">
-          <Input 
-            placeholder="Secret code..." 
-            type="password"
-            value={code}
-            onChange={(e) => setCode(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') handleUnlockAttempt(); }}
-          />
-        </div>
-        <DialogFooter>
-          <Button variant="ghost" onClick={() => setIsOpen(false)}>Cancel</Button>
-          <Button onClick={handleUnlockAttempt}>Unlock</Button>
-        </DialogFooter>
+        {!cheat ? (
+          <div className="py-4 w-full flex flex-col items-center">
+            <Input
+              placeholder="Secret code..."
+              type="text"
+              value={code}
+              onChange={e => setCode(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') handleUnlockAttempt(); }}
+              className="mb-2"
+            />
+            <Button onClick={handleUnlockAttempt} className="w-full">Unlock</Button>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-6">
+            <cheat.icon className={`w-16 h-16 mb-4 ${cheat.color} animate-bounce`} />
+            <div className={`text-2xl font-bold text-center whitespace-pre-line ${cheat.color}`}>{cheat.message}</div>
+            <Button onClick={() => setIsOpen(false)} className="mt-6">Close</Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

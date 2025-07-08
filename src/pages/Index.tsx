@@ -19,6 +19,7 @@ import { MainLayout } from '../components/MainLayout';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import { PublicRoute } from '../components/PublicRoute';
 import { ChallengePage, type Challenge } from './ChallengePage';
+import { HackDialog } from '../components/HackDialog';
 
 export interface Task {
   id: string;
@@ -63,6 +64,9 @@ const Index = () => {
     ALL_CHALLENGES_DEFINITIONS.map(c => ({...c, completed: false}))
   );
   const [hasStartedChallenges, setHasStartedChallenges] = useState(false);
+
+  // Add a state for unlocked themes (except Avi/Gold)
+  const [cheatUnlockType, setCheatUnlockType] = useState<string | null>(null);
 
   const applyTheme = (themeValue: string, isDark: boolean, pageLightness?: number, cardLightnessValue?: number) => {
     const theme = themes.find(t => t.value === themeValue) || themes.find(t => t.value === defaultTheme);
@@ -508,6 +512,48 @@ const Index = () => {
     navigate('/landing');
   };
 
+  // New unlock handler for cheat codes
+  const handleCheatUnlock = (type: string) => {
+    setCheatUnlockType(type);
+    if (type === 'unlockAll') {
+      setUserLevel(100);
+      setUserXp(0);
+      setHasStartedChallenges(true);
+      setCurrentTheme('gold');
+      if (user) {
+        localStorage.setItem(`lifeAdminTheme_${user.id}`, 'gold');
+      }
+      toast.success('Cheats activated! Everything unlocked.', {
+        description: 'Enjoy your god-like status! Gold theme applied!',
+      });
+    } else if (type === 'colors') {
+      // Unlock all themes except Avi/Gold
+      setUserLevel(99);
+      setHasStartedChallenges(true);
+      setCurrentTheme('purple'); // Set to a non-gold theme
+      if (user) {
+        localStorage.setItem(`lifeAdminTheme_${user.id}`, 'purple');
+      }
+      toast.success('All themes unlocked (except Avi/Gold)!', {
+        description: 'Enjoy all the colors!'
+      });
+    } else if (type === 'showAll') {
+      // Just show the cheat code list, do not unlock
+      // No-op for unlock, handled in HackDialog pop-up
+    } else {
+      // For all other codes, unlock all themes except Avi/Gold
+      setUserLevel(99);
+      setHasStartedChallenges(true);
+      setCurrentTheme('purple');
+      if (user) {
+        localStorage.setItem(`lifeAdminTheme_${user.id}`, 'purple');
+      }
+      toast.success('Themes unlocked (except Avi/Gold)!', {
+        description: 'Enjoy your surprise!'
+      });
+    }
+  };
+
   if (loading) {
     return <div className="min-h-screen bg-background flex items-center justify-center"><p>Loading...</p></div>;
   }
@@ -583,6 +629,10 @@ const Index = () => {
                     onRestoreTask={restoreTask}
                     onUnlockAll={handleUnlockAll}
                   />
+                  {/* Add HackDialog to the settings page for cheat code entry */}
+                  <div className="pt-2 text-center">
+                    <HackDialog onUnlock={handleCheatUnlock} />
+                  </div>
                 </PageTransition>
               } />
             </Route>
