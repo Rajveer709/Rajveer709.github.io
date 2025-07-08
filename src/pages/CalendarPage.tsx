@@ -62,7 +62,7 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
   };
 
   const renderTaskList = (pendingTasks: Task[], completedTasks: Task[], viewType: 'day' | 'week' | 'month') => (
-    <div className="space-y-3 max-h-80 overflow-y-auto">
+    <div className="space-y-3">
       {/* Pending Tasks */}
       {pendingTasks.length > 0 && (
         <div className="space-y-2">
@@ -177,11 +177,11 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
         </div>
         
         {/* Main content - centered layout */}
-        <div className="flex flex-col items-center w-full max-w-5xl mx-auto overflow-y-auto" style={{ maxHeight: 'calc(100vh - 56px)' }}>
-          <div className="grid lg:grid-cols-3 gap-6 w-full">
+        <div className="flex flex-col items-center w-full max-w-5xl mx-auto">
+          <div className="grid lg:grid-cols-3 gap-6 w-full justify-center items-center">
             {/* Calendar Section - always centered */}
             <div className="lg:col-span-2 flex flex-col justify-center items-center">
-              <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full max-w-md">
+              <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full max-w-md mx-auto">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base font-semibold text-primary flex items-center gap-2 justify-center">
                     <CalendarIcon className="w-4 h-4" />
@@ -200,9 +200,9 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
             </div>
             
             {/* Tasks Section - centered */}
-            <div className="space-y-4 flex flex-col items-center w-full">
+            <div className="space-y-4 flex flex-col items-center w-full max-w-md mx-auto">
               {/* Tasks Card */}
-              <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full">
+              <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full mx-auto">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between mb-2">
                     <CardTitle className="text-base font-semibold text-primary">
@@ -246,7 +246,7 @@ export const CalendarPage = ({ tasks, onBack }: CalendarPageProps) => {
               </Card>
               
               {/* Quick Stats Card */}
-              <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full">
+              <Card className="bg-card/95 backdrop-blur-sm border-border/50 shadow-sm w-full mx-auto">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-semibold text-primary flex items-center gap-2 justify-center">
                     <Filter className="w-3 h-3" />
