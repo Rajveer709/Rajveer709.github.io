@@ -187,12 +187,12 @@ export const AuthPage = () => {
                     {/* Guest Login Button */}
                     <Button
                       type="button"
-                      className="w-full mt-2 flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-500 text-white font-bold shadow-lg hover:scale-105 transition-transform duration-150 border-0 py-2 rounded-xl animate-pulse"
+                      className="w-full mt-2 flex items-center justify-center gap-2"
                       onClick={handleGuestLogin}
                       disabled={loading}
-                      variant="default"
+                      variant="outline"
                     >
-                      <CheckSquare className="w-5 h-5" />
+                      <CheckSquare className="w-5 h-5 text-muted-foreground" />
                       {loading ? 'Logging in...' : 'Login as Guest'}
                     </Button>
                   </form>
