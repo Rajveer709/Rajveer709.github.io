@@ -112,6 +112,35 @@ export const AuthPage = () => {
     navigate('/');
   };
 
+  const handleDeleteAccount = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    // Call Edge Function to delete user from Auth
+    const response = await fetch('https://<YOUR_PROJECT_ID>.functions.supabase.co/delete-user', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: user.id }),
+    });
+
+    if (!response.ok) {
+      const { error } = await response.json();
+      toast.error(error || 'Failed to delete account.');
+      return;
+    }
+
+    // Delete profile from DB
+    await supabase.from('profiles').delete().eq('id', user.id);
+
+    // Clear all localStorage
+    localStorage.clear();
+
+    // Sign out and redirect
+    await supabase.auth.signOut();
+    toast.success('Account deleted.');
+    navigate('/auth');
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-background/80 via-background/60 to-background/90 relative p-4">
       <div className="absolute top-0 left-0 w-full h-full -z-10 opacity-20 pointer-events-none" style={{
