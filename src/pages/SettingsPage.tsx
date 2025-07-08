@@ -27,6 +27,7 @@ import { Task, Profile } from './Index';
 import { HackDialog } from '../components/HackDialog';
 import { useOutletContext } from 'react-router-dom';
 import { PageHeader } from '../components/PageHeader';
+import { useNavigate } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Button: any = RawButton;
@@ -60,6 +61,8 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
   const { profile, onUpdateProfile, showGreeting } = useOutletContext<OutletContextType>();
   const [name, setName] = useState(profile?.name || '');
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const navigate = useNavigate();
   const hiddenTasks = tasks.filter(task => task.hidden);
   const rank = getRankForLevel(userLevel);
   const isAvi = rank.name === 'Avi';
@@ -113,6 +116,34 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
     }
     setIsEditing(false);
   }
+
+  // Delete account handler
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+    // Delete profile from DB
+    await import('@/integrations/supabase/client').then(async ({ supabase }) => {
+      await supabase.from('profiles').delete().eq('id', user.id);
+      // TODO: Delete all user data from other tables if needed
+      // Remove all user-related localStorage
+      const keys = [
+        `lifeAdminTasks_${user.id}`,
+        `lifeAdminTheme_${user.id}`,
+        `lifeAdminDarkMode_${user.id}`,
+        `lifeAdminUserLevel_${user.id}`,
+        `lifeAdminUserXp_${user.id}`,
+        `lifeAdminChallenges_${user.id}`,
+        `lifeAdminBgLightness_${user.id}`,
+        `lifeAdminCardLightness_${user.id}`,
+        `lifeAdminStartedChallenges_${user.id}`,
+      ];
+      keys.forEach(k => localStorage.removeItem(k));
+      // Placeholder: Deleting user from Supabase Auth requires admin API or edge function
+      // await supabase.auth.admin.deleteUser(user.id); // Not available on client
+      await supabase.auth.signOut();
+      setShowDeleteDialog(false);
+      navigate('/auth');
+    });
+  };
 
   return (
     <TooltipProvider>
@@ -170,13 +201,32 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
               )}
             </div>
           </CardContent>
-          <CardFooter className="border-t px-4 py-3 flex justify-end">
+          <CardFooter className="border-t px-4 py-3 flex justify-end gap-2">
             <Button variant="ghost" onClick={onSignOut} size="sm" className="h-8">
               <LogOut className="w-3 h-3 mr-2" />
               Sign Out
             </Button>
+            <Button variant="destructive" onClick={() => setShowDeleteDialog(true)} size="sm" className="h-8">
+              Delete Account
+            </Button>
           </CardFooter>
         </Card>
+
+        {/* Delete Account Dialog */}
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Account?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will permanently delete your account and all associated data. This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-white">Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         {/* Appearance Card - Compact */}
         <Card className="animate-scale-in bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg" style={{ animationDelay: '200ms' }}>
@@ -362,6 +412,16 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
             <div className="flex items-center justify-between">
               <span className="text-sm">App Version</span>
               <span className="text-sm text-muted-foreground">1.0.0</span>
+            </div>
+            <div className="mt-2">
+              <a
+                href="https://docs.google.com/document/d/e/2PACX-1vRRTPcRObxNvQi2hLf39K6xWjoh1Vvr0URXTlNIiW5801m1st9KOxw8BNlroX94lEyWIriniB_HxNQw/pub"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs underline text-primary hover:text-primary/80 transition-colors"
+              >
+                Privacy Policy
+              </a>
             </div>
           </CardContent>
         </Card>
