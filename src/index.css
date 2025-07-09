@@ -78,24 +78,45 @@
   background: linear-gradient(135deg, #FFD700 0%, #FFB300 50%, #FFFACD 100%) !important;
 }
 .avi-rank h1, .avi-rank h2, .avi-rank h3, .avi-rank h4, .avi-rank h5, .avi-rank h6, .avi-rank .card-title, .avi-rank .CardTitle {
-  background: linear-gradient(90deg, #B8860B 0%, #DAA520 50%, #FFD700 100%);
+  background: linear-gradient(90deg, #B8860B 0%, #DAA520 50%, #FFD700 100%) !important;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -webkit-text-fill-color: transparent !important;
   background-clip: text;
-  color: #B8860B;
-  font-weight: bold;
-  text-shadow: 0 1px 2px rgba(184, 134, 11, 0.3);
+  color: #B8860B !important;
+  font-weight: bold !important;
+  text-shadow: none !important;
 }
 
 /* Gold Theme Headings Gradient - Enhanced visibility */
 .theme-gold h1, .theme-gold h2, .theme-gold h3, .theme-gold h4, .theme-gold h5, .theme-gold h6, .theme-gold .card-title, .theme-gold .CardTitle {
-  background: linear-gradient(90deg, #B8860B 0%, #DAA520 50%, #FFD700 100%);
+  background: linear-gradient(90deg, #B8860B 0%, #DAA520 50%, #FFD700 100%) !important;
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -webkit-text-fill-color: transparent !important;
   background-clip: text;
-  color: #B8860B;
-  font-weight: bold;
-  text-shadow: 0 1px 2px rgba(184, 134, 11, 0.3);
+  color: #B8860B !important;
+  font-weight: bold !important;
+  text-shadow: none !important;
+}
+
+/* Gold theme body text styling */
+.theme-gold {
+  color: #B8860B !important;
+}
+
+.theme-gold p, .theme-gold span, .theme-gold div {
+  color: #B8860B !important;
+}
+
+.theme-gold .text-muted-foreground {
+  color: #DAA520 !important;
+}
+
+.theme-gold .text-foreground {
+  color: #B8860B !important;
+}
+
+.theme-gold .text-primary {
+  color: #FFD700 !important;
 }
 
 /* Exclude task cards from gold text styling */
@@ -106,7 +127,10 @@
 .theme-gold .task-card h5, 
 .theme-gold .task-card h6,
 .theme-gold .task-card .card-title,
-.theme-gold .task-card .CardTitle {
+.theme-gold .task-card .CardTitle,
+.theme-gold .task-card p,
+.theme-gold .task-card span,
+.theme-gold .task-card div {
   background: none !important;
   -webkit-background-clip: unset !important;
   -webkit-text-fill-color: unset !important;
