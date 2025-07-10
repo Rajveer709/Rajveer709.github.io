@@ -1,4 +1,5 @@
 import { useState } from 'react';
+// Show/hide password state for sign up (must be inside AuthPage component)
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -34,6 +35,7 @@ const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export const AuthPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const signUpForm = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
@@ -220,34 +222,34 @@ export const AuthPage = () => {
                     <FormField
                       control={signUpForm.control}
                       name="password"
-                      render={({ field }) => {
-                        const [showPassword, setShowPassword] = useState(false);
-                        return (
-                          <FormItem>
-                            <FormLabel>Password</FormLabel>
-                            <FormControl>
-                              <div className="relative">
-                                <Input
-                                  type={showPassword ? "text" : "password"}
-                                  placeholder="••••••••"
-                                  {...field}
-                                />
-                                <button
-                                  type="button"
-                                  className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-primary"
-                                  tabIndex={-1}
-                                  onClick={() => setShowPassword((v) => !v)}
-                                  aria-label={showPassword ? "Hide password" : "Show password"}
-                                >
-                                  {showPassword ? "Hide" : "Show"}
-                                </button>
-                              </div>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        );
-                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                {...field}
+                                type={showPassword ? "text" : "password"}
+                                autoComplete="new-password"
+                              />
+                              <button
+                                type="button"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-primary"
+                                tabIndex={-1}
+                                onClick={() => setShowPassword((v) => !v)}
+                                aria-label={showPassword ? "Hide password" : "Show password"}
+                              >
+                                {showPassword ? "Hide" : "Show"}
+                              </button>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
+// Show/hide password state for sign up
+import React from 'react';
+const [showPassword, setShowPassword] = React.useState(false);
                     <Button type="submit" className="w-full" disabled={loading}>
                       {loading ? 'Creating Account...' : 'Sign Up'}
                     </Button>
