@@ -69,6 +69,18 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
   const [selectedRank, setSelectedRank] = useState<number | null>(null);
   const rank = unlockAllCheats && selectedRank !== null ? RANKS[selectedRank] : getRankForLevel(userLevel);
   const isAvi = rank.name === 'Avi';
+
+  // Add avi-bg-transparent class to body if Avi
+  useEffect(() => {
+    if (isAvi) {
+      document.body.classList.add('avi-bg-transparent');
+    } else {
+      document.body.classList.remove('avi-bg-transparent');
+    }
+    return () => {
+      document.body.classList.remove('avi-bg-transparent');
+    };
+  }, [isAvi]);
   // Handler for switching ranks (only if unlockAllCheats)
   const handleRankSwitch = (idx: number) => {
     setSelectedRank(idx);
@@ -110,10 +122,12 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
   // Calculate how many themes should be unlocked based on level (3 per rank) + gold for Avi
   // If any cheat code has been entered, unlock Royal Pink and allow toggling
   const cheatUnlockType = typeof window !== 'undefined' ? window.localStorage.getItem('cheatUnlockType') : null;
+  // Unlock Royal Pink and Royal Blue with any cheat code
   const hasRoyalPinkUnlocked = cheatUnlockType !== null || unlockAllCheats;
+  const hasRoyalBlueUnlocked = cheatUnlockType !== null || unlockAllCheats;
   const getUnlockedThemeCount = (level: number) => {
     if (level >= 100) return themes.length; // Avi gets all themes including gold
-    if (hasRoyalPinkUnlocked) return themes.length - 1; // All except gold
+    if (hasRoyalPinkUnlocked || hasRoyalBlueUnlocked) return themes.length - 1; // All except gold
     return Math.min(level * 3, 12); // 3 themes per level, max 12 for the regular ranks
   };
   
@@ -334,23 +348,22 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
 
             <div>
               <h3
-                className="text-sm font-medium mb-1"
-                style={isAvi ? { background: 'transparent' } : {}}
+                className="text-sm font-medium mb-1 avi-bg-transparent"
               >
                 Color Theme
               </h3>
               <p
-                className="text-xs text-muted-foreground mb-3"
-                style={isAvi ? { background: 'transparent' } : {}}
+                className="text-xs text-muted-foreground mb-3 avi-bg-transparent"
               >
                 {isAvi ? 'All themes unlocked!' : 'Unlock with Challenges - 3 themes per rank.'}
               </p>
               <div className="grid grid-cols-3 gap-2">
                 {themes.map((theme, index) => {
                   const unlockedCount = getUnlockedThemeCount(userLevel);
-                  // Royal Pink is always unlocked if any cheat code entered
+                  // Royal Pink and Royal Blue are always unlocked if any cheat code entered
                   const isRoyalPink = theme.value === 'royal-pink';
-                  const isUnlocked = isAvi || index < unlockedCount || (isRoyalPink && hasRoyalPinkUnlocked);
+                  const isRoyalBlue = theme.value === 'royal-blue';
+                  const isUnlocked = isAvi || index < unlockedCount || (isRoyalPink && hasRoyalPinkUnlocked) || (isRoyalBlue && hasRoyalBlueUnlocked);
                   return (
                     isUnlocked ? (
                       <button
