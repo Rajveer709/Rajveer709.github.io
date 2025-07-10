@@ -27,6 +27,14 @@ export const themes: Theme[] = [
   { name: 'Indigo', value: 'indigo', colors: { primary: '#6366f1', secondary: '#8b5cf6' }, levelToUnlock: 4 },
   // Gold theme (locked by default, unlocked by cheat code)
   { name: 'Gold', value: 'gold', colors: { primary: '#FFD700', secondary: '#FFB300' }, levelToUnlock: 100 },
+
+  // Royal Pink theme (unlocked by any cheat code)
+  {
+    name: 'Royal Pink',
+    value: 'royal-pink',
+    colors: { primary: '#d72660', secondary: '#fbb1cf' }, // deep royal pink and pastel pink
+    levelToUnlock: 0 // Unlockable by any cheat code
+  },
 ];
 
 export const defaultTheme = 'purple';

@@ -1,3 +1,55 @@
+/* Royal Pink Theme - Aesthetic, with graphics and symbols */
+.theme-royal-pink body,
+.theme-royal-pink .bg-background,
+.theme-royal-pink .bg-card {
+  background: linear-gradient(120deg, #fbb1cf 0%, #fff0f6 60%, #ffe3f6 100%) !important;
+  min-height: 100vh;
+  position: relative;
+}
+
+.theme-royal-pink body::before {
+  content: '';
+  pointer-events: none;
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  z-index: 0;
+  background-image:
+    url('data:image/svg+xml;utf8,<svg width="120" height="120" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="60" r="50" fill="%23fbb1cf" fill-opacity="0.12"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="32" fill="%23d72660" fill-opacity="0.18">★</text></svg>'),
+    radial-gradient(circle, #fff6fb 0.5px, transparent 1.5px),
+    radial-gradient(circle, #fbb1cf88 1px, transparent 2.5px),
+    radial-gradient(circle, #d7266044 1.5px, transparent 3px);
+  background-size: 180px 180px, 120px 120px, 200px 200px, 320px 320px;
+  background-position: 0 0, 60px 80px, 120px 160px, 240px 320px;
+  opacity: 0.45;
+  animation: sparkle-float 18s linear infinite;
+}
+
+@keyframes sparkle-float {
+  0% { background-position: 0 0, 60px 80px, 120px 160px, 240px 320px; }
+  100% { background-position: 120px 240px, 260px 280px, 320px 480px, 480px 640px; }
+}
+
+.theme-royal-pink h1, .theme-royal-pink h2, .theme-royal-pink h3, .theme-royal-pink h4, .theme-royal-pink h5, .theme-royal-pink h6, .theme-royal-pink .card-title, .theme-royal-pink .CardTitle {
+  color: #d72660 !important;
+  font-weight: bold;
+  text-shadow: 0 2px 8px #fbb1cf, 0 1px 0 #fff;
+  letter-spacing: 0.5px;
+}
+.theme-royal-pink .card, .theme-royal-pink .Card, .theme-royal-pink .bg-card {
+  background: rgba(255, 240, 246, 0.98) !important;
+  border: 1.5px solid #d72660 !important;
+  box-shadow: 0 2px 16px 0 rgba(247, 177, 207, 0.18) !important;
+}
+.theme-royal-pink .text-primary, .theme-royal-pink .text-foreground, .theme-royal-pink .text-base, .theme-royal-pink .font-bold, .theme-royal-pink .font-extrabold {
+  color: #d72660 !important;
+  text-shadow: 0 1px 2px #fbb1cf !important;
+}
+.theme-royal-pink .btn, .theme-royal-pink button, .theme-royal-pink .Button {
+  background: linear-gradient(90deg, #d72660 0%, #fbb1cf 100%) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 2px 8px #fbb1cf44 !important;
+}
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
