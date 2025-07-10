@@ -537,11 +537,22 @@ const Index = () => {
       toast.success('All themes unlocked (except Avi/Gold)!', {
         description: 'Enjoy all the colors!'
       });
+    } else if (type === 'royal-pink') {
+      // Unlock Royal Pink and auto-apply it
+      setUserLevel(99);
+      setHasStartedChallenges(true);
+      setCurrentTheme('royal-pink');
+      if (user) {
+        localStorage.setItem(`lifeAdminTheme_${user.id}`, 'royal-pink');
+      }
+      toast.success('Royal Pink theme applied!', {
+        description: 'Enjoy the aesthetic Royal Pink theme!'
+      });
     } else if (type === 'showAll') {
       // Just show the cheat code list, do not unlock
       // No-op for unlock, handled in HackDialog pop-up
     } else {
-      // For all other codes, unlock all themes except Avi/Gold
+      // For all other codes, unlock all themes except Avi/Gold and unlock Royal Pink
       setUserLevel(99);
       setHasStartedChallenges(true);
       setCurrentTheme('purple');
@@ -549,7 +560,7 @@ const Index = () => {
         localStorage.setItem(`lifeAdminTheme_${user.id}`, 'purple');
       }
       toast.success('Themes unlocked (except Avi/Gold)!', {
-        description: 'Enjoy your surprise!'
+        description: 'Enjoy your surprise! Royal Pink is now unlocked.'
       });
     }
   };
