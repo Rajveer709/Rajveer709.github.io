@@ -179,13 +179,15 @@
 .avi-rank h1, .avi-rank h2, .avi-rank h3, .avi-rank h4, .avi-rank h5, .avi-rank h6, .avi-rank .card-title, .avi-rank .CardTitle {
   background: transparent !important;
   color: #222 !important;
-  -webkit-background-clip: unset !important;
+  -webkit-background-clip: text !important;
   -webkit-text-fill-color: #222 !important;
-  background-clip: unset !important;
+  background-clip: text !important;
   text-shadow: 0 2px 8px #fff, 0 1px 0 #fff !important;
   opacity: 1 !important;
   z-index: 2;
   position: relative;
+  display: block !important;
+  visibility: visible !important;
 }
 .avi-rank p, .avi-rank span, .avi-rank div,
 .avi-rank .text-muted-foreground, .avi-rank .text-foreground {
@@ -197,6 +199,8 @@
   text-shadow: none !important;
   opacity: 0 !important;
   z-index: 1;
+  display: none !important;
+  visibility: hidden !important;
 }
 
 /* Gold Theme Headings Gradient - Enhanced visibility */
