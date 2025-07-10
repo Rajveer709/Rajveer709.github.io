@@ -206,9 +206,6 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
               <LogOut className="w-3 h-3 mr-2" />
               Sign Out
             </Button>
-            <Button variant="destructive" onClick={() => setShowDeleteDialog(true)} size="sm" className="h-8">
-              Delete Account
-            </Button>
           </CardFooter>
         </Card>
 

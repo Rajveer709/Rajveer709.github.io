@@ -226,7 +226,11 @@ export const AddTaskPage = ({ onAddTask, onBack, currentTheme, profile }: AddTas
       return;
     }
     if (task === 'Click for a surprise 🎉') {
+      // Always show RickRoll dialog, but if quick add popup is enabled, show both
       setShowRickRollDialog(true);
+      if (quickAddPopupEnabled) {
+        setTimeout(() => setShowQuickAddDialog(true), 500); // show quick add after rickroll
+      }
       return;
     }
     
