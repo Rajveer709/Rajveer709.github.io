@@ -22,6 +22,13 @@ interface HackDialogProps {
 
 const CHEAT_CODES = [
   {
+    codes: ['dreamcatcher', 'royal pink'],
+    message: '', // Will be set dynamically
+    icon: Star,
+    color: 'text-pink-500',
+    type: 'royal-pink',
+  },
+  {
     codes: ['TJsir', 'Ajaysir'],
     message: 'Physics Rocks',
     icon: Atom,
@@ -101,6 +108,11 @@ export const HackDialog = ({ onUnlock, buttonTitle = 'cheat code', buttonGradien
       found = CHEAT_CODES.find(entry => entry.codes.some(c => c.toLowerCase() === code.trim().toLowerCase()));
     }
     if (found) {
+      // Special message for dreamcatcher/royal pink
+      if (found.type === 'royal-pink') {
+        const username = (window.localStorage.getItem('profileName') || '').split(' ')[0] || 'User';
+        found.message = `Your app has been aesthetic, ${username}!\nEnjoy the Royal Pink theme ✨`;
+      }
       setCheat(found);
       onUnlock(found.type);
       setCode('');
