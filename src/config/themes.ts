@@ -1,3 +1,4 @@
+// ...existing code...
 export type Theme = {
   name: string;
   value: string;
@@ -33,6 +34,13 @@ export const themes: Theme[] = [
     name: 'Royal Pink',
     value: 'royal-pink',
     colors: { primary: '#d72660', secondary: '#fbb1cf' }, // deep royal pink and pastel pink
+    levelToUnlock: 0 // Unlockable by any cheat code
+  },
+  // Royal Blue theme (unlocked by any cheat code)
+  {
+    name: 'Royal Blue',
+    value: 'royal-blue',
+    colors: { primary: '#3b82f6', secondary: '#a5b4fc' }, // blue and pastel blue
     levelToUnlock: 0 // Unlockable by any cheat code
   },
 ];
