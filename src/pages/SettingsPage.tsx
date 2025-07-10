@@ -1,10 +1,10 @@
-import { Moon, Sun, User, Palette, Info, RotateCcw, Lock, LogOut, EyeOff, Eye, Check } from 'lucide-react';
+import { Moon, Sun, User, Palette, Info, RotateCcw, Lock, LogOut, EyeOff, Eye, Check, Medal } from 'lucide-react';
 import { Button as RawButton } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { themes } from '../config/themes';
-import { getRankForLevel } from '../config/ranks';
+import { getRankForLevel, RANKS } from '../config/ranks';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -64,8 +64,39 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const navigate = useNavigate();
   const hiddenTasks = tasks.filter(task => task.hidden);
-  const rank = getRankForLevel(userLevel);
+  // Allow rank switching if unlockAllCheats is set
+  const unlockAllCheats = typeof window !== 'undefined' && window.localStorage.getItem('unlockAllCheats') === 'true';
+  const [selectedRank, setSelectedRank] = useState<number | null>(null);
+  const rank = unlockAllCheats && selectedRank !== null ? RANKS[selectedRank] : getRankForLevel(userLevel);
   const isAvi = rank.name === 'Avi';
+  // Handler for switching ranks (only if unlockAllCheats)
+  const handleRankSwitch = (idx: number) => {
+    setSelectedRank(idx);
+    // Optionally, you could also update userLevel or other state if needed
+  };
+        {/* Rank Switcher (only if unlockAllCheats) */}
+        {unlockAllCheats && (
+          <Card className="animate-scale-in bg-card/80 dark:bg-card/30 backdrop-blur-sm border-0 shadow-lg" style={{ animationDelay: '250ms' }}>
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Medal className="w-4 h-4" />
+                <span>Switch Rank</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-wrap gap-2">
+              {RANKS.map((r, idx) => (
+                <Button
+                  key={r.name}
+                  variant={rank.name === r.name ? 'default' : 'outline'}
+                  className="flex items-center gap-1 px-3 py-1 text-xs"
+                  onClick={() => handleRankSwitch(idx)}
+                >
+                  <r.Icon className="w-4 h-4" /> {r.name}
+                </Button>
+              ))}
+            </CardContent>
+          </Card>
+        )}
   const [quickAddPopupEnabled, setQuickAddPopupEnabled] = useState(() => {
     const stored = localStorage.getItem('quickAddPopupEnabled');
     return stored === null ? true : stored === 'true';
@@ -445,7 +476,10 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           </AlertDialogContent>
         </AlertDialog>
 
-        {/* Cheat Code Buttons removed as requested */}
+        {/* Show All Cheat Codes Button (bottom of settings) */}
+        <div className="flex justify-center mt-6">
+          <HackDialog buttonTitle="Show All Cheat Codes" cheatType="showAll" onUnlock={() => {}} />
+        </div>
       </div>
     </TooltipProvider>
   );
