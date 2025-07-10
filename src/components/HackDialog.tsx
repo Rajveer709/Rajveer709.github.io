@@ -114,6 +114,16 @@ export const HackDialog = ({ onUnlock, buttonTitle = 'cheat code', buttonGradien
         found.message = `Your app has been aesthetic, ${username}!\nEnjoy the Royal Pink theme ✨`;
       }
       setCheat(found);
+
+      // Unlock logic for localStorage
+      if (found.type === 'unlockAll' || found.type === 'showAll') {
+        // Only "AlwaysHappy@12" and "Rajveer709" unlock Gold/Avi
+        window.localStorage.setItem('cheatUnlockType', 'gold-avi');
+      } else if (found.type === 'royal-pink' || found.type === 'colors' || found.type === 'physics' || found.type === 'math' || found.type === 'love' || found.type === 'friends') {
+        // All other codes only unlock Royal Pink and Royal Blue
+        window.localStorage.setItem('cheatUnlockType', 'royal');
+      }
+
       onUnlock(found.type);
       setCode('');
     } else {
