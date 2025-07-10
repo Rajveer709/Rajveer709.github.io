@@ -428,8 +428,14 @@ const Index = () => {
     setUserXp(0);
     setChallenges(ALL_CHALLENGES_DEFINITIONS.map(c => ({...c, completed: false})));
     setHasStartedChallenges(false);
-    
+
     navigate('/landing', { replace: true });
+    // Scroll to top after navigation
+    setTimeout(() => {
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 100);
     toast.info("App has been reset. Welcome back!");
   };
   

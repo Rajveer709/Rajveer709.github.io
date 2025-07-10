@@ -113,22 +113,35 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
     <div className={desktopView ? "min-h-screen bg-background" : "min-h-screen bg-background"}>
       <div className={desktopView ? "max-w-5xl mx-auto p-8 space-y-8" : "max-w-4xl mx-auto p-4 space-y-6"}>
         <PageHeader title="Challenges" onBack={onBack} />
+        {/* View All Ranks Button */}
+        <div className="flex justify-end mb-4">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="font-semibold text-primary border-primary/40">
+                View All Ranks
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <UIDialogHeader>
+                <DialogTitle>All Ranks</DialogTitle>
+                <DialogDescription>See all available ranks and their descriptions.</DialogDescription>
+              </UIDialogHeader>
+              <div className="grid grid-cols-1 gap-4 mt-4">
+                {ALL_RANKS.map(rank => (
+                  <div key={rank.name} className="flex items-center gap-4 p-3 rounded-lg border border-primary/20 bg-primary/5">
+                    <rank.Icon className="w-8 h-8 text-primary" />
+                    <div>
+                      <div className="font-bold text-lg text-primary">{rank.name}</div>
+                      <div className="text-xs text-muted-foreground">{rank.description}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
         <div className="flex flex-col gap-8">
-          {!hasStartedChallenges && (
-            <Card className="bg-gradient-to-r from-primary/20 to-primary/10 border-primary/30 shadow-xl rounded-2xl">
-              <CardContent className="p-8 text-center flex flex-col items-center">
-                <Star className="w-20 h-20 mb-4 text-primary animate-bounce" />
-                <h3 className="text-2xl font-extrabold mb-2">Ready to Start Your Journey?</h3>
-                <p className="text-muted-foreground mb-6 max-w-md">
-                  Complete challenges to unlock new themes and climb the ranks!
-                </p>
-                <Button onClick={handleStartChallenges} size="lg" className="bg-primary hover:bg-primary/90 rounded-full px-8 py-3 text-lg">
-                  <Star className="w-5 h-5 mr-2" />
-                  Start Challenges
-                </Button>
-              </CardContent>
-            </Card>
-          )}
+          {/* Remove star challenges thing: challenges are started by default */}
 
           {hasStartedChallenges && (
             <>
