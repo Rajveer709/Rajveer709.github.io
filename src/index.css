@@ -40,9 +40,9 @@
     radial-gradient(circle, #e0e7ff 0.5px, transparent 1.5px),
     radial-gradient(circle, #a5b4fc88 1px, transparent 2.5px),
     radial-gradient(circle, #3b82f644 1.5px, transparent 3px);
-  background-size: 180px 180px, 120px 120px, 120px 120px, 180px 180px, 120px 120px, 120px 120px, 200px 200px, 320px 320px, 120px 120px, 200px 200px, 320px 320px;
-  background-position: 0 0, 60px 80px, 120px 160px, 240px 320px, 40vw 20vh, 60vw 60vh, 80vw 80vh, 20vw 70vh, 10vw 10vh, 70vw 30vh, 50vw 80vh;
-  opacity: 0.55;
+  background-size: 220px 220px, 160px 160px, 160px 160px, 220px 220px, 160px 160px, 160px 160px, 240px 240px, 360px 360px, 160px 160px, 240px 240px, 360px 360px;
+  background-position: 0 0, 90px 120px, 180px 240px, 320px 400px, 38vw 22vh, 58vw 58vh, 78vw 78vh, 22vw 68vh, 15vw 15vh, 72vw 32vh, 52vw 82vh;
+  opacity: 0.8;
   animation: sparkle-float 18s linear infinite;
 }
 /* Royal Pink Theme - Aesthetic, with graphics and symbols */
@@ -80,9 +80,9 @@
     radial-gradient(circle, #fff6fb 0.5px, transparent 1.5px),
     radial-gradient(circle, #fbb1cf88 1px, transparent 2.5px),
     radial-gradient(circle, #d7266044 1.5px, transparent 3px);
-  background-size: 180px 180px, 120px 120px, 120px 120px, 180px 180px, 120px 120px, 120px 120px, 200px 200px, 320px 320px, 120px 120px, 200px 200px, 320px 320px;
-  background-position: 0 0, 60px 80px, 120px 160px, 240px 320px, 40vw 20vh, 60vw 60vh, 80vw 80vh, 20vw 70vh, 10vw 10vh, 70vw 30vh, 50vw 80vh;
-  opacity: 0.55;
+  background-size: 220px 220px, 160px 160px, 160px 160px, 220px 220px, 160px 160px, 160px 160px, 240px 240px, 360px 360px, 160px 160px, 240px 240px, 360px 360px;
+  background-position: 0 0, 90px 120px, 180px 240px, 320px 400px, 38vw 22vh, 58vw 58vh, 78vw 78vh, 22vw 68vh, 15vw 15vh, 72vw 32vh, 52vw 82vh;
+  opacity: 0.8;
   animation: sparkle-float 18s linear infinite;
 }
 
