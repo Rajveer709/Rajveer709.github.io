@@ -108,8 +108,12 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
   const [isMobile, setIsMobile] = useState(false);
 
   // Calculate how many themes should be unlocked based on level (3 per rank) + gold for Avi
+  // If any cheat code has been entered, unlock Royal Pink and allow toggling
+  const cheatUnlockType = typeof window !== 'undefined' ? window.localStorage.getItem('cheatUnlockType') : null;
+  const hasRoyalPinkUnlocked = cheatUnlockType !== null || unlockAllCheats;
   const getUnlockedThemeCount = (level: number) => {
     if (level >= 100) return themes.length; // Avi gets all themes including gold
+    if (hasRoyalPinkUnlocked) return themes.length - 1; // All except gold
     return Math.min(level * 3, 12); // 3 themes per level, max 12 for the regular ranks
   };
   
@@ -336,7 +340,9 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
               <div className="grid grid-cols-3 gap-2">
                 {themes.map((theme, index) => {
                   const unlockedCount = getUnlockedThemeCount(userLevel);
-                  const isUnlocked = isAvi || index < unlockedCount;
+                  // Royal Pink is always unlocked if any cheat code entered
+                  const isRoyalPink = theme.value === 'royal-pink';
+                  const isUnlocked = isAvi || index < unlockedCount || (isRoyalPink && hasRoyalPinkUnlocked);
                   return (
                     isUnlocked ? (
                       <button
