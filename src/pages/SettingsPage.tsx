@@ -333,8 +333,16 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
             </div>
 
             <div>
-              <h3 className="text-sm font-medium mb-1">Color Theme</h3>
-              <p className="text-xs text-muted-foreground mb-3">
+              <h3
+                className="text-sm font-medium mb-1"
+                style={isAvi ? { background: 'transparent' } : {}}
+              >
+                Color Theme
+              </h3>
+              <p
+                className="text-xs text-muted-foreground mb-3"
+                style={isAvi ? { background: 'transparent' } : {}}
+              >
                 {isAvi ? 'All themes unlocked!' : 'Unlock with Challenges - 3 themes per rank.'}
               </p>
               <div className="grid grid-cols-3 gap-2">
