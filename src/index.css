@@ -125,16 +125,16 @@
 }
 
 /* Avi Rank Gold Gradient and Headings - Enhanced visibility */
-.avi-rank {
-  background: linear-gradient(135deg, #FFD700 0%, #FFB300 50%, #FFFACD 100%) !important;
-}
-.avi-rank h1, .avi-rank h2, .avi-rank h3, .avi-rank h4, .avi-rank h5, .avi-rank h6, .avi-rank .card-title, .avi-rank .CardTitle {
-  background: linear-gradient(90deg, #B8860B 0%, #DAA520 50%, #FFD700 100%) !important;
-  -webkit-background-clip: text;
+
+/* Avi Rank: Make all text and heading backgrounds fully transparent for a "hidden" effect */
+.avi-rank h1, .avi-rank h2, .avi-rank h3, .avi-rank h4, .avi-rank h5, .avi-rank h6, .avi-rank .card-title, .avi-rank .CardTitle,
+.avi-rank p, .avi-rank span, .avi-rank div,
+.avi-rank .text-muted-foreground, .avi-rank .text-foreground {
+  background: transparent !important;
+  color: transparent !important;
+  -webkit-background-clip: unset !important;
   -webkit-text-fill-color: transparent !important;
-  background-clip: text;
-  color: #B8860B !important;
-  font-weight: bold !important;
+  background-clip: unset !important;
   text-shadow: none !important;
 }
 
