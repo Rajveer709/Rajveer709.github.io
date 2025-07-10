@@ -67,6 +67,16 @@ const taskCategories = {
     'Job Search Tasks': ['Applications', 'Interviews'],
     'Work-Related Expenses': ['Documentation']
   },
+  // Move Student & School Life here (5th position)
+  'Student & School Life': {
+    icon: Users, // Reuse Users icon for now, or import a school icon if available
+    color: 'text-cyan-600',
+    'Homework': ['Math Homework', 'Science Project', 'Reading Assignment'],
+    'Exams & Tests': ['Prepare for Test', 'Revise Notes', 'Mock Exam'],
+    'School Events': ['Sports Day', 'Field Trip', 'School Assembly'],
+    'Extracurricular': ['Music Practice', 'Art Project', 'Club Meeting'],
+    'Reminders': ['Bring Lunch', 'Pack Bag', 'Parent-Teacher Meeting']
+  },
   'Personal & Social': {
     icon: Users,
     color: 'text-pink-600',
@@ -104,15 +114,6 @@ const taskCategories = {
     icon: Plus,
     color: 'text-orange-600',
     'Secret Stuff': ['Click for a surprise 🎉']
-  },
-  'Student & School Life': {
-    icon: Users, // Reuse Users icon for now, or import a school icon if available
-    color: 'text-cyan-600',
-    'Homework': ['Math Homework', 'Science Project', 'Reading Assignment'],
-    'Exams & Tests': ['Prepare for Test', 'Revise Notes', 'Mock Exam'],
-    'School Events': ['Sports Day', 'Field Trip', 'School Assembly'],
-    'Extracurricular': ['Music Practice', 'Art Project', 'Club Meeting'],
-    'Reminders': ['Bring Lunch', 'Pack Bag', 'Parent-Teacher Meeting']
   }
 } as const;
 
