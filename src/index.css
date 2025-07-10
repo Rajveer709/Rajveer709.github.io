@@ -147,13 +147,13 @@
 }
 
 /* Gold Theme Headings Gradient - Enhanced visibility */
+/* Gold Theme: Make all headings and sub-headings fully transparent for a "hidden" effect */
 .theme-gold h1, .theme-gold h2, .theme-gold h3, .theme-gold h4, .theme-gold h5, .theme-gold h6, .theme-gold .card-title, .theme-gold .CardTitle {
-  background: linear-gradient(90deg, #B8860B 0%, #DAA520 50%, #FFD700 100%) !important;
-  -webkit-background-clip: text;
+  background: transparent !important;
+  color: transparent !important;
+  -webkit-background-clip: unset !important;
   -webkit-text-fill-color: transparent !important;
-  background-clip: text;
-  color: #B8860B !important;
-  font-weight: bold !important;
+  background-clip: unset !important;
   text-shadow: none !important;
 }
 
