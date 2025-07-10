@@ -16,6 +16,7 @@
   position: relative;
 }
 
+/* Royal Blue Theme Background Icon - FULL OPACITY */
 .theme-royal-blue body::before {
   content: '';
   pointer-events: none;
@@ -42,7 +43,10 @@
     radial-gradient(circle, #3b82f644 1.5px, transparent 3px);
   background-size: 220px 220px, 160px 160px, 160px 160px, 220px 220px, 160px 160px, 160px 160px, 240px 240px, 360px 360px, 160px 160px, 240px 240px, 360px 360px;
   background-position: 0 0, 90px 120px, 180px 240px, 320px 400px, 38vw 22vh, 58vw 58vh, 78vw 78vh, 22vw 68vh, 15vw 15vh, 72vw 32vh, 52vw 82vh;
-  opacity: 0.8;
+  opacity: 1;
+  background-repeat: repeat;
+  background-size: 320px 320px, 240px 240px, 240px 240px, 320px 320px, 240px 240px, 240px 240px, 360px 360px, 480px 480px, 240px 240px, 360px 360px, 480px 480px;
+  filter: drop-shadow(0 0 32px #a5b4fc88) drop-shadow(0 0 24px #3b82f688);
   animation: sparkle-float 18s linear infinite;
 }
 /* Royal Pink Theme - Aesthetic, with graphics and symbols */
@@ -56,6 +60,7 @@
 
 
 
+/* Royal Pink Theme Background Icon - FULL OPACITY */
 .theme-royal-pink body::before {
   content: '';
   pointer-events: none;
@@ -82,7 +87,10 @@
     radial-gradient(circle, #d7266044 1.5px, transparent 3px);
   background-size: 220px 220px, 160px 160px, 160px 160px, 220px 220px, 160px 160px, 160px 160px, 240px 240px, 360px 360px, 160px 160px, 240px 240px, 360px 360px;
   background-position: 0 0, 90px 120px, 180px 240px, 320px 400px, 38vw 22vh, 58vw 58vh, 78vw 78vh, 22vw 68vh, 15vw 15vh, 72vw 32vh, 52vw 82vh;
-  opacity: 0.8;
+  opacity: 1;
+  background-repeat: repeat;
+  background-size: 320px 320px, 240px 240px, 240px 240px, 320px 320px, 240px 240px, 240px 240px, 360px 360px, 480px 480px, 240px 240px, 360px 360px, 480px 480px;
+  filter: drop-shadow(0 0 32px #fbb1cf88) drop-shadow(0 0 24px #d7266088);
   animation: sparkle-float 18s linear infinite;
 }
 
@@ -188,8 +196,17 @@
 
 /* Avi Rank Gold Gradient and Headings - Enhanced visibility */
 
-/* Avi Rank: Make all text and heading backgrounds fully transparent for a "hidden" effect */
-.avi-rank h1, .avi-rank h2, .avi-rank h3, .avi-rank h4, .avi-rank h5, .avi-rank h6, .avi-rank .card-title, .avi-rank .CardTitle,
+/* Avi Rank: Only headings and sub-headings visible, all other text hidden */
+/* Avi Rank: Only headings and sub-headings visible, all other text hidden */
+.avi-rank h1, .avi-rank h2, .avi-rank h3, .avi-rank h4, .avi-rank h5, .avi-rank h6, .avi-rank .card-title, .avi-rank .CardTitle {
+  background: transparent !important;
+  color: #222 !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+  background-clip: unset !important;
+  text-shadow: 0 2px 8px #fff, 0 1px 0 #fff !important;
+  opacity: 1 !important;
+}
 .avi-rank p, .avi-rank span, .avi-rank div,
 .avi-rank .text-muted-foreground, .avi-rank .text-foreground {
   background: transparent !important;
@@ -198,6 +215,7 @@
   -webkit-text-fill-color: transparent !important;
   background-clip: unset !important;
   text-shadow: none !important;
+  opacity: 0 !important;
 }
 
 /* Gold Theme Headings Gradient - Enhanced visibility */
