@@ -186,6 +186,9 @@ export const AuthPage = () => {
                 <CardTitle className="text-center text-2xl font-bold">Create an Account</CardTitle>
               </CardHeader>
               <CardContent>
+                <Button variant="ghost" className="mb-4" onClick={() => navigate(-1)}>
+                  ← Back
+                </Button>
                 <Form {...signUpForm}>
                   <form onSubmit={signUpForm.handleSubmit(handleSignUp)} className="space-y-4">
                     <FormField
