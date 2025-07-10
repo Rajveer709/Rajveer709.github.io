@@ -7,6 +7,7 @@
   position: relative;
 }
 
+
 .theme-royal-pink body::before {
   content: '';
   pointer-events: none;
@@ -14,12 +15,19 @@
   top: 0; left: 0; width: 100vw; height: 100vh;
   z-index: 0;
   background-image:
+    /* Teddy Bear SVG */
+    url('data:image/svg+xml;utf8,<svg width="80" height="80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="32" fill="%23fbb1cf" fill-opacity="0.13"/><ellipse cx="40" cy="50" rx="18" ry="15" fill="%23fff0f6" fill-opacity="0.7"/><circle cx="28" cy="32" r="7" fill="%23d72660" fill-opacity="0.18"/><circle cx="52" cy="32" r="7" fill="%23d72660" fill-opacity="0.18"/></svg>'),
+    /* Bow and Arrow SVG */
+    url('data:image/svg+xml;utf8,<svg width="90" height="90" xmlns="http://www.w3.org/2000/svg"><path d="M10,80 Q45,10 80,80" stroke="%23d72660" stroke-width="4" fill="none"/><line x1="45" y1="10" x2="45" y2="80" stroke="%23fbb1cf" stroke-width="2"/><polygon points="45,10 50,20 40,20" fill="%23d72660" fill-opacity="0.7"/></svg>'),
+    /* Sword SVG */
+    url('data:image/svg+xml;utf8,<svg width="80" height="80" xmlns="http://www.w3.org/2000/svg"><rect x="36" y="10" width="8" height="40" fill="%23d72660" fill-opacity="0.18"/><rect x="32" y="50" width="16" height="8" fill="%23fbb1cf"/><polygon points="40,10 44,2 36,2" fill="%23fff0f6"/></svg>'),
+    /* Star SVG */
     url('data:image/svg+xml;utf8,<svg width="120" height="120" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="60" r="50" fill="%23fbb1cf" fill-opacity="0.12"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="32" fill="%23d72660" fill-opacity="0.18">★</text></svg>'),
     radial-gradient(circle, #fff6fb 0.5px, transparent 1.5px),
     radial-gradient(circle, #fbb1cf88 1px, transparent 2.5px),
     radial-gradient(circle, #d7266044 1.5px, transparent 3px);
-  background-size: 180px 180px, 120px 120px, 200px 200px, 320px 320px;
-  background-position: 0 0, 60px 80px, 120px 160px, 240px 320px;
+  background-size: 180px 180px, 120px 120px, 120px 120px, 180px 180px, 120px 120px, 200px 200px, 320px 320px;
+  background-position: 0 0, 60px 80px, 120px 160px, 240px 320px, 40vw 20vh, 60vw 60vh, 80vw 80vh;
   opacity: 0.45;
   animation: sparkle-float 18s linear infinite;
 }
