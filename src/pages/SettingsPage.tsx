@@ -476,10 +476,7 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
           </AlertDialogContent>
         </AlertDialog>
 
-        {/* Show All Cheat Codes Button (bottom of settings) */}
-        <div className="flex justify-center mt-6">
-          <HackDialog buttonTitle="Show All Cheat Codes" cheatType="showAll" onUnlock={() => {}} />
-        </div>
+        {/* Show All Cheat Codes Button removed as requested */}
       </div>
     </TooltipProvider>
   );
