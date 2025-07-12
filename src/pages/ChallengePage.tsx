@@ -303,17 +303,154 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
           </>
         </div>
         <Dialog open={!!selectedChallenge} onOpenChange={() => setSelectedChallenge(null)}>
-          <DialogContent className="p-0 overflow-hidden rounded-xl max-w-xs">
+          <DialogContent className="p-0 overflow-hidden rounded-2xl max-w-md border-0 shadow-2xl">
             {selectedChallenge && (
-              <div className="bg-gradient-to-r from-primary/80 to-primary/60 px-4 py-3 flex items-center gap-2">
-                <Star className="w-7 h-7 text-white drop-shadow" />
-                <h2 className="text-base font-bold text-white leading-tight flex-1">{selectedChallenge.text}</h2>
-              </div>
+              <>
+                {/* Enhanced Header with Gradient and Icon */}
+                <div className="relative bg-gradient-to-br from-primary via-primary/90 to-primary/80 px-6 py-6">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
+                  
+                  <div className="relative flex items-start gap-4">
+                    <div className="p-3 rounded-xl bg-white/20 backdrop-blur-sm border border-white/30">
+                      {selectedChallenge.completed ? (
+                        <Trophy className="w-8 h-8 text-white" />
+                      ) : (
+                        <Target className="w-8 h-8 text-white" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-xl font-bold text-white leading-tight mb-2">
+                        {selectedChallenge.text}
+                      </h2>
+                      <div className="flex items-center gap-3">
+                        <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm">
+                          {selectedChallenge.xp} XP
+                        </Badge>
+                        <Badge 
+                          variant={selectedChallenge.completed ? "default" : "secondary"}
+                          className={`${selectedChallenge.completed ? 'bg-green-500 text-white' : 'bg-white/20 text-white border-white/30'}`}
+                        >
+                          {selectedChallenge.completed ? 'Completed' : 'In Progress'}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Enhanced Content */}
+                <div className="p-6 space-y-6">
+                  {/* Challenge Details */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-foreground">Challenge Details</h3>
+                      <div className="flex items-center gap-2">
+                        <div className={`w-3 h-3 rounded-full ${selectedChallenge.completed ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                        <span className="text-sm text-muted-foreground">
+                          {selectedChallenge.completed ? 'Achievement Unlocked' : 'Ready to Complete'}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="p-4 rounded-xl bg-primary/5 border border-primary/20">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Star className="w-4 h-4 text-primary" />
+                          <span className="text-sm font-medium text-primary">Reward</span>
+                        </div>
+                        <p className="text-2xl font-bold text-primary">{selectedChallenge.xp} XP</p>
+                        <p className="text-xs text-muted-foreground">Experience Points</p>
+                      </div>
+                      
+                      <div className="p-4 rounded-xl bg-primary/5 border border-primary/20">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Award className="w-4 h-4 text-primary" />
+                          <span className="text-sm font-medium text-primary">Level</span>
+                        </div>
+                        <p className="text-2xl font-bold text-primary">{getChallengeLevel(selectedChallenge.id)}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {levelConfigs[getChallengeLevel(selectedChallenge.id) as keyof typeof levelConfigs]?.name}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Progress Section */}
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-sm font-medium text-foreground">Challenge Progress</h4>
+                      <span className="text-xs text-muted-foreground">
+                        {selectedChallenge.completed ? '100%' : '0%'} Complete
+                      </span>
+                    </div>
+                    <div className="relative">
+                      <div className="h-3 bg-muted rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full transition-all duration-500 ease-out rounded-full ${
+                            selectedChallenge.completed 
+                              ? 'bg-gradient-to-r from-green-500 to-green-600' 
+                              : 'bg-gradient-to-r from-primary to-primary/80'
+                          }`}
+                          style={{ width: selectedChallenge.completed ? '100%' : '0%' }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-3 pt-2">
+                    <Button 
+                      className="flex-1 bg-primary hover:bg-primary/90 text-white"
+                      onClick={() => setSelectedChallenge(null)}
+                    >
+                      {selectedChallenge.completed ? 'Close' : 'Got It'}
+                    </Button>
+                    {!selectedChallenge.completed && (
+                      <Button 
+                        variant="outline" 
+                        className="flex-1 border-primary/30 text-primary hover:bg-primary/5"
+                        onClick={() => {
+                          // Here you could add logic to mark challenge as completed
+                          setSelectedChallenge(null);
+                        }}
+                      >
+                        Mark Complete
+                      </Button>
+                    )}
+                  </div>
+
+                  {/* Motivational Message */}
+                  {!selectedChallenge.completed && (
+                    <div className="p-4 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-full bg-blue-100">
+                          <Target className="w-5 h-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-blue-900">Ready to take on this challenge?</p>
+                          <p className="text-xs text-blue-700">Complete it to earn {selectedChallenge.xp} XP and level up!</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Completion Celebration */}
+                  {selectedChallenge.completed && (
+                    <div className="p-4 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-full bg-green-100">
+                          <Trophy className="w-5 h-5 text-green-600" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-green-900">Challenge Completed! 🎉</p>
+                          <p className="text-xs text-green-700">You earned {selectedChallenge.xp} XP for this achievement!</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </>
             )}
-            <div className="p-4 flex flex-col gap-2 items-start">
-              <Badge variant="outline" className="text-xs px-2 py-1 bg-primary/10 text-primary border-primary/30">{selectedChallenge?.xp} XP</Badge>
-              <span className={`text-xs font-semibold ${selectedChallenge?.completed ? 'text-green-600' : 'text-muted-foreground'}`}>{selectedChallenge?.completed ? 'Completed' : 'Incomplete'}</span>
-            </div>
           </DialogContent>
         </Dialog>
       </div>
