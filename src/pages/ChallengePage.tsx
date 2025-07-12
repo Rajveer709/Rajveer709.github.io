@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader as UIDialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader as UIDialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, Circle, Lock, Trophy, Star, Target, Award, Shield, Crown, Ghost } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -40,21 +40,7 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
   const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null);
   const isAvi = rank.name === 'Avi';
 
-  useEffect(() => {
-    if (!hasStartedChallenges) {
-      toast.info("Welcome to Challenges!", {
-        description: "Start your journey to unlock new themes and ranks!",
-        action: {
-          label: "Start Challenges",
-          onClick: () => handleStartChallenges()
-        }
-      });
-    }
-  }, [hasStartedChallenges]);
-
-  const handleStartChallenges = () => {
-    onStartChallenges();
-  };
+  // Challenges now start automatically; no toast or manual start needed
 
   const handleChallengeClick = (challenge: Challenge) => {
     setSelectedChallenge(challenge);
