@@ -1,4 +1,4 @@
-/* --- Responsive Aspect Ratio & Foldable Support --- */
+/* --- Responsive Aspect Ratio & Mobile Support --- */
 html, body, #root {
   min-height: 100vh;
   min-width: 100vw;
@@ -8,9 +8,12 @@ html, body, #root {
 }
 
 body {
-  /* Prevent unwanted scrollbars on ultra-wide/tall/foldable devices */
+  /* Prevent unwanted scrollbars on mobile devices */
   overflow-x: hidden;
   overflow-y: auto;
+  /* Ensure proper mobile viewport handling */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
 }
 
 /* Responsive container for all aspect ratios */
@@ -26,17 +29,41 @@ body {
   box-sizing: border-box;
 }
 
-/* Aspect ratio specific tweaks */
+/* Mobile-specific aspect ratio handling */
 @media (max-aspect-ratio: 1/1) {
   .responsive-app-container {
-    /* Portrait, tall, or foldable vertical */
-    padding: 0 0.5rem;
+    /* Portrait mode - phones and tablets */
+    padding: 0 0.75rem;
+    /* Ensure content fits properly on narrow screens */
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  /* Improve touch targets on mobile */
+  button, .btn, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
+
 @media (min-aspect-ratio: 1/1) {
   .responsive-app-container {
-    /* Landscape, wide, or foldable horizontal */
+    /* Landscape mode */
     padding: 0.5rem 0;
+  }
+}
+
+/* Ultra-tall screens (like some foldables) */
+@media (max-aspect-ratio: 9/16) {
+  .responsive-app-container {
+    padding: 0 1rem;
+  }
+}
+
+/* Ultra-wide screens */
+@media (min-aspect-ratio: 16/9) {
+  .responsive-app-container {
+    padding: 1rem 0;
   }
 }
 
@@ -49,6 +76,7 @@ body {
     padding-right: env(fold-right, 0px);
   }
 }
+
 @media (vertical-viewport-segments: 2) {
   .responsive-app-container {
     gap: env(fold-vertical-spacing, 16px);
@@ -69,85 +97,86 @@ body {
 body::-webkit-scrollbar {
   display: none;
 }
+
 body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-/* --- Responsive Aspect Ratio & Foldable Support --- */
-html, body, #root {
-  min-height: 100vh;
-  min-width: 100vw;
-  height: 100%;
-  width: 100%;
-  box-sizing: border-box;
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+  /* Ensure proper spacing on mobile */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Improve text readability on small screens */
+  body {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  /* Better touch targets */
+  input, select, textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
 }
 
-body {
-  /* Prevent unwanted scrollbars on ultra-wide/tall/foldable devices */
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-/* Responsive container for all aspect ratios */
-.responsive-app-container {
-  width: 100vw;
-  height: 100vh;
-  min-height: 100dvh;
-  min-width: 100dvw;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: stretch;
-  box-sizing: border-box;
-}
-
-/* Aspect ratio specific tweaks */
-@media (max-aspect-ratio: 1/1) {
+/* Safe area support for devices with notches */
+@supports (padding: max(0px)) {
   .responsive-app-container {
-    /* Portrait, tall, or foldable vertical */
+    padding-left: max(0.75rem, env(safe-area-inset-left));
+    padding-right: max(0.75rem, env(safe-area-inset-right));
+    padding-top: max(0.5rem, env(safe-area-inset-top));
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Additional mobile optimizations for better aspect ratio handling */
+@media (max-width: 480px) {
+  /* Extra small phones */
+  .responsive-app-container {
     padding: 0 0.5rem;
   }
-}
-@media (min-aspect-ratio: 1/1) {
-  .responsive-app-container {
-    /* Landscape, wide, or foldable horizontal */
-    padding: 0.5rem 0;
+  
+  /* Ensure content doesn't overflow on very small screens */
+  .container {
+    max-width: 100vw;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
 }
 
-/* Foldable/folding device support */
-@media (horizontal-viewport-segments: 2) {
+@media (min-width: 481px) and (max-width: 768px) {
+  /* Small to medium phones */
   .responsive-app-container {
-    /* For dual-screen/foldable devices */
-    gap: env(fold-horizontal-spacing, 16px);
-    padding-left: env(fold-left, 0px);
-    padding-right: env(fold-right, 0px);
-  }
-}
-@media (vertical-viewport-segments: 2) {
-  .responsive-app-container {
-    gap: env(fold-vertical-spacing, 16px);
-    padding-top: env(fold-top, 0px);
-    padding-bottom: env(fold-bottom, 0px);
+    padding: 0 0.75rem;
   }
 }
 
-/* Utility: Make all cards and dialogs responsive */
-.responsive-card, .responsive-dialog {
-  max-width: 100vw;
-  max-height: 100vh;
-  width: 100%;
-  box-sizing: border-box;
+/* Ensure proper height handling on mobile browsers */
+@media (max-height: 600px) {
+  .responsive-app-container {
+    min-height: 100vh;
+    height: 100vh;
+  }
 }
 
-/* Utility: Hide scrollbars on mobile for a cleaner look */
-body::-webkit-scrollbar {
-  display: none;
+/* Handle very tall screens (like some Android phones) */
+@media (min-height: 800px) {
+  .responsive-app-container {
+    min-height: 100vh;
+    height: 100vh;
+  }
 }
-body {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+
+/* Ensure bottom navigation doesn't overlap content */
+@media (max-aspect-ratio: 1/1) {
+  main {
+    padding-bottom: 5rem; /* Space for bottom nav */
+  }
 }
+
 /* Make heading and sub-heading backgrounds transparent for Avi rank */
 .avi-bg-transparent h1,
 .avi-bg-transparent h2,
@@ -248,7 +277,6 @@ body {
   border: none !important;
   box-shadow: 0 2px 8px #fbb1cf44 !important;
 }
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;

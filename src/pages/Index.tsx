@@ -576,7 +576,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="responsive-app-container">
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route element={<PublicRoute session={session} />}>
