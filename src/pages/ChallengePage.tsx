@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader as UIDialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, Circle, Lock, Trophy, Star, Target, Award, Shield, Crown, Ghost } from "lucide-react";
+import { CheckCircle2, Circle, Lock, Trophy, Star, Target, Award, Shield, Crown, Ghost, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Challenge as ChallengeType } from '../config/challenges';
@@ -99,101 +99,102 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
     <div className={desktopView ? "min-h-screen bg-background" : "min-h-screen bg-background"}>
       <div className={desktopView ? "max-w-5xl mx-auto p-8 space-y-8" : "max-w-4xl mx-auto p-4 space-y-6"}>
         <PageHeader title="Challenges" onBack={onBack} />
-        {/* View All Ranks Button */}
-        <div className="flex justify-end mb-4">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline" className="font-semibold text-primary border-primary/40">
-                View All Ranks
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-md">
-              <UIDialogHeader>
-                <DialogTitle>All Ranks</DialogTitle>
-                <DialogDescription>See all available ranks and their descriptions.</DialogDescription>
-              </UIDialogHeader>
-              <div className="grid grid-cols-1 gap-4 mt-4">
-                {ALL_RANKS.map(rank => (
-                  <div key={rank.name} className="flex items-center gap-4 p-3 rounded-lg border border-primary/20 bg-primary/5">
-                    <rank.Icon className="w-8 h-8 text-primary" />
-                    <div>
-                      <div className="font-bold text-lg text-primary">{rank.name}</div>
-                      <div className="text-xs text-muted-foreground">{rank.description}</div>
-                    </div>
+        
+        {/* Unified Information Bar */}
+        <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20 rounded-xl">
+          <CardContent className="p-6">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+              {/* Left side - Rank and Level Info */}
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+                    <rank.Icon className="w-6 h-6 text-primary" />
                   </div>
-                ))}
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
-        <div className="flex flex-col gap-8">
-          <>
-            {/* Progress Overview */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Card className="text-center bg-primary/5 border-primary/20 rounded-xl min-h-[110px] p-0">
-                <CardContent className="p-3 flex flex-col items-center justify-center">
-                  <div className="w-8 h-8 mb-1 bg-primary/20 rounded-full flex items-center justify-center">
-                    <rank.Icon className="w-4 h-4 text-primary" />
-                  </div>
-                  <p className="text-xs text-muted-foreground">Rank</p>
-                  <p className="font-bold text-base text-primary leading-tight">{rank.name}</p>
-                  <Badge variant="secondary" className="mt-1 text-xs">Lvl {userLevel}</Badge>
-                </CardContent>
-              </Card>
-              <Card className="text-center bg-primary/5 border-primary/20 rounded-xl min-h-[110px] p-0">
-                <CardContent className="p-3 flex flex-col items-center justify-center">
-                  <div className="w-8 h-8 mb-1 bg-primary/20 rounded-full flex items-center justify-center">
-                    <Trophy className="w-4 h-4 text-primary" />
-                  </div>
-                  <p className="text-xs text-muted-foreground">Completed</p>
-                  <p className="font-bold text-base text-primary leading-tight">{isAvi ? totalChallenges : completedChallenges}</p>
-                  <p className="text-xs text-muted-foreground">/ {totalChallenges}</p>
-                </CardContent>
-              </Card>
-              <Card className="text-center bg-primary/5 border-primary/20 rounded-xl min-h-[110px] p-0">
-                <CardContent className="p-3 flex flex-col items-center justify-center">
-                  <div className="w-8 h-8 mb-1 bg-primary/20 rounded-full flex items-center justify-center">
-                    <Star className="w-4 h-4 text-primary" />
-                  </div>
-                  <p className="text-xs text-muted-foreground">XP</p>
-                  <p className="font-bold text-base text-primary leading-tight">{isAvi ? '∞' : userXp}</p>
-                  <p className="text-xs text-muted-foreground">points</p>
-                </CardContent>
-              </Card>
-              <Card className="text-center bg-primary/5 border-primary/20 rounded-xl min-h-[110px] p-0">
-                <CardContent className="p-3 flex flex-col items-center justify-center">
-                  <div className="w-8 h-8 mb-1 bg-primary/20 rounded-full flex items-center justify-center">
-                    <Target className="w-4 h-4 text-primary" />
-                  </div>
-                  <p className="text-xs text-muted-foreground">Next</p>
-                  <p className="font-bold text-base text-primary leading-tight">
-                    {isAvi ? '∞' : (nextRank ? `${xpToNextLevel - userXp}` : 'MAX')}
-                  </p>
-                  <p className="text-xs text-muted-foreground">XP left</p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Level Progress */}
-            <Card className="bg-primary/5 border-primary/20 rounded-xl">
-              <CardContent className="p-6">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-2">
                   <div>
-                    <h3 className="text-lg font-bold text-primary">Progress to Next Rank</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-lg font-bold text-primary">{rank.name}</h3>
+                      <Badge variant="secondary" className="text-xs">Lvl {userLevel}</Badge>
+                    </div>
                     <p className="text-xs text-muted-foreground">
-                      {nextRank ? `${nextRank.name} Rank` : "Maximum Level Reached!"}
-                    </p>
-                  </div>
-                  <div className="flex-1 md:ml-8">
-                    <Progress value={progressPercentage} className="h-4 bg-muted rounded-full" />
-                    <p className="text-center text-xs text-muted-foreground mt-1">
-                      {progressPercentage}% complete
+                      {nextRank ? `Next: ${nextRank.name}` : "Maximum Level Reached!"}
                     </p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
 
+              {/* Center - Progress Bar */}
+              <div className="flex-1 lg:mx-8">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-primary">Progress to Next Rank</span>
+                    <span className="text-sm text-muted-foreground">{progressPercentage}%</span>
+                  </div>
+                  <Progress value={progressPercentage} className="h-3 bg-muted rounded-full" />
+                </div>
+              </div>
+
+              {/* Right side - Stats and Actions */}
+              <div className="flex items-center gap-6">
+                {/* Stats */}
+                <div className="flex items-center gap-4">
+                  <div className="text-center">
+                    <div className="flex items-center gap-1 justify-center">
+                      <Trophy className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-bold text-primary">{isAvi ? totalChallenges : completedChallenges}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">/{totalChallenges}</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="flex items-center gap-1 justify-center">
+                      <Star className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-bold text-primary">{isAvi ? '∞' : userXp}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">XP</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="flex items-center gap-1 justify-center">
+                      <Target className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-bold text-primary">
+                        {isAvi ? '∞' : (nextRank ? `${xpToNextLevel - userXp}` : 'MAX')}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">Left</p>
+                  </div>
+                </div>
+
+                {/* View Ranks Button */}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm" className="font-semibold text-primary border-primary/40 flex items-center gap-1">
+                      View Ranks
+                      <ChevronRight className="w-3 h-3" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-md">
+                    <UIDialogHeader>
+                      <DialogTitle>All Ranks</DialogTitle>
+                      <DialogDescription>See all available ranks and their descriptions.</DialogDescription>
+                    </UIDialogHeader>
+                    <div className="grid grid-cols-1 gap-4 mt-4">
+                      {ALL_RANKS.map(rank => (
+                        <div key={rank.name} className="flex items-center gap-4 p-3 rounded-lg border border-primary/20 bg-primary/5">
+                          <rank.Icon className="w-8 h-8 text-primary" />
+                          <div>
+                            <div className="font-bold text-lg text-primary">{rank.name}</div>
+                            <div className="text-xs text-muted-foreground">{rank.description}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="flex flex-col gap-8">
+          <>
             {/* Avi Special Display */}
             {isAvi && (
               <Card className="bg-gradient-to-r from-yellow-100 to-yellow-50 border-yellow-300 rounded-2xl">
