@@ -161,16 +161,6 @@ export const HackDialog = ({ onUnlock, buttonTitle = 'cheat code', buttonGradien
                 : 'Enter a secret code to unlock themes, ranks, or see a surprise!'}
           </DialogDescription>
           {/* Account Deletion Google Docs link below Privacy Policy */}
-          <div className="mt-2 text-xs text-center">
-            <a
-              href="https://docs.google.com/document/d/e/2PACX-1vQSkdjzUKcE0dFSsmWMI42JALnKbSHK2bNYsMtQWjFzFYLD96uPZQYS__XGQb8CCwiK3vIifo1jsKVJ/pub"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline text-primary hover:text-primary/80 transition-colors block mt-2"
-            >
-              Account Deletion (Google Docs)
-            </a>
-          </div>
         </DialogHeader>
         {!cheat ? (
           !cheatType ? (

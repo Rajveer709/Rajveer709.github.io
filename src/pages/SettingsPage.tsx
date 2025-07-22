@@ -478,6 +478,14 @@ export const SettingsPage = ({ onBack, currentTheme, onThemeChange, isDarkMode, 
               >
                 Privacy Policy
               </a>
+              <a
+                href="https://docs.google.com/document/d/e/2PACX-1vQSkdjzUKcE0dFSsmWMI42JALnKbSHK2bNYsMtQWjFzFYLD96uPZQYS__XGQb8CCwiK3vIifo1jsKVJ/pub"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs underline text-primary hover:text-primary/80 transition-colors block mt-1"
+              >
+                Account Deletion (Google Docs)
+              </a>
             </div>
           </CardContent>
         </Card>
