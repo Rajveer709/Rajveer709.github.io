@@ -192,8 +192,28 @@ export const ChallengePage = ({ userLevel, userXp, xpToNextLevel, challenges, on
 
                   {/* Progress Percentage */}
                   <div className="flex items-center gap-3 p-3 bg-primary/5 rounded-lg border border-primary/15">
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-                      <div className="w-4 h-4 border-2 border-primary rounded-full border-t-transparent animate-spin"></div>
+                    <div className="relative w-8 h-8">
+                      <svg className="w-full h-full" viewBox="0 0 36 36">
+                        <path
+                          d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke="#e0e0e0"
+                          strokeWidth="3"
+                        />
+                        <path
+                          d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none"
+                          stroke="hsl(var(--primary))"
+                          strokeWidth="3"
+                          strokeDasharray={`${progressPercentage}, 100`}
+                          strokeLinecap="round"
+                          transform="rotate(-90 18 18)"
+                        />
+                      </svg>
                     </div>
                     <div className="flex-1">
                       <p className="font-semibold text-primary">{progressPercentage}%</p>
