@@ -22,13 +22,6 @@ interface HackDialogProps {
 
 const CHEAT_CODES = [
   {
-    codes: ['dreamcatcher', 'royal pink'],
-    message: '', // Will be set dynamically
-    icon: Star,
-    color: 'text-pink-500',
-    type: 'royal-pink',
-  },
-  {
     codes: ['TJsir', 'Ajaysir'],
     message: 'Physics Rocks',
     icon: Atom,
